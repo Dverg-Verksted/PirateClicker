@@ -4,14 +4,13 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/GameModeBase.h"
-#include "PirateClickerGameModeBase.generated.h"
+#include "StoryGMBase.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
-class PIRATECLICKER_API APirateClickerGameModeBase : public AGameModeBase
+class PIRATECLICKER_API AStoryGMBase : public AGameModeBase
 {
-	GENERATED_BODY()
-	
+    GENERATED_BODY()
 };

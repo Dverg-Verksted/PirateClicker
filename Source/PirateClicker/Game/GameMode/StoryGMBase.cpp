@@ -1,5 +1,3 @@
 // Copyright Epic Games, Inc. All Rights Reserved.
 
-
-#include "PirateClickerGameModeBase.h"
-
+#include "StoryGMBase.h"
