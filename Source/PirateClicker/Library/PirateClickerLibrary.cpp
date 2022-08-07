@@ -21,6 +21,16 @@ void UPirateClickerLibrary::Print_Log(const ELogRSVerb LogVerb, const FString Te
     }
 }
 
+bool UPirateClickerLibrary::CheckedCondition(const bool bCondition, const FString Text, const int Line, const char* Function)
+{
+    if (!bCondition)
+    {
+        Print_Log(ELogRSVerb::Error, Text, Line, Function);
+        return false;
+    }
+    return true;
+}
+
 #pragma region WorldUtils
 
 UWorld* UPirateClickerLibrary::GetWorldInEditor()

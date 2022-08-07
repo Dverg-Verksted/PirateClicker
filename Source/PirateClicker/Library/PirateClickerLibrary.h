@@ -8,7 +8,8 @@
 #include "PirateClickerLibrary.generated.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogPirateClicker, All, All);
-#define LOG_PIRATE(LogVerb, Text) URSFunctionLibrary::Print_Log(LogVerb, Text, __LINE__, __FUNCTION__)
+#define LOG_PIRATE(LogVerb, Text) UPirateClickerLibrary::Print_Log(LogVerb, Text, __LINE__, __FUNCTION__)
+#define CHECKED(Cond, Text) UPirateClickerLibrary::CheckedCondition(Cond, Text, __LINE__, __FUNCTION__)
 
 DECLARE_DYNAMIC_DELEGATE_TwoParams(FAsyncAssetLoadSignature, bool, bResult, UObject*, Object);
 DECLARE_DYNAMIC_DELEGATE_ThreeParams(FAsyncSpawnActorSignature, bool, bResult, FStringAssetReference, LoadedReference, AActor*, SpawnedActor);
@@ -27,6 +28,12 @@ public:
      * @public Write a log
      **/
     static void Print_Log(const ELogRSVerb LogVerb, const FString Text, const int Line, const char* Function);
+
+    /**
+     * @public Check the condition
+     * @return bool
+     **/
+    static bool CheckedCondition(const bool bCondition, const FString Text, const int Line, const char* Function);
 
 #pragma region WorldUtils
 
