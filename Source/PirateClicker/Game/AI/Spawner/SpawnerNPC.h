@@ -4,11 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Actor.h"
+#include "Library/LibraryDataTypes.h"
 #include "SpawnerNPC.generated.h"
 
 class USphereComponent;
 
-UCLASS()
+#define LOG_SPAWNER(LogVerb, Text) Print_LogSpawner(LogVerb, Text, __LINE__, __FUNCTION__)
+
+UCLASS(HideCategories = ("Replication", "Collision", "Input", "Actor", "LOD", "Cooking"))
 class PIRATECLICKER_API ASpawnerNPC : public AActor
 {
     GENERATED_BODY()
@@ -31,6 +34,19 @@ protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
 
+#if WITH_EDITOR
+
+    virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+
+#endif
+
+private:
+
+    /**
+     * @public Write a log
+    **/
+    void Print_LogSpawner(const ELogRSVerb LogVerb, const FString Text, const int Line, const char* Function) const;
+
 #pragma endregion
 
 #pragma region Components
@@ -50,5 +66,33 @@ protected:
     USphereComponent* SphereCollision;
 
 #pragma endregion
+
+#pragma region Data
+
+protected:
     
+    UPROPERTY(EditInstanceOnly, Category = "Settings SpawnerNPC", meta = (ClampMin = "30.0", ClampMax = "5000.0", ForceUnits = "cm"))
+    float RadiusCollision = 100.0f;
+
+    UPROPERTY(EditInstanceOnly, Category = "Settings SpawnerNPC", meta = (ClampMin = "1", ClampMax = "100"))
+    int32 CountSpawnPosition = 5;
+
+private:
+    TArray<FVector> ArrSavedPosition;
+
+#pragma endregion
+
+private:
+
+    /**
+     * @private Generate point position spawn
+     * @return TArray<FVector>
+     **/
+    TArray<FVector> GeneratePositionPoint() const;
+    
+    /**
+     * @private Calculation of the spawn position in the collision radius
+     * @return FVector - World position
+     **/
+    FVector CalculateRandomPositionSpawn() const;
 };
