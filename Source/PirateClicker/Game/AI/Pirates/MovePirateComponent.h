@@ -5,9 +5,20 @@
 #include "CoreMinimal.h"
 #include "AIDataTypes.h"
 #include "Components/ActorComponent.h"
+#include "Library/LibraryDataTypes.h"
 #include "MovePirateComponent.generated.h"
 
 class USplineComponent;
+
+UENUM()
+enum class EStateMovement: uint8
+{
+    Off,
+    Rotating,
+    Moving
+};
+
+#define LOG_MOVE(LogVerb, Text) Print_LogMovement(LogVerb, Text, __LINE__, __FUNCTION__)
 
 /**
  * @class Component for movement pirate
@@ -30,58 +41,63 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+private:
+    
+    /**
+     * @public Write a log
+    **/
+    void Print_LogMovement(const ELogRSVerb LogVerb, const FString Text, const int Line, const char* Function) const;
+
 #pragma endregion
 
 #pragma region DataMove
 
 public:
 
+    UFUNCTION(BlueprintCallable)
+    void GoAIMove(const FVector& ToPos);
+    
     /**
-     * @public Setup target spline
-     * @param1 USplineComponent*
-     **/
-    void SetupTargetSpline(USplineComponent* NewSpline) { TargetSpline = NewSpline; }
-
-    /**
-     * @public Start move
-     * @param1 FVector
+     * @public run movement
+     * @param1 FMovementData
      * @return bool
      **/
-    bool StartMove(const FMovementData& NewData);
+    bool RunMovement(const FMovementData& NewData);
 
 protected:
 
     // Movement speed pirate cm/sec
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Settings Move",
-        meta = (ToolTip = "Скорость пирата", ClampMin = "1.0", ClampMax = "1500.0", ForceUnits = "m/s"))
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Settings Movement",
+        meta = (ToolTip = "Скорость передвижения пирата", ClampMin = "1.0", ClampMax = "1500.0", ForceUnits = "m/s"))
     float DefaultSpeedMove{10.0f};
+
+    // Rotate speed pirate 
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Settings Movement",
+        meta = (ToolTip = "Скорость поворота пирата", ClampMin = "1.0", ClampMax = "150.0", ForceUnits = "x"))
+    float DefaultSpeedRotate{10.0f};
 
 private:
 
     UPROPERTY()
-    USplineComponent* TargetSpline;
-
-    UPROPERTY()
     AActor* OwnerPirate;
 
-    // State enable move
-    bool bEnableMove{false};
-
-    // end time
-    float MoveEndTime{0.0f};
+    EStateMovement StateMovement = EStateMovement::Off;
 
     // Target data for movement
     FMovementData TargetData;
 
+    // End time
+    float EndTime{0.0f};
+
     /**
      * @private Calculate movement
      **/
-    void CalculateMove();
+    void CalculateMove(float DeltaTime);
 
     /**
      * @private Calculate rotate
      **/
-    void CalculateRotate();
+    void CalculateRotate(float DeltaTime);
 
 #pragma endregion
     

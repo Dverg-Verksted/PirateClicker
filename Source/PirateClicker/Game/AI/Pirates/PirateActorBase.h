@@ -31,13 +31,13 @@ protected:
 protected:
 
     // Root capsule collision
-    UPROPERTY(EditDefaultsOnly, Category = "Components")
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
     UCapsuleComponent* CapsuleCollision{nullptr};
     
-    UPROPERTY(EditDefaultsOnly, Category = "Components")
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
     USkeletalMeshComponent* PirateMesh{nullptr};
     
-    UPROPERTY(EditDefaultsOnly, Category = "Components")
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
     UMovePirateComponent* MovePirateComponent;
 
 #pragma endregion
