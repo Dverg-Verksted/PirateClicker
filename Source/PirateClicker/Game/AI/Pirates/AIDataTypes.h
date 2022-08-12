@@ -40,8 +40,6 @@ struct FMovementData
         return  this->StartPointPosition != FVector::ZeroVector &&
                 this->EndPointPosition != FVector::ZeroVector &&
                 this->TimeMoveDelta == 0.0f &&
-                this->StartRotatePosition != FRotator::ZeroRotator &&
-                this->EndRotatePosition != FRotator::ZeroRotator &&
                 this->TimeRotateDelta == 0.0f;
     }
 };
