@@ -6,7 +6,7 @@
 
 // State Game
 UENUM(BlueprintType)
-enum class EStateGame: uint8
+enum class EStateGame : uint8
 {
     Loading,
     InProgress,
@@ -60,7 +60,7 @@ struct FGameRule : public FTableRowBase
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ToolTip = "Имя острова"))
     FText DescriptionIsland{FText::FromString("Description Island")};
-    
+
     UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowedClasses = "World", ToolTip = "Укажите мир в котором будут работать правила"))
     FSoftObjectPath World;
 

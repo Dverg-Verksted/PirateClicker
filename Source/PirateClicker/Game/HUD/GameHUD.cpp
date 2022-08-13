@@ -1,6 +1,5 @@
 // This section is the property of the Dverg Verksted team
 
-
 #include "Game/HUD/GameHUD.h"
 
 #if UE_EDITOR || UE_BUILD_DEVELOPMENT
@@ -12,7 +11,6 @@ AGameHUD::AGameHUD()
     PrimaryActorTick.bCanEverTick = false;
     PrimaryActorTick.bAllowTickOnDedicatedServer = false;
     PrimaryActorTick.TickGroup = ETickingGroup::TG_PrePhysics;
-    
 }
 
 void AGameHUD::DrawHUD()
@@ -29,7 +27,6 @@ void AGameHUD::DrawHUD()
         AddBool(TEXT("Test function AddBool"), true);
     }
 #endif
-    
 }
 
 void AGameHUD::BeginPlay()

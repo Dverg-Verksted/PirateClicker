@@ -5,6 +5,7 @@
 #include "DrawDebugHelpers.h"
 #include "Components/BillboardComponent.h"
 #include "Components/SphereComponent.h"
+#include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Library/PirateClickerLibrary.h"
 
@@ -86,7 +87,7 @@ void ASpawnerNPC::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedE
 TArray<FVector> ASpawnerNPC::GeneratePositionPoint() const
 {
     TArray<FVector> Result;
-    
+
     for (int32 i = 0; i < CountSpawnPosition; i++)
     {
         const FVector ResCalcPos = CalculateRandomPositionSpawn();
@@ -99,8 +100,8 @@ TArray<FVector> ASpawnerNPC::GeneratePositionPoint() const
 FVector ASpawnerNPC::CalculateRandomPositionSpawn() const
 {
     const FVector& L_CenterLoc = GetActorLocation();
-    const FVector Box = FVector(RadiusCollision / 2.0f,RadiusCollision / 2.0f, 0.0f);
-	
+    const FVector Box = FVector(RadiusCollision / 2.0f, RadiusCollision / 2.0f, 0.0f);
+
     const FVector BoxMin = L_CenterLoc - Box;
     const FVector BoxMax = L_CenterLoc + Box;
     const FVector L_RandPoint = FMath::RandPointInBox(FBox(BoxMin, BoxMax));
@@ -110,12 +111,10 @@ FVector ASpawnerNPC::CalculateRandomPositionSpawn() const
     FCollisionQueryParams CollisionQueryParams;
     CollisionQueryParams.AddIgnoredActor(this);
     CollisionQueryParams.AddIgnoredComponent(SphereCollision);
-	
+
     FCollisionResponseParams CollisionResponseParams;
-    GetWorld()->LineTraceSingleByChannel(HitResult, L_RandPoint, L_EndPoint, ECollisionChannel::ECC_Visibility,
-        CollisionQueryParams, CollisionResponseParams);
-    
-    if (HitResult.bBlockingHit)
-        return HitResult.Location;
+    GetWorld()->LineTraceSingleByChannel(HitResult, L_RandPoint, L_EndPoint, ECollisionChannel::ECC_Visibility, CollisionQueryParams, CollisionResponseParams);
+
+    if (HitResult.bBlockingHit) return HitResult.Location;
     return FVector::ZeroVector;
 }

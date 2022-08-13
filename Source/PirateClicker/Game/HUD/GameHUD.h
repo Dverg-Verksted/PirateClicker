@@ -12,11 +12,11 @@
 UCLASS()
 class PIRATECLICKER_API AGameHUD : public ADebugHUD
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 public:
     AGameHUD();
-    
+
 protected:
     // Draw the HUD.
     virtual void DrawHUD() override;

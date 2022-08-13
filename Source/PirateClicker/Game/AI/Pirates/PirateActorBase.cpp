@@ -1,6 +1,5 @@
 // This section is the property of the Dverg Verksted team
 
-
 #include "Game/AI/Pirates/PirateActorBase.h"
 #include "MovePirateComponent.h"
 #include "Components/CapsuleComponent.h"
@@ -26,12 +25,9 @@ APirateActorBase::APirateActorBase()
 // Called when the game starts or when spawned
 void APirateActorBase::BeginPlay()
 {
-	Super::BeginPlay();
+    Super::BeginPlay();
 
     if (!CHECKED(CapsuleCollision != nullptr, "Capsule collision is nullptr")) return;
     if (!CHECKED(PirateMesh != nullptr, "Skeletal mesh is nullptr")) return;
     if (!CHECKED(MovePirateComponent != nullptr, "Movement pirate component is nullptr")) return;
-
-    
 }
-

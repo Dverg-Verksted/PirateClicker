@@ -23,7 +23,6 @@ class PIRATECLICKER_API UPirateClickerLibrary : public UBlueprintFunctionLibrary
     GENERATED_BODY()
 
 public:
-    
     /**
      * @public Write a log
      **/
@@ -38,11 +37,10 @@ public:
 #pragma region WorldUtils
 
 public:
-
     UFUNCTION(BlueprintCallable, Category = "PirateClickerLibrary")
     static UWorld* GetWorldInEditor();
-    
-    template<typename T>
+
+    template <typename T>
     static void FindAllActors(UWorld* InWorld, TArray<T*>& OutActors)
     {
         if (!InWorld) return;
@@ -53,7 +51,7 @@ public:
         }
     }
 
-    template<typename T>
+    template <typename T>
     static void FindActor(UWorld* InWorld, T*& OutActor)
     {
         if (!InWorld) return;
@@ -65,7 +63,7 @@ public:
         }
     }
 
-    template<typename T>
+    template <typename T>
     static void FindActorByName(UWorld* InWorld, const FString& InActorName, T*& OutActor)
     {
         if (!InWorld || InActorName.IsEmpty()) return;
@@ -86,17 +84,15 @@ public:
 #pragma region LoadAssets
 
 public:
-    
     /** Asynchronously load asset */
     UFUNCTION(BlueprintCallable, Category = "PirateClickerLibrary")
     static void AsyncAssetLoadObject(TAssetPtr<UObject> AssetPtr, const FAsyncAssetLoadSignature& Callback);
-	
+
     /** Asynchronously load asset and spawn actor then */
     UFUNCTION(BlueprintCallable, Category = "PirateClickerLibrary", meta = (WorldContext = "WorldContextObject"))
     static void AsyncSpawnActor(UObject* WorldContextObject, TAssetSubclassOf<AActor> AssetPtr, FTransform SpawnTransform, const FAsyncSpawnActorSignature& Callback);
 
 private:
-
     /** Called when asset loading is finished */
     UFUNCTION()
     static void OnAsyncAssetLoadObjectComplete(FStringAssetReference Reference, FAsyncAssetLoadSignature Callback);

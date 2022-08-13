@@ -1,6 +1,5 @@
 // This section is the property of the Dverg Verksted team
 
-
 #include "Game/AI/Pirates/MovePirateComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Library/PirateClickerLibrary.h"
@@ -14,21 +13,19 @@ static TAutoConsoleVariable<bool> EnableD_MovementPirate(TEXT("Pirate.ShowDebugM
 // Sets default values for this component's properties
 UMovePirateComponent::UMovePirateComponent()
 {
-	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
-	// off to improve performance if you don't need them.
-	PrimaryComponentTick.bCanEverTick = true;
+    // Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
+    // off to improve performance if you don't need them.
+    PrimaryComponentTick.bCanEverTick = true;
     PrimaryComponentTick.bAllowTickOnDedicatedServer = false;
     PrimaryComponentTick.TickGroup = ETickingGroup::TG_PrePhysics;
-
-    
 }
 
 // Called when the game starts
 void UMovePirateComponent::BeginPlay()
 {
-	Super::BeginPlay();
-    
-	OwnerPirate = GetOwner();
+    Super::BeginPlay();
+
+    OwnerPirate = GetOwner();
     if (!CHECKED(OwnerPirate != nullptr, "Owner pirate is nullptr")) return;
 }
 
@@ -36,14 +33,13 @@ void UMovePirateComponent::Print_LogMovement(const ELogRSVerb LogVerb, const FSt
 {
     if (!CHECKED(OwnerPirate != nullptr, "Owner pirate is nullptr")) return;
 
-    UPirateClickerLibrary::Print_Log(LogVerb, FString::Printf(TEXT("Name: [%s] | State movement: [%s] | %s"),
-        *OwnerPirate->GetName(), *UEnum::GetValueAsString(StateMovement), *Text), Line, Function);
+    UPirateClickerLibrary::Print_Log(LogVerb, FString::Printf(TEXT("Name: [%s] | State movement: [%s] | %s"), *OwnerPirate->GetName(), *UEnum::GetValueAsString(StateMovement), *Text), Line, Function);
 }
 
 // Called every frame
 void UMovePirateComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+    Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
 #if UE_EDITOR || UE_BUILD_DEVELOPMENT
     if (EnableD_MovementPirate.GetValueOnGameThread())
@@ -53,7 +49,7 @@ void UMovePirateComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
         DrawDebugLine(GetWorld(), TargetData.StartPointPosition, TargetData.EndPointPosition, FColor::Cyan, false, 0.0f, 0, 2.0f);
     }
 #endif
-    
+
     if (StateMovement == EStateMovement::Moving)
     {
         CalculateMove(DeltaTime);
@@ -66,7 +62,6 @@ void UMovePirateComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
 }
 
 #pragma endregion
-
 
 #pragma region DataMove
 
