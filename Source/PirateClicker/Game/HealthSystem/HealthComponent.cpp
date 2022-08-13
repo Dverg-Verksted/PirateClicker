@@ -2,9 +2,6 @@
 
 
 #include "HealthComponent.h"
-
-#include <wrl/wrappers/corewrappers.h>
-
 #include "GameFramework/Actor.h"
 
 
