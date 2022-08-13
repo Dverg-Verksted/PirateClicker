@@ -3,6 +3,10 @@
 
 #include "HealthComponent.h"
 
+#include <wrl/wrappers/corewrappers.h>
+
+#include "GameFramework/Actor.h"
+
 
 UHealthComponent::UHealthComponent()
 {
@@ -15,26 +19,30 @@ void UHealthComponent::BeginPlay()
 	{
 		return;
 	}
-	//Damage.AddDynamic(this,&UHealthComponent::TakeDamage);
+    Damage.AddDynamic(this,&UHealthComponent::TakeDamage);
 }
 
-float UHealthComponent::TakeDamage(float TakenDamage,float TakenHeal)
+void UHealthComponent::TakeDamage(float TakenDamage)
 {
-	CurrentHealth = CurrentHealth - TakenDamage;
+    
+    CurrentHealth = CurrentHealth - TakenDamage;
 	if (CurrentHealth <= 0)
 	{
 		CurrentHealth = 0;
 	}
-	return CurrentHealth;
 }
 
-float UHealthComponent::TakeHeal(float TakenHeal,float TakenDamage)
+void UHealthComponent::TakeHeal(float TakenHeal,float TakenDamage)  // <-- this function isn't working for now. Maybe we can use it later
 {
-	CurrentHealth = CurrentHealth + TakenHeal;
-	if (CurrentHealth > MaxHealth)
+    CurrentHealth = CurrentHealth + TakenHeal;
+	    if (CurrentHealth > MaxHealth)
 	{
 		CurrentHealth = MaxHealth;
 	}
-	return CurrentHealth;
+}
+
+float UHealthComponent::GetCurrentHealth()
+{
+    return CurrentHealth;
 }
 
