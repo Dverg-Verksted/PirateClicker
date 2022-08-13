@@ -117,14 +117,14 @@ void UMovePirateComponent::CalculateRotate(float DeltaTime)
 {
     if (TargetData.TimeRotateDelta < EndTime)
     {
-        const FRotator NewRotate = FMath::Lerp(TargetData.StartRotatePosition, TargetData.EndRotatePosition, TargetData.TimeMoveDelta / EndTime);
+        const FRotator NewRotate = FMath::Lerp(TargetData.StartRotatePosition, TargetData.EndRotatePosition, TargetData.TimeRotateDelta / EndTime);
         OwnerPirate->SetActorRotation(NewRotate);
         TargetData.TimeRotateDelta += DeltaTime;
     }
     else
     {
         OwnerPirate->SetActorRotation(TargetData.EndRotatePosition);
-        EndTime = (TargetData.EndPointPosition - TargetData.StartPointPosition).Size() / DefaultSpeedMove;
+        EndTime = (TargetData.EndPointPosition - TargetData.StartPointPosition).Size() / (DefaultSpeedMove * M_TO_CM);
         StateMovement = EStateMovement::Moving;
     }
 }

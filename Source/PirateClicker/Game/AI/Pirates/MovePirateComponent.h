@@ -73,8 +73,8 @@ protected:
 
     // Rotate speed pirate 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Settings Movement",
-        meta = (ToolTip = "Скорость поворота пирата", ClampMin = "1.0", ClampMax = "150.0", ForceUnits = "x"))
-    float DefaultSpeedRotate{10.0f};
+        meta = (ToolTip = "Скорость поворота пирата", ClampMin = "0.1", ClampMax = "5.0", ForceUnits = "x"))
+    float DefaultSpeedRotate{0.1f};
 
 private:
 

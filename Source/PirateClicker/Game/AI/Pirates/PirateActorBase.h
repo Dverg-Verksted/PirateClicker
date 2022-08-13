@@ -6,6 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "PirateActorBase.generated.h"
 
+class ASplineMeshActor;
 class UMovePirateComponent;
 class UCapsuleComponent;
 
@@ -42,4 +43,22 @@ protected:
 
 #pragma endregion
 
+#pragma region DataPirate
+
+public:
+
+    /**
+     * @public Change target spline for pirate
+     * @param1 ASplineMeshActor*
+     **/
+    UFUNCTION(BlueprintCallable, Category = "APirateActorBase | DataPirate")
+    void SetupTargetSpline(ASplineMeshActor* NewSpline) { TargetSpline = NewSpline; }
+    
+private:
+    
+    UPROPERTY()
+    ASplineMeshActor* TargetSpline;
+
+#pragma endregion
+    
 };
