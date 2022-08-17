@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "LibraryDataTypes.h"
 #include "Kismet/BlueprintFunctionLibrary.h"
+#include "EngineUtils.h"
 #include "PirateClickerLibrary.generated.h"
 
 DEFINE_LOG_CATEGORY_STATIC(LogPirateClicker, All, All);

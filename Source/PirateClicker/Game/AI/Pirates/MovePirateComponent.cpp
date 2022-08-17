@@ -103,7 +103,6 @@ void UMovePirateComponent::CalculateMove(float DeltaTime)
     }
     else
     {
-        OwnerPirate->SetActorLocation(TargetData.EndPointPosition);
         StateMovement = EStateMovement::Off;
     }
 }

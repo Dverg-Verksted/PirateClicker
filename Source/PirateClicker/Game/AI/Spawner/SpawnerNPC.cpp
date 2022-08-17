@@ -3,8 +3,10 @@
 #include "Game/AI/Spawner/SpawnerNPC.h"
 
 #include "DrawDebugHelpers.h"
+#include "SplineActor.h"
 #include "Components/BillboardComponent.h"
 #include "Components/SphereComponent.h"
+#include "Game/GoldStorage/GoldStorageActor.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Library/PirateClickerLibrary.h"
@@ -78,6 +80,11 @@ void ASpawnerNPC::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedE
     {
         SphereCollision->SetSphereRadius(RadiusCollision);
     }
+
+    if (PropertyChangedEvent.GetPropertyName() == TEXT("CountSpawnPosition"))
+    {
+        ArrSavedPosition = GeneratePositionPoint();
+    }
 }
 
 #endif
@@ -117,4 +124,63 @@ FVector ASpawnerNPC::CalculateRandomPositionSpawn() const
 
     if (HitResult.bBlockingHit) return HitResult.Location;
     return FVector::ZeroVector;
+}
+
+FVector ASpawnerNPC::GetRandomPositionFromSavePosition()
+{
+    if (ArrSavedPosition.Num() == 0) return GetActorLocation();
+    return ArrSavedPosition[FMath::RandRange(0, ArrSavedPosition.Num() - 1)];
+}
+
+void ASpawnerNPC::CompileSpline()
+{
+    ArrSavedPosition = GeneratePositionPoint();
+
+    for (auto& SplineInfo : ArrDataSplineInfo)
+    {
+        if (!SplineInfo.TargetGoldStorage.Get()) continue;
+        for (auto*& Spline : SplineInfo.SplineActors)
+        {
+            if (Spline != nullptr) continue;
+
+            UWorld* World = UPirateClickerLibrary::GetWorldInEditor();
+            if (!World) continue;
+
+            Spline = World->SpawnActor<ASplineActor>();
+            if (!Spline) continue;
+            const FVector& StartPosSpline = GetRandomPositionFromSavePosition();
+            const FVector& EndPosSpline = SplineInfo.TargetGoldStorage.Get()->GetActorLocation();
+            Spline->SetActorLocation(StartPosSpline);
+
+            if (!Spline->GetSpline()) continue;
+            Spline->GetSpline()->AddSplineWorldPoint(FMath::Lerp(StartPosSpline, EndPosSpline, 0.2f));
+            Spline->GetSpline()->AddSplineWorldPoint(FMath::Lerp(StartPosSpline, EndPosSpline, 0.4f));
+            Spline->GetSpline()->AddSplineWorldPoint(FMath::Lerp(StartPosSpline, EndPosSpline, 0.6f));
+            Spline->GetSpline()->AddSplineWorldPoint(FMath::Lerp(StartPosSpline, EndPosSpline, 0.8f));
+            Spline->GetSpline()->AddSplineWorldPoint(FMath::Lerp(StartPosSpline, EndPosSpline, 1.0f));
+        }
+    }
+}
+
+void ASpawnerNPC::RemoveAllSpline()
+{
+    UWorld* World = UPirateClickerLibrary::GetWorldInEditor();
+    if (!World) return;
+    TArray<ASplineActor*> SplineActors;
+    UPirateClickerLibrary::FindAllActors<ASplineActor>(World, SplineActors);
+    for (auto Spline : SplineActors)
+    {
+        if (!Spline) return;
+        Spline->Destroy();
+        Spline = nullptr;
+    }
+
+    for (auto& SplineInfo : ArrDataSplineInfo)
+    {
+        if (!SplineInfo.TargetGoldStorage.Get()) continue;
+        for (auto*& Spline : SplineInfo.SplineActors)
+        {
+            Spline = nullptr;
+        }
+    }
 }

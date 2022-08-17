@@ -1,8 +1,9 @@
-// This section is the property of the Dverg Verksted team
+﻿// This section is the property of the Dverg Verksted team
 
 #pragma once
 
 #include "CoreMinimal.h"
+#include "SpawnerDataTypes.h"
 #include "GameFramework/Actor.h"
 #include "Library/LibraryDataTypes.h"
 #include "SpawnerNPC.generated.h"
@@ -74,11 +75,14 @@ protected:
     UPROPERTY(EditInstanceOnly, Category = "Settings SpawnerNPC", meta = (ClampMin = "1", ClampMax = "100"))
     int32 CountSpawnPosition = 5;
 
+    UPROPERTY(EditInstanceOnly,  Category = "Settings SpawnerNPC", meta = (ToolTip = "Набор указателей на золотохранилище для установки путей"))
+    TArray<FDataSplineInfo> ArrDataSplineInfo;
+
 private:
     TArray<FVector> ArrSavedPosition;
 
 #pragma endregion
-
+    
 private:
     /**
      * @private Generate point position spawn
@@ -91,4 +95,16 @@ private:
      * @return FVector - World position
      **/
     FVector CalculateRandomPositionSpawn() const;
+
+    /**
+     * @private Get random position from ArrSavedPosition
+     * @return FVector
+     **/
+    FVector GetRandomPositionFromSavePosition();
+
+    UFUNCTION(CallInEditor, Category = "Settings SpawnerNPC")
+    void CompileSpline();
+
+    UFUNCTION(CallInEditor, Category = "Settings SpawnerNPC")
+    void RemoveAllSpline();
 };
