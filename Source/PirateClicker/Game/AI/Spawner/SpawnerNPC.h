@@ -82,6 +82,12 @@ private:
     TArray<FVector> ArrSavedPosition;
 
 #pragma endregion
+
+#pragma region Action
+
+public:
+
+    void RunSpawnPirate(const FSoftObjectPath& PirateAsset, const int32 CountSpawn);
     
 private:
     /**
@@ -107,4 +113,6 @@ private:
 
     UFUNCTION(CallInEditor, Category = "Settings SpawnerNPC")
     void RemoveAllSpline();
+
+#pragma endregion
 };

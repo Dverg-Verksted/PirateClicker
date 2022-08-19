@@ -104,6 +104,7 @@ void UMovePirateComponent::CalculateMove(float DeltaTime)
     else
     {
         StateMovement = EStateMovement::Off;
+        OnStopedMove.Broadcast();
     }
 }
 

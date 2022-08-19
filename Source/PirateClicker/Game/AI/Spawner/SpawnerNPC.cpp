@@ -91,6 +91,13 @@ void ASpawnerNPC::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedE
 
 #pragma endregion
 
+#pragma region Action
+
+void ASpawnerNPC::RunSpawnPirate(const FSoftObjectPath& PirateAsset, const int32 CountSpawn)
+{
+    // TODO: Spawn NPC Pirate
+}
+
 TArray<FVector> ASpawnerNPC::GeneratePositionPoint() const
 {
     TArray<FVector> Result;
@@ -184,3 +191,5 @@ void ASpawnerNPC::RemoveAllSpline()
         }
     }
 }
+
+#pragma endregion

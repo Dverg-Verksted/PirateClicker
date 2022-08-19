@@ -10,15 +10,9 @@
 
 class USplineComponent;
 
-UENUM()
-enum class EStateMovement : uint8
-{
-    Off,
-    Rotating,
-    Moving
-};
-
 #define LOG_MOVE(LogVerb, Text) Print_LogMovement(LogVerb, Text, __LINE__, __FUNCTION__)
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FStopedMoveSignature);
 
 /**
  * @class Component for movement pirate
@@ -92,6 +86,15 @@ private:
      * @private Calculate rotate
      **/
     void CalculateRotate(float DeltaTime);
+
+#pragma endregion
+
+#pragma region Signature
+
+public:
+
+    UPROPERTY(BlueprintAssignable)
+    FStopedMoveSignature OnStopedMove;
 
 #pragma endregion
 };

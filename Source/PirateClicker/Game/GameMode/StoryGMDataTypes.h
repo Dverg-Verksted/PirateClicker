@@ -32,8 +32,14 @@ struct FDataUnderWave
     UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ToolTip = "Количество сколько нужно заспаунить", ClampMin = "1"))
     int32 CountSpawn = 5;
 
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ToolTip = "Задержки после спауна партии", ForceUnits = "s"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ToolTip = "Задержки после спауна партии", ClampMin = "1.0", ForceUnits = "s"))
     float NextSpawnUnderWave = 1.0f;
+
+    FString ToString() const
+    {
+        return FString::Printf(TEXT("Spawner NPC: [%s] | Pirate Asset: [%s] | Count spawn: [%i] | Next spawn delay: [%f]"),
+            *this->SoftPtrSpawnerNPC.ToString(), *this->PirateAsset.ToString(), this->CountSpawn, this->NextSpawnUnderWave);
+    }
 };
 
 // Data game wave
@@ -42,7 +48,7 @@ struct FDataGameWave
 {
     GENERATED_BODY()
 
-    UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ToolTip = "Задержки перед стартом волны", ForceUnits = "s"))
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ToolTip = "Задержки перед стартом волны", ClampMin = "1.0", ForceUnits = "s"))
     float DelayForStart = 1.0f;
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ToolTip = "Массив под волн"))

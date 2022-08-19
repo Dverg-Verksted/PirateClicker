@@ -4,12 +4,22 @@
 
 #define M_TO_CM 100.0f
 
+UENUM()
+enum class EStateMovement : uint8
+{
+    Off,
+    Rotating,
+    Moving
+};
+
 // A special state for pirate
 UENUM()
 enum class EStateBrain : uint8
 {
-    Idle UMETA(DisplayName = "Стоит"),
-    Walk UMETA(DisplayName = "Идет"),
+    Idle            UMETA(DisplayName = "Стоит"),
+    WalkToStorage   UMETA(DisplayName = "Идет до золота"),
+    WalkToBack      UMETA(DisplayName = "Идет обратно"),
+    WaitFor         UMETA(DisplayName = "Отдыхает"),
 };
 
 USTRUCT()

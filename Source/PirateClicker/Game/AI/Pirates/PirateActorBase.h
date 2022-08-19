@@ -3,10 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "AIDataTypes.h"
 #include "GameFramework/Actor.h"
 #include "PirateActorBase.generated.h"
 
-class ASplineMeshActor;
+class ASplineActor;
 class UMovePirateComponent;
 class UCapsuleComponent;
 
@@ -44,17 +45,43 @@ protected:
 
 #pragma region DataPirate
 
+protected:
+    
+    // @protected Target spline
+    UPROPERTY()
+    ASplineActor* TargetSpline;
+
+    // @protected Current state brain
+    EStateBrain StateBrain = EStateBrain::Idle;
+
+    int32 TargetIndex = -1;
+
+#pragma endregion
+
+#pragma region Action
+    
 public:
+
     /**
      * @public Change target spline for pirate
      * @param1 ASplineMeshActor*
      **/
-    UFUNCTION(BlueprintCallable, Category = "APirateActorBase | DataPirate")
-    void SetupTargetSpline(ASplineMeshActor* NewSpline) { TargetSpline = NewSpline; }
+    UFUNCTION(BlueprintCallable, Category = "APirateActorBase | Action")
+    void SetupTargetSpline(ASplineActor* NewSpline);
+
+    /**
+     * @public Setup new state brain
+     **/
+    UFUNCTION(BlueprintCallable, Category = "APirateActorBase | Action")
+    void SetupStateBrain(const EStateBrain& NewState);
 
 private:
-    UPROPERTY()
-    ASplineMeshActor* TargetSpline;
+
+    /**
+     * @private Next Move To Point
+     **/
+    UFUNCTION()
+    void NextMoveToPoint();
 
 #pragma endregion
 };
