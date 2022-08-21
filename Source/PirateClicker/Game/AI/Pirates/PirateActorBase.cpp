@@ -6,6 +6,8 @@
 #include "Game/AI/Spawner/SplineActor.h"
 #include "Library/PirateClickerLibrary.h"
 
+#pragma region Default
+
 // Sets default values
 APirateActorBase::APirateActorBase()
 {
@@ -23,6 +25,14 @@ APirateActorBase::APirateActorBase()
     MovePirateComponent = CreateDefaultSubobject<UMovePirateComponent>(FName("Movement component"));
 }
 
+void APirateActorBase::InitParamsPirate(const FDataPirate& DataPirate, ASplineActor* NewSpline)
+{
+    if (!CHECKED(StateBrain == EStateBrain::NoneInit, "Pirate is init!")) return;
+
+    MovePirateComponent->InitMoveData(DataPirate.SpeedMove, DataPirate.SpeedRotate);
+    SetupTargetSpline(NewSpline);
+}
+
 // Called when the game starts or when spawned
 void APirateActorBase::BeginPlay()
 {
@@ -33,26 +43,26 @@ void APirateActorBase::BeginPlay()
     if (!CHECKED(MovePirateComponent != nullptr, "Movement pirate component is nullptr")) return;
     if (!CHECKED(TargetSpline != nullptr, "Target spline is nullptr")) return;
     if (!CHECKED(TargetSpline->GetSpline() != nullptr, "Spline is nullptr")) return;
-    
+
     MovePirateComponent->OnStopedMove.AddDynamic(this, &ThisClass::NextMoveToPoint);
     StateBrain = EStateBrain::WalkToStorage;
     NextMoveToPoint();
 }
 
+#pragma endregion
+
 #pragma region Action
 
 void APirateActorBase::SetupTargetSpline(ASplineActor* NewSpline)
 {
+    if (!CHECKED(NewSpline != nullptr, "New Spline is nullptr")) return;
+
     TargetSpline = NewSpline;
 }
 
 void APirateActorBase::SetupStateBrain(const EStateBrain& NewState)
 {
-    if (StateBrain == NewState)
-    {
-        LOG_PIRATE(ELogRSVerb::Error, "Current state brain == New State");
-        return;
-    }
+    if (!CHECKED(StateBrain != NewState, "Current state brain == New State")) return;
 
     LOG_PIRATE(ELogRSVerb::Display, FString::Printf(TEXT("New brain state: [%s]"),
         *UEnum::GetValueAsString(NewState)));
@@ -61,11 +71,7 @@ void APirateActorBase::SetupStateBrain(const EStateBrain& NewState)
 
 void APirateActorBase::NextMoveToPoint()
 {
-    if (StateBrain == EStateBrain::Idle)
-    {
-        LOG_PIRATE(ELogRSVerb::Warning, "State brain equal idle");
-        return;
-    }
+    if (!CHECKED(StateBrain != EStateBrain::Idle, "State brain equal idle")) return;
 
     LOG_PIRATE(ELogRSVerb::Display, FString::Printf(TEXT("Current state brain: [%s]"),
         *UEnum::GetValueAsString(StateBrain)));

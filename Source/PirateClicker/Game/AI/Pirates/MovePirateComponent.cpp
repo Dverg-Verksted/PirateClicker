@@ -61,6 +61,12 @@ void UMovePirateComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
     }
 }
 
+void UMovePirateComponent::InitMoveData(const float SpeedMove, const float SpeedRotate)
+{
+    DefaultSpeedMove = SpeedMove;
+    DefaultSpeedRotate = SpeedRotate;
+}
+
 #pragma endregion
 
 #pragma region DataMove

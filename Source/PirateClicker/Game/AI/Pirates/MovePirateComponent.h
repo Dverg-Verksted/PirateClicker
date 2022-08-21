@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "AIDataTypes.h"
 #include "Components/ActorComponent.h"
+#include "Game/AI/DataAsset/PirateDataAsset.h"
 #include "Library/LibraryDataTypes.h"
 #include "MovePirateComponent.generated.h"
 
@@ -31,6 +32,13 @@ public:
     // Called every frame
     virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
 
+    /**
+     * @public Initializing parameters for move component
+     * @param1 FDataPirate
+     **/
+    UFUNCTION(BlueprintCallable, Category = "APirateActorBase | Default")
+    void InitMoveData(const float SpeedMove, const float SpeedRotate);
+    
 protected:
     // Called when the game starts
     virtual void BeginPlay() override;
@@ -46,6 +54,7 @@ private:
 #pragma region DataMove
 
 public:
+    
     UFUNCTION(BlueprintCallable)
     void GoAIMove(const FVector& ToPos);
 
@@ -57,6 +66,7 @@ public:
     bool RunMovement(const FMovementData& NewData);
 
 protected:
+    
     // Movement speed pirate cm/sec
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Settings Movement", meta = (ToolTip = "Скорость передвижения пирата", ClampMin = "1.0", ClampMax = "1500.0", ForceUnits = "m/s"))
     float DefaultSpeedMove{10.0f};

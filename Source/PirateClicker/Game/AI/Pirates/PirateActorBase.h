@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "AIDataTypes.h"
+#include "Game/AI/DataAsset/PirateDataAsset.h"
 #include "GameFramework/Actor.h"
 #include "PirateActorBase.generated.h"
 
@@ -19,8 +20,17 @@ class PIRATECLICKER_API APirateActorBase : public AActor
 #pragma region Default
 
 public:
+    
     // Sets default values for this actor's properties
     APirateActorBase();
+
+    /**
+     * @public Initializing parameters for a pirate
+     * @param1 FDataPirate
+     * @param2 ASplineActor
+     **/
+    UFUNCTION(BlueprintCallable, Category = "APirateActorBase | Default")
+    void InitParamsPirate(const FDataPirate& DataPirate, ASplineActor* NewSpline);
 
 protected:
     // Called when the game starts or when spawned
@@ -52,7 +62,7 @@ protected:
     ASplineActor* TargetSpline;
 
     // @protected Current state brain
-    EStateBrain StateBrain = EStateBrain::Idle;
+    EStateBrain StateBrain = EStateBrain::NoneInit;
 
     int32 TargetIndex = -1;
 
@@ -61,10 +71,10 @@ protected:
 #pragma region Action
     
 public:
-
+    
     /**
      * @public Change target spline for pirate
-     * @param1 ASplineMeshActor*
+     * @param1 ASplineActor*
      **/
     UFUNCTION(BlueprintCallable, Category = "APirateActorBase | Action")
     void SetupTargetSpline(ASplineActor* NewSpline);

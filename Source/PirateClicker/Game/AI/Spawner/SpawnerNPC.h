@@ -87,14 +87,23 @@ private:
 
 public:
 
+    /**
+     * @public Start the spawn process
+     **/
+    UFUNCTION(BlueprintCallable, Category = "ASpawnerNPC | Action")
     void RunSpawnPirate(const FSoftObjectPath& PirateAsset, const int32 CountSpawn);
     
 private:
     /**
+      * @private The process of spawning pirates after loading into memory
+     **/
+    void OnSpawnPirateComplete(const FSoftObjectPath PirateAsset, const int32 CountSpawn);
+    
+    /**
      * @private Generate point position spawn
      * @return TArray<FVector>
      **/
-    TArray<FVector> GeneratePositionPoint() const;
+    TArray<FVector> GeneratePositionPoint(const int32 CountSpawn) const;
 
     /**
      * @private Calculation of the spawn position in the collision radius
@@ -107,6 +116,12 @@ private:
      * @return FVector
      **/
     FVector GetRandomPositionFromSavePosition();
+
+    /**
+     * @private Get random spline from Array FDataSplineInfo
+     * @return ASplineActor
+     **/
+    ASplineActor* GetRandomTargetSpline();
 
     UFUNCTION(CallInEditor, Category = "Settings SpawnerNPC")
     void CompileSpline();

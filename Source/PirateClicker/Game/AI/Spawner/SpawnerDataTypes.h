@@ -17,4 +17,12 @@ struct FDataSplineInfo
 
     UPROPERTY(EditAnywhere)
     TArray<ASplineActor*> SplineActors;
+
+    UPROPERTY(VisibleAnywhere, meta = (ForceUnits = "cm"))
+    float Distance{0.0f};
+
+    ASplineActor* GetRandomSplineActor()
+    {
+        return this->SplineActors[FMath::RandRange(0, SplineActors.Num() - 1)];
+    }
 };

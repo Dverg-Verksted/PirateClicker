@@ -6,6 +6,9 @@
 #include "SplineActor.h"
 #include "Components/BillboardComponent.h"
 #include "Components/SphereComponent.h"
+#include "Engine/AssetManager.h"
+#include "Game/AI/DataAsset/PirateDataAsset.h"
+#include "Game/AI/Pirates/PirateActorBase.h"
 #include "Game/GoldStorage/GoldStorageActor.h"
 #include "Kismet/GameplayStatics.h"
 #include "Kismet/KismetSystemLibrary.h"
@@ -65,7 +68,7 @@ void ASpawnerNPC::BeginPlay()
     if (!CHECKED(Billboard != nullptr, "Billboard is nullptr")) return;
     if (!CHECKED(SphereCollision != nullptr, "Sphere Collision is nullptr")) return;
 
-    ArrSavedPosition = GeneratePositionPoint();
+    ArrSavedPosition = GeneratePositionPoint(CountSpawnPosition);
 }
 
 #if WITH_EDITOR
@@ -83,7 +86,7 @@ void ASpawnerNPC::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedE
 
     if (PropertyChangedEvent.GetPropertyName() == TEXT("CountSpawnPosition"))
     {
-        ArrSavedPosition = GeneratePositionPoint();
+        ArrSavedPosition = GeneratePositionPoint(CountSpawnPosition);
     }
 }
 
@@ -95,14 +98,39 @@ void ASpawnerNPC::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedE
 
 void ASpawnerNPC::RunSpawnPirate(const FSoftObjectPath& PirateAsset, const int32 CountSpawn)
 {
-    // TODO: Spawn NPC Pirate
+    ArrSavedPosition = GeneratePositionPoint(CountSpawn);
+
+    FStreamableManager& AssetLoader = UAssetManager::GetStreamableManager();
+    FStreamableDelegate Delegate = FStreamableDelegate::CreateUObject(this, &ThisClass::OnSpawnPirateComplete, PirateAsset, CountSpawn);
+    AssetLoader.RequestAsyncLoad(PirateAsset, Delegate);
 }
 
-TArray<FVector> ASpawnerNPC::GeneratePositionPoint() const
+void ASpawnerNPC::OnSpawnPirateComplete(const FSoftObjectPath PirateAsset, const int32 CountSpawn)
+{
+    const UPirateDataAsset* PirateDataAsset = LoadObject<UPirateDataAsset>(nullptr, *(PirateAsset.ToString()));
+    if (!CHECKED(PirateDataAsset != nullptr, FString::Printf(TEXT("Load pirate data asset failed for path: [%s]"),
+        *PirateAsset.ToString()))) return;
+
+    const TSubclassOf<APirateActorBase> SubClassPirate = PirateDataAsset->GetDataPirate().SubClassPirate;
+    if (!CHECKED(SubClassPirate.GetDefaultObject() != nullptr, FString::Printf(TEXT("Sub class failed for path: [%s]"), *PirateAsset.ToString()))) return;
+
+    for (int32 i = 0; i < CountSpawn; i++)
+    {
+        FTransform Transform;
+        FVector LocationSpawn = GetRandomPositionFromSavePosition();
+        Transform.SetLocation(LocationSpawn);
+        APirateActorBase* Pirate = GetWorld()->SpawnActorDeferred<APirateActorBase>(SubClassPirate, Transform);
+        if (!CHECKED(Pirate != nullptr, FString::Printf(TEXT("Spawn pirate faild from subclass: [%s]"), *SubClassPirate->GetName()))) continue;
+        Pirate->InitParamsPirate(PirateDataAsset->GetDataPirate(), GetRandomTargetSpline());
+        Pirate->FinishSpawning(Transform);
+    }
+}
+
+TArray<FVector> ASpawnerNPC::GeneratePositionPoint(const int32 CountSpawn) const
 {
     TArray<FVector> Result;
 
-    for (int32 i = 0; i < CountSpawnPosition; i++)
+    for (int32 i = 0; i < CountSpawn; i++)
     {
         const FVector ResCalcPos = CalculateRandomPositionSpawn();
         Result.Add(ResCalcPos);
@@ -139,13 +167,29 @@ FVector ASpawnerNPC::GetRandomPositionFromSavePosition()
     return ArrSavedPosition[FMath::RandRange(0, ArrSavedPosition.Num() - 1)];
 }
 
+ASplineActor* ASpawnerNPC::GetRandomTargetSpline()
+{
+    float MinDist = MAX_FLT;
+    FDataSplineInfo TargetDataSplineInfo;
+    for (const FDataSplineInfo& DataSplineInfo : ArrDataSplineInfo)
+    {
+        if (DataSplineInfo.Distance < MinDist)
+        {
+            MinDist = DataSplineInfo.Distance;
+            TargetDataSplineInfo = DataSplineInfo;
+        }
+    }
+    return TargetDataSplineInfo.GetRandomSplineActor();
+}
+
 void ASpawnerNPC::CompileSpline()
 {
-    ArrSavedPosition = GeneratePositionPoint();
+    ArrSavedPosition = GeneratePositionPoint(CountSpawnPosition);
 
     for (auto& SplineInfo : ArrDataSplineInfo)
     {
         if (!SplineInfo.TargetGoldStorage.Get()) continue;
+        SplineInfo.Distance = (SplineInfo.TargetGoldStorage.Get()->GetActorLocation() - GetActorLocation()).Size();
         for (auto*& Spline : SplineInfo.SplineActors)
         {
             if (Spline != nullptr) continue;
