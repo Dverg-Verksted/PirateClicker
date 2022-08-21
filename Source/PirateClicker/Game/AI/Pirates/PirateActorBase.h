@@ -40,15 +40,38 @@ protected:
 
 #pragma region Components
 
+public:
+
+    /**
+     * @public Get capsule collision
+     * @return UCapsuleComponent
+     **/
+    UFUNCTION(BlueprintCallable, Category = "APirateActorBase | Components")
+    UCapsuleComponent* GetCapsuleCollision() const { return CapsuleCollision; }
+
+    /**
+     * @public Get pirate mesh
+     * @return USkeletalMeshComponent
+     **/
+    UFUNCTION(BlueprintCallable, Category = "APirateActorBase | Components")
+    USkeletalMeshComponent* GetPirateMesh() const { return PirateMesh; }
+
+    /**
+     * @public Get move pirate component
+     * @return UMovePirateComponent
+     **/
+    UFUNCTION(BlueprintCallable, Category = "APirateActorBase | Components")
+    UMovePirateComponent* GetMovePirateComponent() const { return MovePirateComponent; }
+
 protected:
     // Root capsule collision
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
+    UPROPERTY(EditDefaultsOnly, Category = "Components")
     UCapsuleComponent* CapsuleCollision{nullptr};
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
+    UPROPERTY(EditDefaultsOnly, Category = "Components")
     USkeletalMeshComponent* PirateMesh{nullptr};
 
-    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
+    UPROPERTY(EditDefaultsOnly, Category = "Components")
     UMovePirateComponent* MovePirateComponent{nullptr};
 
 #pragma endregion

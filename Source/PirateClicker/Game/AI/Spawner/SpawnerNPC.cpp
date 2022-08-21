@@ -5,6 +5,7 @@
 #include "DrawDebugHelpers.h"
 #include "SplineActor.h"
 #include "Components/BillboardComponent.h"
+#include "Components/CapsuleComponent.h"
 #include "Components/SphereComponent.h"
 #include "Engine/AssetManager.h"
 #include "Game/AI/DataAsset/PirateDataAsset.h"
@@ -118,6 +119,7 @@ void ASpawnerNPC::OnSpawnPirateComplete(const FSoftObjectPath PirateAsset, const
     {
         FTransform Transform;
         FVector LocationSpawn = GetRandomPositionFromSavePosition();
+        LocationSpawn.Z += PirateDataAsset->GetDataPirate().SubClassPirate.GetDefaultObject()->GetCapsuleCollision()->GetScaledCapsuleHalfHeight();
         Transform.SetLocation(LocationSpawn);
         APirateActorBase* Pirate = GetWorld()->SpawnActorDeferred<APirateActorBase>(SubClassPirate, Transform);
         if (!CHECKED(Pirate != nullptr, FString::Printf(TEXT("Spawn pirate faild from subclass: [%s]"), *SubClassPirate->GetName()))) continue;

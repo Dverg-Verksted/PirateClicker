@@ -78,7 +78,8 @@ void APirateActorBase::NextMoveToPoint()
     if (StateBrain == EStateBrain::WalkToStorage)
     {
         TargetIndex++;
-        const FVector NewPos = TargetSpline->GetSpline()->GetLocationAtSplinePoint(TargetIndex, ESplineCoordinateSpace::World);
+        FVector NewPos = TargetSpline->GetSpline()->GetLocationAtSplinePoint(TargetIndex, ESplineCoordinateSpace::World);
+        NewPos.Z += CapsuleCollision->GetScaledCapsuleHalfHeight();
         LOG_PIRATE(ELogRSVerb::Display, FString::Printf(TEXT("New position [%s] from spline: [%s]"),
             *NewPos.ToString(), *TargetSpline->GetName()));
         MovePirateComponent->GoAIMove(NewPos);
