@@ -4,6 +4,8 @@
 #include "MovePirateComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Game/AI/Spawner/SplineActor.h"
+#include "Game/Player/GamePC.h"
+#include "Kismet/GameplayStatics.h"
 #include "Library/PirateClickerLibrary.h"
 
 #pragma region Default
@@ -44,6 +46,10 @@ void APirateActorBase::BeginPlay()
     if (!CHECKED(TargetSpline != nullptr, "Target spline is nullptr")) return;
     if (!CHECKED(TargetSpline->GetSpline() != nullptr, "Spline is nullptr")) return;
 
+    AGamePC* GamePC = Cast<AGamePC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+    if (!CHECKED(GamePC != nullptr, "Game player controller is nullptr")) return;
+
+    GamePC->OnHitActor.AddDynamic(this, &ThisClass::RegisterHitActor);
     MovePirateComponent->OnStopedMove.AddDynamic(this, &ThisClass::NextMoveToPoint);
     StateBrain = EStateBrain::WalkToStorage;
     NextMoveToPoint();
@@ -69,19 +75,24 @@ void APirateActorBase::SetupStateBrain(const EStateBrain& NewState)
     StateBrain = NewState;
 }
 
+void APirateActorBase::RegisterHitActor(AActor* HitActor)
+{
+    if (this == HitActor)
+    {
+        OnPirateDead.Broadcast(this);
+        SetLifeSpan(1.0f);
+    }
+}
+
 void APirateActorBase::NextMoveToPoint()
 {
     if (!CHECKED(StateBrain != EStateBrain::Idle, "State brain equal idle")) return;
 
-    LOG_PIRATE(ELogRSVerb::Display, FString::Printf(TEXT("Current state brain: [%s]"),
-        *UEnum::GetValueAsString(StateBrain)));
     if (StateBrain == EStateBrain::WalkToStorage)
     {
         TargetIndex++;
         FVector NewPos = TargetSpline->GetSpline()->GetLocationAtSplinePoint(TargetIndex, ESplineCoordinateSpace::World);
         NewPos.Z += CapsuleCollision->GetScaledCapsuleHalfHeight();
-        LOG_PIRATE(ELogRSVerb::Display, FString::Printf(TEXT("New position [%s] from spline: [%s]"),
-            *NewPos.ToString(), *TargetSpline->GetName()));
         MovePirateComponent->GoAIMove(NewPos);
     }
 

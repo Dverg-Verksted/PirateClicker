@@ -26,3 +26,10 @@ struct FDataSplineInfo
         return this->SplineActors[FMath::RandRange(0, SplineActors.Num() - 1)];
     }
 };
+
+USTRUCT()
+struct FDataSpawn
+{
+    GENERATED_BODY()
+    
+};

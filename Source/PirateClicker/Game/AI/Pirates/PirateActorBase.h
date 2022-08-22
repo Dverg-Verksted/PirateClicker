@@ -12,6 +12,8 @@ class ASplineActor;
 class UMovePirateComponent;
 class UCapsuleComponent;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPirateDeadSignature, APirateActorBase*, Pirate);
+
 UCLASS()
 class PIRATECLICKER_API APirateActorBase : public AActor
 {
@@ -33,6 +35,7 @@ public:
     void InitParamsPirate(const FDataPirate& DataPirate, ASplineActor* NewSpline);
 
 protected:
+    
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
 
@@ -111,10 +114,27 @@ public:
 private:
 
     /**
+     * @private Register hit on actor
+     * @param1 AActor*
+     **/
+    UFUNCTION()
+    void RegisterHitActor(AActor* HitActor);
+    
+    /**
      * @private Next Move To Point
      **/
     UFUNCTION()
     void NextMoveToPoint();
+
+#pragma endregion
+
+#pragma region Signature
+
+public:
+
+    // @public Signature on the death of a pirate
+    UPROPERTY(BlueprintAssignable)
+    FPirateDeadSignature OnPirateDead;
 
 #pragma endregion
 };

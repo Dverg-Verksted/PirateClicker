@@ -1,7 +1,6 @@
 // This section is the property of the Dverg Verksted team
 
 #include "Game/AI/Spawner/SpawnerNPC.h"
-
 #include "DrawDebugHelpers.h"
 #include "SplineActor.h"
 #include "Components/BillboardComponent.h"
@@ -106,6 +105,16 @@ void ASpawnerNPC::RunSpawnPirate(const FSoftObjectPath& PirateAsset, const int32
     AssetLoader.RequestAsyncLoad(PirateAsset, Delegate);
 }
 
+void ASpawnerNPC::RegisterPirateDead(APirateActorBase* Pirate)
+{
+    ArrayPirates.Remove(Pirate);
+    if (ArrayPirates.Num() == 0)
+    {
+        LOG_SPAWNER(ELogRSVerb::Display, "All pirate dead on spawner");
+        OnAllPirateDead.Broadcast();
+    }
+}
+
 void ASpawnerNPC::OnSpawnPirateComplete(const FSoftObjectPath PirateAsset, const int32 CountSpawn)
 {
     const UPirateDataAsset* PirateDataAsset = LoadObject<UPirateDataAsset>(nullptr, *(PirateAsset.ToString()));
@@ -125,6 +134,8 @@ void ASpawnerNPC::OnSpawnPirateComplete(const FSoftObjectPath PirateAsset, const
         if (!CHECKED(Pirate != nullptr, FString::Printf(TEXT("Spawn pirate faild from subclass: [%s]"), *SubClassPirate->GetName()))) continue;
         Pirate->InitParamsPirate(PirateDataAsset->GetDataPirate(), GetRandomTargetSpline());
         Pirate->FinishSpawning(Transform);
+        Pirate->OnPirateDead.AddDynamic(this, &ThisClass::RegisterPirateDead);
+        ArrayPirates.Add(Pirate);
     }
 }
 

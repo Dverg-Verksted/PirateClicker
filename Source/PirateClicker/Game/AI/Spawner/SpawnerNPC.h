@@ -8,9 +8,12 @@
 #include "Library/LibraryDataTypes.h"
 #include "SpawnerNPC.generated.h"
 
+class APirateActorBase;
 class USphereComponent;
 
 #define LOG_SPAWNER(LogVerb, Text) Print_LogSpawner(LogVerb, Text, __LINE__, __FUNCTION__)
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FAllPirateDeadSignature);
 
 UCLASS(HideCategories = ("Replication", "Collision", "Input", "Actor", "LOD", "Cooking"))
 class PIRATECLICKER_API ASpawnerNPC : public AActor
@@ -69,6 +72,7 @@ protected:
 #pragma region Data
 
 protected:
+    
     UPROPERTY(EditInstanceOnly, Category = "Settings SpawnerNPC", meta = (ClampMin = "30.0", ClampMax = "5000.0", ForceUnits = "cm"))
     float RadiusCollision = 100.0f;
 
@@ -79,7 +83,12 @@ protected:
     TArray<FDataSplineInfo> ArrDataSplineInfo;
 
 private:
+
+    // @private Array saved position
     TArray<FVector> ArrSavedPosition;
+
+    // @private Array spawn pirates
+    TArray<APirateActorBase*> ArrayPirates;
 
 #pragma endregion
 
@@ -92,8 +101,17 @@ public:
      **/
     UFUNCTION(BlueprintCallable, Category = "ASpawnerNPC | Action")
     void RunSpawnPirate(const FSoftObjectPath& PirateAsset, const int32 CountSpawn);
+
     
 private:
+
+    /**
+     * @private Register pirate on dead
+     * @param1 APirateActorBase*
+     **/
+    UFUNCTION()
+    void RegisterPirateDead(APirateActorBase* Pirate);
+
     /**
       * @private The process of spawning pirates after loading into memory
      **/
@@ -130,4 +148,14 @@ private:
     void RemoveAllSpline();
 
 #pragma endregion
+
+#pragma region Signature
+
+public:
+
+    UPROPERTY(BlueprintAssignable)
+    FAllPirateDeadSignature OnAllPirateDead;
+
+#pragma endregion
+    
 };
