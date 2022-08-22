@@ -7,7 +7,7 @@
 #include "Components/ActorComponent.h"
 #include "HealthComponent.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FDamageSignature,float,TakenDamage);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FHealthUpdateSignature,float,NewHealth);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDeathSignature);
 
 UCLASS(ClassGroup=(Custom),HideCategories =("Variable","Sockets","Tags","ComponentTick","ComponentReplication","Activation","Cooking","Collision","AssetUserData"), meta=(BlueprintSpawnableComponent))
@@ -19,7 +19,7 @@ public:
 	UHealthComponent();
 
 	UFUNCTION(BlueprintCallable,Category = "Damage and Health",meta =(ToolTip="Дай мне свой урон"))
-	void TakeDamage(float TakenDamage);
+	void TakeDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
     
 	void TakeHeal(float TakenDamage,float TakeHeal); // <-- this function isn't working for now. Maybe we can use it later
 
@@ -32,7 +32,7 @@ public:
     void SetMaxHealth(float HealthToSet);
     
 	UPROPERTY(BlueprintAssignable,BlueprintCallable,Category = "Damage and Health Dispatchers")
-	FDamageSignature Damage;
+	FHealthUpdateSignature OnUpdateHealth;
     UPROPERTY(BlueprintAssignable,BlueprintCallable,Category = "Damage and Health Dispatchers")
     FDeathSignature OnDeath;
     

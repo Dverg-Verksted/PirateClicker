@@ -14,12 +14,31 @@ class PIRATECLICKER_API AGoldStorageActor : public AActor
 #pragma region Default
     
 public:	
-	// Sets default values for this actor's properties
 	AGoldStorageActor();
 
+    UFUNCTION(BlueprintCallable,Category = "Gold settings")
+    int32 GetCurrentGold();
+    UFUNCTION(BlueprintCallable,Category = "Gold settings")
+    void SetCurrentGold(float GoldToSet);
+
+    void SetStorageStaticMesh();
+
+    void PirateMovingDirectionChange();
+
+private:
+    UPROPERTY(EditInstanceOnly,Category = "Storage Settings",meta = (ClampMin = "0",ToolTip = "Показывает текущее золото в хранилище"))
+    int32 CurrentGold = 0;
+
 protected:
-	// Called when the game starts or when spawned
-	virtual void BeginPlay() override;
+    virtual void BeginPlay() override;
+
+    UPROPERTY (EditInstanceOnly,Category = "Storage Settings",meta = (ToolTip = "Тут назначаем меш для хранилища"))
+    UStaticMeshComponent *StaticMeshToChange;
+
+    UStaticMesh* StorageStaticMesh;
+
+    UPROPERTY (EditInstanceOnly, Category = "Storage Settings",meta = (ToolTip = "Тут назначаем зону, где пират после сбора сундука будет идти на корабль"))
+    class UCapsuleComponent *TriggerCapsule ;
 
 #pragma endregion
 

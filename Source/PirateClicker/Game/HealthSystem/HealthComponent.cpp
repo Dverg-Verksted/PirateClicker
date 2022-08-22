@@ -2,6 +2,8 @@
 
 
 #include "HealthComponent.h"
+
+#include "GameFramework/Actor.h"
 #include "Library/PirateClickerLibrary.h"
 
 UHealthComponent::UHealthComponent()
@@ -14,12 +16,13 @@ void UHealthComponent::BeginPlay()
     CurrentHealth = MaxHealth;
     
 	if (!CHECKED(GetOwner() !=nullptr, "Owner is nullptr")) return;
-    Damage.AddDynamic(this,&UHealthComponent::TakeDamage);
+    GetOwner()->OnTakeAnyDamage.AddDynamic(this,&UHealthComponent::TakeDamage);
 }
 
-void UHealthComponent::TakeDamage(float TakenDamage)
+void UHealthComponent::TakeDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser)
 {
-    CurrentHealth = FMath::Clamp(CurrentHealth - TakenDamage,0.0f,MaxHealth);
+    CurrentHealth = FMath::Clamp(CurrentHealth - Damage,0.0f,MaxHealth);
+    OnUpdateHealth.Broadcast(CurrentHealth);
 	if (CurrentHealth <= 0.0f)
 	{
 		OnDeath.Broadcast();
