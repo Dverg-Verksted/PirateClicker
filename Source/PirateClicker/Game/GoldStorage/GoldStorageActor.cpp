@@ -27,10 +27,6 @@ void AGoldStorageActor::BeginPlay()
 
     if (!CHECKED(RootScene != nullptr, "Root scene is nullptr")) return;
     if (!CHECKED(MeshStorage != nullptr, "Mesh storage is nullptr")) return;
-
-    SetStorageStaticMesh();
-
-    
 }
 
 int32 AGoldStorageActor::GetCurrentGold()
@@ -42,14 +38,26 @@ void AGoldStorageActor::SetCurrentGold(float GoldToSet)
     CurrentGold = GoldToSet;
 }
 
-void AGoldStorageActor::SetStorageStaticMesh()
+#if WITH_EDITOR
+void AGoldStorageActor::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
-    if (!StaticMeshToChange) return;
-    
-    StaticMeshToChange->SetStaticMesh(StorageStaticMesh);
-}
-void AGoldStorageActor::PirateMovingDirectionChange()
-{
-    
-}
+    Super::PostEditChangeProperty(PropertyChangedEvent);
 
+    if (!PropertyChangedEvent.Property) return;
+    LOG_PIRATE(ELogRSVerb::Warning, FString::Printf(TEXT("Name Property[%s]"),*PropertyChangedEvent.Property->GetName()));
+
+    if (PropertyChangedEvent.Property->GetName()==TEXT("Mesh"))
+    {
+        if (!StaticMeshToChange) return;
+        MeshStorage->SetStaticMesh(StaticMeshToChange);
+    }
+    if (TypeCollision == ETypeCollision::Box)
+    {
+        
+    }
+    if (TypeCollision == ETypeCollision::Sphere)
+    {
+        
+    }
+}
+#endif

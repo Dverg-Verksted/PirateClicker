@@ -6,7 +6,15 @@
 #include "GameFramework/Actor.h"
 #include "GoldStorageActor.generated.h"
 
-UCLASS()
+
+UENUM()
+enum class ETypeCollision:uint8
+{
+    Box,
+    Sphere
+};
+
+UCLASS(HideCategories = ("Input","Replication","Actor","LOD","Cooking","Rendering"))
 class PIRATECLICKER_API AGoldStorageActor : public AActor
 {
 	GENERATED_BODY()
@@ -21,9 +29,11 @@ public:
     UFUNCTION(BlueprintCallable,Category = "Gold settings")
     void SetCurrentGold(float GoldToSet);
 
-    void SetStorageStaticMesh();
+#if WITH_EDITOR
 
-    void PirateMovingDirectionChange();
+    virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+
+#endif
 
 private:
     UPROPERTY(EditInstanceOnly,Category = "Storage Settings",meta = (ClampMin = "0",ToolTip = "Показывает текущее золото в хранилище"))
@@ -32,25 +42,24 @@ private:
 protected:
     virtual void BeginPlay() override;
 
-    UPROPERTY (EditInstanceOnly,Category = "Storage Settings",meta = (ToolTip = "Тут назначаем меш для хранилища"))
-    UStaticMeshComponent *StaticMeshToChange;
-
-    UStaticMesh* StorageStaticMesh;
-
-    UPROPERTY (EditInstanceOnly, Category = "Storage Settings",meta = (ToolTip = "Тут назначаем зону, где пират после сбора сундука будет идти на корабль"))
-    class UCapsuleComponent *TriggerCapsule ;
-
 #pragma endregion
 
 #pragma region Components
 
 protected:
+
+    UPROPERTY (EditInstanceOnly,Category = "Storage Settings",meta = (ToolTip = "Тут назначаем меш для хранилища"))
+    UStaticMesh *StaticMeshToChange;
     
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
     USceneComponent* RootScene;
 
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
     UStaticMeshComponent* MeshStorage;
+
+    UPROPERTY(EditInstanceOnly,Category = "Storage Settings", meta = (ToolTip = "Sphere Collision"))
+    ETypeCollision TypeCollision;
+
 
 #pragma endregion
 };
