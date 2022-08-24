@@ -90,6 +90,11 @@ private:
     // @private Array spawn pirates
     TArray<APirateActorBase*> ArrayPirates;
 
+    // @private Pirate Spawn Data Queue
+    TQueue<FDataPirateSpawn> QueueDataUnderWaves;
+
+    FTimerHandle TimerHandleSpawnPirate;
+
 #pragma endregion
 
 #pragma region Action
@@ -97,14 +102,26 @@ private:
 public:
 
     /**
-     * @public Start the spawn process
+     * @public Add data to spawn pirate
+     * @param1 FDataPirateSpawn
      **/
     UFUNCTION(BlueprintCallable, Category = "ASpawnerNPC | Action")
-    void RunSpawnPirate(const FSoftObjectPath& PirateAsset, const int32 CountSpawn);
-
+    void AddDataSpawn(const FDataPirateSpawn& DataPirateSpawn);
     
 private:
 
+    /**
+     * @private Checking the spawn queue
+     **/
+    void CheckedDataUnderWaves();
+    
+    /**
+      * @private Start the spawn process
+      * @param1 FSoftObjectPath
+      * @param2 int32
+     **/
+    void RunSpawnPirate(const FSoftObjectPath& PirateAsset, const int32 CountSpawn);
+    
     /**
      * @private Register pirate on dead
      * @param1 APirateActorBase*

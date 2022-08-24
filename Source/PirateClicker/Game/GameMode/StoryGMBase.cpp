@@ -55,17 +55,11 @@ void AStoryGMBase::RunWaves(int32 IndexWave)
 void AStoryGMBase::RunUnderWaves(FDataGameWave DataGameWave)
 {
     const TArray<FDataUnderWave>& ArrayUnderWaves = DataGameWave.ArrUnderWaves;
-    float Delay = 0.1f;
     for (const FDataUnderWave& UnderWave : ArrayUnderWaves)
     {
-        FTimerHandle TimerHandle;
-        GetWorldTimerManager().SetTimer(TimerHandle, [UnderWave]()
-        {
-            UnderWave.SoftPtrSpawnerNPC.Get()->RunSpawnPirate(UnderWave.PirateAsset, UnderWave.CountSpawn);
-        }, Delay, false);
-        LOG_PIRATE(ELogRSVerb::Display, FString::Printf(TEXT("Data under wave: [%s] | Delay: [%f]"),
-            *UnderWave.ToString(), Delay));
-        Delay += UnderWave.NextSpawnUnderWave;
+        ASpawnerNPC* SpawnerNPC = UnderWave.SoftPtrSpawnerNPC.Get();
+        if (!CHECKED(SpawnerNPC != nullptr, "Spawner NPC is nullptr")) continue;
+        SpawnerNPC->AddDataSpawn(FDataPirateSpawn(UnderWave.PirateAsset, UnderWave.CountSpawn, UnderWave.NextSpawnUnderWave));
     }
 }
 

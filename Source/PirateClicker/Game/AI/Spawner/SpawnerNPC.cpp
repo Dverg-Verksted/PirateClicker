@@ -96,6 +96,27 @@ void ASpawnerNPC::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedE
 
 #pragma region Action
 
+void ASpawnerNPC::AddDataSpawn(const FDataPirateSpawn& DataPirateSpawn)
+{
+    QueueDataUnderWaves.Enqueue(DataPirateSpawn);
+    CheckedDataUnderWaves();
+}
+
+void ASpawnerNPC::CheckedDataUnderWaves()
+{
+    if (GetWorldTimerManager().TimerExists(TimerHandleSpawnPirate) || QueueDataUnderWaves.IsEmpty()) return;
+
+    GetWorldTimerManager().SetTimer(TimerHandleSpawnPirate, [&]()
+    {
+        FDataPirateSpawn DataPirateSpawn;
+        QueueDataUnderWaves.Dequeue(DataPirateSpawn);
+        LOG_SPAWNER(ELogRSVerb::Display, FString::Printf(TEXT("Run data pirate spawn: [%s]"), *DataPirateSpawn.ToString()));
+        RunSpawnPirate(DataPirateSpawn.PirateAsset, DataPirateSpawn.CountSpawn);
+        GetWorldTimerManager().ClearTimer(TimerHandleSpawnPirate);
+        CheckedDataUnderWaves();
+    }, QueueDataUnderWaves.Peek()->DelayTimeSpawn, false);
+}
+
 void ASpawnerNPC::RunSpawnPirate(const FSoftObjectPath& PirateAsset, const int32 CountSpawn)
 {
     ArrSavedPosition = GeneratePositionPoint(CountSpawn);
