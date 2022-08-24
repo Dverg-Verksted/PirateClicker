@@ -24,6 +24,6 @@ for /D %%a in ("%ProjectRoot%\Plugins\*") do (
 
 
 "%UBTRelativePath%" -projectfiles -progress -project="%ProjectPath%"
-"%UBTRelativePath%" Development Win64 -Project="%ProjectPath%" -TargetType=Editor -Progress -NoEngineChanges -NoHotReloadFromIDE
+"%UBTRelativePath%" DebugGame Win64 -Project="%ProjectPath%" -TargetType=Editor -Progress -NoEngineChanges -NoHotReloadFromIDE
 
 PAUSE
