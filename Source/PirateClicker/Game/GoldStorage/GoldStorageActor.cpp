@@ -2,7 +2,6 @@
 
 
 #include "Game/GoldStorage/GoldStorageActor.h"
-
 #include "Components/StaticMeshComponent.h"
 #include "Library/PirateClickerLibrary.h"
 
@@ -27,6 +26,7 @@ void AGoldStorageActor::BeginPlay()
 
     if (!CHECKED(RootScene != nullptr, "Root scene is nullptr")) return;
     if (!CHECKED(MeshStorage != nullptr, "Mesh storage is nullptr")) return;
+    
 }
 
 int32 AGoldStorageActor::GetCurrentGold()
@@ -38,6 +38,18 @@ void AGoldStorageActor::SetCurrentGold(float GoldToSet)
     CurrentGold = GoldToSet;
 }
 
+void AGoldStorageActor::CollisionChecker()
+{
+    if (TypeCollision == ETypeCollision::Box)
+    {
+        MeshStorage->DestroyComponent();
+    }
+    if (TypeCollision == ETypeCollision::Sphere)
+    {
+        MeshStorage->DestroyComponent();
+    }
+}
+
 #if WITH_EDITOR
 void AGoldStorageActor::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
@@ -46,18 +58,16 @@ void AGoldStorageActor::PostEditChangeProperty(FPropertyChangedEvent& PropertyCh
     if (!PropertyChangedEvent.Property) return;
     LOG_PIRATE(ELogRSVerb::Warning, FString::Printf(TEXT("Name Property[%s]"),*PropertyChangedEvent.Property->GetName()));
 
-    if (PropertyChangedEvent.Property->GetName()==TEXT("Mesh"))
+    if (PropertyChangedEvent.Property->GetName()==TEXT("MeshToChange"))
     {
-        if (!StaticMeshToChange) return;
-        MeshStorage->SetStaticMesh(StaticMeshToChange);
+        if (!MeshToChange) return;
+        MeshStorage->SetStaticMesh(MeshToChange);
     }
-    if (TypeCollision == ETypeCollision::Box)
-    {
-        
-    }
-    if (TypeCollision == ETypeCollision::Sphere)
-    {
-        
-    }
+    
 }
 #endif
+
+void AGoldStorageActor::OnActorBeginOverlap(AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+{
+
+}
