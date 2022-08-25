@@ -6,6 +6,7 @@
 #include "Components/BillboardComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SphereComponent.h"
+#include "Components/SplineComponent.h"
 #include "Engine/AssetManager.h"
 #include "Game/AI/DataAsset/PirateDataAsset.h"
 #include "Game/AI/Pirates/PirateActorBase.h"
