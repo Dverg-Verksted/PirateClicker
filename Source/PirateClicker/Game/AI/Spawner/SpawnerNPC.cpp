@@ -129,7 +129,7 @@ void ASpawnerNPC::RunSpawnPirate(const FSoftObjectPath& PirateAsset, const int32
 void ASpawnerNPC::RegisterPirateDead(APirateActorBase* Pirate)
 {
     ArrayPirates.Remove(Pirate);
-    if (ArrayPirates.Num() == 0)
+    if (ArrayPirates.Num() == 0 && QueueDataUnderWaves.IsEmpty())
     {
         LOG_SPAWNER(ELogRSVerb::Display, "All pirate dead on spawner");
         OnAllPirateDead.Broadcast();

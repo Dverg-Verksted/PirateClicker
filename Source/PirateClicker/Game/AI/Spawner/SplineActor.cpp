@@ -2,7 +2,7 @@
 
 
 #include "Game/AI/Spawner/SplineActor.h"
-
+#include "Components/SplineComponent.h"
 #include "Library/PirateClickerLibrary.h"
 
 // Sets default values

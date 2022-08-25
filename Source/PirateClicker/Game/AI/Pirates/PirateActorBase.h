@@ -8,6 +8,7 @@
 #include "GameFramework/Actor.h"
 #include "PirateActorBase.generated.h"
 
+class UHealthComponent;
 class ASplineActor;
 class UMovePirateComponent;
 class UCapsuleComponent;
@@ -66,16 +67,30 @@ public:
     UFUNCTION(BlueprintCallable, Category = "APirateActorBase | Components")
     UMovePirateComponent* GetMovePirateComponent() const { return MovePirateComponent; }
 
+    /**
+     * @public Get health component
+     * @return UHealthComponent
+     **/
+    UFUNCTION(BlueprintCallable, Category = "APirateActorBase | Components")
+    UHealthComponent* GetHealthComponent() const { return HealthComponent; }
+
 protected:
-    // Root capsule collision
+    
+    // @protected Root capsule collision
     UPROPERTY(EditDefaultsOnly, Category = "Components")
     UCapsuleComponent* CapsuleCollision{nullptr};
 
+    // @protected Pirate skeletal mesh component
     UPROPERTY(EditDefaultsOnly, Category = "Components")
     USkeletalMeshComponent* PirateMesh{nullptr};
 
+    // @protected actor component for custom movement
     UPROPERTY(EditDefaultsOnly, Category = "Components")
     UMovePirateComponent* MovePirateComponent{nullptr};
+
+    // @protected actor component for health pirate
+    UPROPERTY(EditDefaultsOnly, Category = "Components")
+    UHealthComponent* HealthComponent{nullptr};
 
 #pragma endregion
 

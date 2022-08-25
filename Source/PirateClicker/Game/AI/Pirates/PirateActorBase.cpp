@@ -3,7 +3,9 @@
 #include "Game/AI/Pirates/PirateActorBase.h"
 #include "MovePirateComponent.h"
 #include "Components/CapsuleComponent.h"
+#include "Components/SplineComponent.h"
 #include "Game/AI/Spawner/SplineActor.h"
+#include "Game/HealthSystem/HealthComponent.h"
 #include "Game/Player/GamePC.h"
 #include "Kismet/GameplayStatics.h"
 #include "Library/PirateClickerLibrary.h"
@@ -25,6 +27,7 @@ APirateActorBase::APirateActorBase()
     PirateMesh->SetupAttachment(CapsuleCollision);
 
     MovePirateComponent = CreateDefaultSubobject<UMovePirateComponent>(FName("Movement component"));
+    HealthComponent = CreateDefaultSubobject<UHealthComponent>(FName("Health component"));
 }
 
 void APirateActorBase::InitParamsPirate(const FDataPirate& DataPirate, ASplineActor* NewSpline)

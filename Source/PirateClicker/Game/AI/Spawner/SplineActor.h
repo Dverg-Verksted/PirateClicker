@@ -3,9 +3,10 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "Components/SplineComponent.h"
 #include "GameFramework/Actor.h"
 #include "SplineActor.generated.h"
+
+class USplineComponent;
 
 UCLASS(HideCategories = ("Replication", "Collision", "Input", "Actor", "LOD", "Cooking"))
 class PIRATECLICKER_API ASplineActor : public AActor
