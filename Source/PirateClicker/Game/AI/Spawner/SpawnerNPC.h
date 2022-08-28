@@ -72,18 +72,16 @@ protected:
 #pragma region Data
 
 protected:
-    
     UPROPERTY(EditInstanceOnly, Category = "Settings SpawnerNPC", meta = (ClampMin = "30.0", ClampMax = "5000.0", ForceUnits = "cm"))
     float RadiusCollision = 100.0f;
 
     UPROPERTY(EditInstanceOnly, Category = "Settings SpawnerNPC", meta = (ClampMin = "1", ClampMax = "100"))
     int32 CountSpawnPosition = 5;
 
-    UPROPERTY(EditInstanceOnly,  Category = "Settings SpawnerNPC", meta = (ToolTip = "Набор указателей на золотохранилище для установки путей"))
+    UPROPERTY(EditInstanceOnly, Category = "Settings SpawnerNPC", meta = (ToolTip = "Набор указателей на золотохранилище для установки путей"))
     TArray<FDataSplineInfo> ArrDataSplineInfo;
 
 private:
-
     // @private Array saved position
     TArray<FVector> ArrSavedPosition;
 
@@ -100,28 +98,26 @@ private:
 #pragma region Action
 
 public:
-
     /**
      * @public Add data to spawn pirate
      * @param1 FDataPirateSpawn
      **/
     UFUNCTION(BlueprintCallable, Category = "ASpawnerNPC | Action")
     void AddDataSpawn(const FDataPirateSpawn& DataPirateSpawn);
-    
-private:
 
+private:
     /**
      * @private Checking the spawn queue
      **/
     void CheckedDataUnderWaves();
-    
+
     /**
-      * @private Start the spawn process
-      * @param1 FSoftObjectPath
-      * @param2 int32
+     * @private Start the spawn process
+     * @param1 FSoftObjectPath
+     * @param2 int32
      **/
     void RunSpawnPirate(const FSoftObjectPath& PirateAsset, const int32 CountSpawn);
-    
+
     /**
      * @private Register pirate on dead
      * @param1 APirateActorBase*
@@ -130,10 +126,10 @@ private:
     void RegisterPirateDead(APirateActorBase* Pirate);
 
     /**
-      * @private The process of spawning pirates after loading into memory
+     * @private The process of spawning pirates after loading into memory
      **/
     void OnSpawnPirateComplete(const FSoftObjectPath PirateAsset, const int32 CountSpawn);
-    
+
     /**
      * @private Generate point position spawn
      * @return TArray<FVector>
@@ -169,10 +165,8 @@ private:
 #pragma region Signature
 
 public:
-
     UPROPERTY(BlueprintAssignable)
     FAllPirateDeadSignature OnAllPirateDead;
 
 #pragma endregion
-    
 };

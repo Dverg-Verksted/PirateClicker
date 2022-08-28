@@ -1,6 +1,5 @@
 // This section is the property of the Dverg Verksted team
 
-
 #include "Game/GameMode/StoryGMLibrary.h"
 #include "Library/PirateClickerLibrary.h"
 
@@ -31,12 +30,13 @@ FName UStoryGMLibrary::FindRowNameGameRule(UDataTable* Table, const FString& Nam
     if (!CHECKED(Table != nullptr, "Data table is nullptr")) return NAME_None;
 
     TArray<FName> ArrRowName = Table->GetRowNames();
-    const auto FindElem = ArrRowName.FindByPredicate([Table, NameWorld](const FName& Row)
-    {
-        const FGameRule* Rule = Table->FindRow<FGameRule>(Row, "");
-        if (!Rule) return false;
-        return Rule->World.GetAssetName() == NameWorld;
-    });
+    const auto FindElem = ArrRowName.FindByPredicate(
+        [Table, NameWorld](const FName& Row)
+        {
+            const FGameRule* Rule = Table->FindRow<FGameRule>(Row, "");
+            if (!Rule) return false;
+            return Rule->World.GetAssetName() == NameWorld;
+        });
 
     return FindElem ? *FindElem : NAME_None;
 }

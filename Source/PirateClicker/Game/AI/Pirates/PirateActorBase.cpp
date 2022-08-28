@@ -1,11 +1,11 @@
 // This section is the property of the Dverg Verksted team
 
 #include "Game/AI/Pirates/PirateActorBase.h"
+#include "AbilitySystemComponent.h"
 #include "MovePirateComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SplineComponent.h"
 #include "Game/AI/Spawner/SplineActor.h"
-#include "Game/HealthSystem/HealthComponent.h"
 #include "Game/Player/GamePC.h"
 #include "Kismet/GameplayStatics.h"
 #include "Library/PirateClickerLibrary.h"
@@ -27,7 +27,7 @@ APirateActorBase::APirateActorBase()
     PirateMesh->SetupAttachment(CapsuleCollision);
 
     MovePirateComponent = CreateDefaultSubobject<UMovePirateComponent>(FName("Movement component"));
-    HealthComponent = CreateDefaultSubobject<UHealthComponent>(FName("Health component"));
+    AbilitySystem = CreateDefaultSubobject<UAbilitySystemComponent>(FName("Ability system component"));
 }
 
 void APirateActorBase::InitParamsPirate(const FDataPirate& DataPirate, ASplineActor* NewSpline)
@@ -48,6 +48,8 @@ void APirateActorBase::BeginPlay()
     if (!CHECKED(MovePirateComponent != nullptr, "Movement pirate component is nullptr")) return;
     if (!CHECKED(TargetSpline != nullptr, "Target spline is nullptr")) return;
     if (!CHECKED(TargetSpline->GetSpline() != nullptr, "Spline is nullptr")) return;
+    if (!CHECKED(AbilitySystem != nullptr, "AbilitySystem is nullptr")) return;
+    AbilitySystem->OnDeath.AddDynamic(this, &ThisClass::RegisterDeadActor);
 
     AGamePC* GamePC = Cast<AGamePC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
     if (!CHECKED(GamePC != nullptr, "Game player controller is nullptr")) return;
@@ -73,18 +75,22 @@ void APirateActorBase::SetupStateBrain(const EStateBrain& NewState)
 {
     if (!CHECKED(StateBrain != NewState, "Current state brain == New State")) return;
 
-    LOG_PIRATE(ELogRSVerb::Display, FString::Printf(TEXT("New brain state: [%s]"),
-        *UEnum::GetValueAsString(NewState)));
+    LOG_PIRATE(ELogRSVerb::Display, FString::Printf(TEXT("New brain state: [%s]"), *UEnum::GetValueAsString(NewState)));
     StateBrain = NewState;
 }
 
 void APirateActorBase::RegisterHitActor(AActor* HitActor)
 {
-    if (this == HitActor)
+    if (this == HitActor && AbilitySystem)
     {
-        OnPirateDead.Broadcast(this);
-        SetLifeSpan(1.0f);
+        AbilitySystem->TakeDamage(HitActor, 10.0f, nullptr, nullptr, nullptr);
     }
+}
+
+void APirateActorBase::RegisterDeadActor()
+{
+    if (GetWorldTimerManager().TimerExists(TimerHandle_LifeSpanExpired)) return;
+    SetLifeSpan(1.0f);
 }
 
 void APirateActorBase::NextMoveToPoint()

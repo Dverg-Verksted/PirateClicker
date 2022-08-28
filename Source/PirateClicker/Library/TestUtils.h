@@ -20,9 +20,9 @@ struct TestPayload
     float Tolerance = KINDA_SMALL_NUMBER;
 };
 
-#define ENUM_LOOP_START(TYPE, EnumElem)                                        \
-    for (int32 Index = 0; Index < StaticEnum<TYPE>()->NumEnums() - 1; ++Index) \
-    {                                                                          \
+#define ENUM_LOOP_START(TYPE, EnumElem)                                                                                                                                                                \
+    for (int32 Index = 0; Index < StaticEnum<TYPE>()->NumEnums() - 1; ++Index)                                                                                                                         \
+    {                                                                                                                                                                                                  \
         const auto EnumElem = static_cast<TYPE>(StaticEnum<TYPE>()->GetValueByIndex(Index));
 #define ENUM_LOOP_END }
 
@@ -105,8 +105,7 @@ int32 GetAxisBindingIndexByName(UInputComponent* InputComp, const FString& AxisN
 {
     if (!InputComp) return INDEX_NONE;
 
-    const int32 AxisIndex = InputComp->AxisBindings.IndexOfByPredicate(
-        [=](const FInputAxisBinding& AxisBind) { return AxisBind.AxisName.ToString().Equals(AxisName); });
+    const int32 AxisIndex = InputComp->AxisBindings.IndexOfByPredicate([=](const FInputAxisBinding& AxisBind) { return AxisBind.AxisName.ToString().Equals(AxisName); });
 
     return AxisIndex;
 }
@@ -152,6 +151,6 @@ void PausePressed(UInputComponent* InputComponent)
     DoInputAction(InputComponent, "ToggleGamePause", EKeys::P);
 }
 
-}  // namespace Test
+}  // namespace TestUtils
 
 #endif

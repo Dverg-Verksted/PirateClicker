@@ -27,11 +27,7 @@ struct FDataPirate
     UPROPERTY(EditDefaultsOnly, meta = (ToolTip = "Скорость поворота пирата", ClampMin = "0.1", ClampMax = "5.0", ForceUnits = "x"))
     float SpeedRotate{1.0f};
 
-    FString ToString() const
-    {
-        return FString::Printf(TEXT("Health: [%i] | Speed Move: [%f] m/s | Speed Rotate: [%f]"),
-            this->Health, this->SpeedMove, this->SpeedRotate);
-    }
+    FString ToString() const { return FString::Printf(TEXT("Health: [%i] | Speed Move: [%f] m/s | Speed Rotate: [%f]"), this->Health, this->SpeedMove, this->SpeedRotate); }
 };
 
 /**
@@ -43,17 +39,14 @@ class PIRATECLICKER_API UPirateDataAsset : public UDataAsset
     GENERATED_BODY()
 
 public:
-
     /**
      * @public Get data pirate
      * @return FDataPirate
      **/
     UFUNCTION(BlueprintCallable, Category = "UPirateDataAsset | GetData")
     FORCEINLINE FDataPirate GetDataPirate() const { return DataPirate; }
-    
-private:
 
+private:
     UPROPERTY(EditAnywhere, Category = "Settings Pirate", meta = (ShowOnlyInnerProperties))
     FDataPirate DataPirate;
-    
 };

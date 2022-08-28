@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Game/GameMode/StoryGMBase.h"
 #include "Game/HUD/DebugHUD.h"
 #include "GameHUD.generated.h"
 
@@ -23,4 +24,13 @@ protected:
 
     /** Overridable native event for when play begins for this actor. */
     virtual void BeginPlay() override;
+
+#pragma region DataHUD
+
+private:
+
+    UPROPERTY()
+    AStoryGMBase* StoryGM;
+
+#pragma endregion
 };

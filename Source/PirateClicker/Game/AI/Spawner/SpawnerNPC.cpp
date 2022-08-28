@@ -107,15 +107,18 @@ void ASpawnerNPC::CheckedDataUnderWaves()
 {
     if (GetWorldTimerManager().TimerExists(TimerHandleSpawnPirate) || QueueDataUnderWaves.IsEmpty()) return;
 
-    GetWorldTimerManager().SetTimer(TimerHandleSpawnPirate, [&]()
-    {
-        FDataPirateSpawn DataPirateSpawn;
-        QueueDataUnderWaves.Dequeue(DataPirateSpawn);
-        LOG_SPAWNER(ELogRSVerb::Display, FString::Printf(TEXT("Run data pirate spawn: [%s]"), *DataPirateSpawn.ToString()));
-        RunSpawnPirate(DataPirateSpawn.PirateAsset, DataPirateSpawn.CountSpawn);
-        GetWorldTimerManager().ClearTimer(TimerHandleSpawnPirate);
-        CheckedDataUnderWaves();
-    }, QueueDataUnderWaves.Peek()->DelayTimeSpawn, false);
+    GetWorldTimerManager().SetTimer(
+        TimerHandleSpawnPirate,
+        [&]()
+        {
+            FDataPirateSpawn DataPirateSpawn;
+            QueueDataUnderWaves.Dequeue(DataPirateSpawn);
+            LOG_SPAWNER(ELogRSVerb::Display, FString::Printf(TEXT("Run data pirate spawn: [%s]"), *DataPirateSpawn.ToString()));
+            RunSpawnPirate(DataPirateSpawn.PirateAsset, DataPirateSpawn.CountSpawn);
+            GetWorldTimerManager().ClearTimer(TimerHandleSpawnPirate);
+            CheckedDataUnderWaves();
+        },
+        QueueDataUnderWaves.Peek()->DelayTimeSpawn, false);
 }
 
 void ASpawnerNPC::RunSpawnPirate(const FSoftObjectPath& PirateAsset, const int32 CountSpawn)
@@ -140,8 +143,7 @@ void ASpawnerNPC::RegisterPirateDead(APirateActorBase* Pirate)
 void ASpawnerNPC::OnSpawnPirateComplete(const FSoftObjectPath PirateAsset, const int32 CountSpawn)
 {
     const UPirateDataAsset* PirateDataAsset = LoadObject<UPirateDataAsset>(nullptr, *(PirateAsset.ToString()));
-    if (!CHECKED(PirateDataAsset != nullptr, FString::Printf(TEXT("Load pirate data asset failed for path: [%s]"),
-        *PirateAsset.ToString()))) return;
+    if (!CHECKED(PirateDataAsset != nullptr, FString::Printf(TEXT("Load pirate data asset failed for path: [%s]"), *PirateAsset.ToString()))) return;
 
     const TSubclassOf<APirateActorBase> SubClassPirate = PirateDataAsset->GetDataPirate().SubClassPirate;
     if (!CHECKED(SubClassPirate.GetDefaultObject() != nullptr, FString::Printf(TEXT("Sub class failed for path: [%s]"), *PirateAsset.ToString()))) return;

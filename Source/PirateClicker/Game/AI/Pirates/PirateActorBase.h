@@ -8,7 +8,7 @@
 #include "GameFramework/Actor.h"
 #include "PirateActorBase.generated.h"
 
-class UHealthComponent;
+class UAbilitySystemComponent;
 class ASplineActor;
 class UMovePirateComponent;
 class UCapsuleComponent;
@@ -23,7 +23,6 @@ class PIRATECLICKER_API APirateActorBase : public AActor
 #pragma region Default
 
 public:
-    
     // Sets default values for this actor's properties
     APirateActorBase();
 
@@ -36,7 +35,6 @@ public:
     void InitParamsPirate(const FDataPirate& DataPirate, ASplineActor* NewSpline);
 
 protected:
-    
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
 
@@ -45,7 +43,6 @@ protected:
 #pragma region Components
 
 public:
-
     /**
      * @public Get capsule collision
      * @return UCapsuleComponent
@@ -68,14 +65,13 @@ public:
     UMovePirateComponent* GetMovePirateComponent() const { return MovePirateComponent; }
 
     /**
-     * @public Get health component
-     * @return UHealthComponent
+     * @public Get ability component
+     * @return UMovePirateComponent
      **/
     UFUNCTION(BlueprintCallable, Category = "APirateActorBase | Components")
-    UHealthComponent* GetHealthComponent() const { return HealthComponent; }
+    UAbilitySystemComponent* GetAbilityComponent() const { return AbilitySystem; }
 
 protected:
-    
     // @protected Root capsule collision
     UPROPERTY(EditDefaultsOnly, Category = "Components")
     UCapsuleComponent* CapsuleCollision{nullptr};
@@ -90,14 +86,13 @@ protected:
 
     // @protected actor component for health pirate
     UPROPERTY(EditDefaultsOnly, Category = "Components")
-    UHealthComponent* HealthComponent{nullptr};
+    UAbilitySystemComponent* AbilitySystem;
 
 #pragma endregion
 
 #pragma region DataPirate
 
 protected:
-    
     // @protected Target spline
     UPROPERTY()
     ASplineActor* TargetSpline;
@@ -110,9 +105,8 @@ protected:
 #pragma endregion
 
 #pragma region Action
-    
+
 public:
-    
     /**
      * @public Change target spline for pirate
      * @param1 ASplineActor*
@@ -127,14 +121,19 @@ public:
     void SetupStateBrain(const EStateBrain& NewState);
 
 private:
-
     /**
      * @private Register hit on actor
      * @param1 AActor*
      **/
     UFUNCTION()
     void RegisterHitActor(AActor* HitActor);
-    
+
+    /**
+     * @private Register death
+     **/
+    UFUNCTION()
+    void RegisterDeadActor();
+
     /**
      * @private Next Move To Point
      **/
@@ -146,7 +145,6 @@ private:
 #pragma region Signature
 
 public:
-
     // @public Signature on the death of a pirate
     UPROPERTY(BlueprintAssignable)
     FPirateDeadSignature OnPirateDead;

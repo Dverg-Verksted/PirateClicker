@@ -21,10 +21,7 @@ struct FDataSplineInfo
     UPROPERTY(VisibleAnywhere, meta = (ForceUnits = "cm"))
     float Distance{0.0f};
 
-    ASplineActor* GetRandomSplineActor()
-    {
-        return this->SplineActors[FMath::RandRange(0, SplineActors.Num() - 1)];
-    }
+    ASplineActor* GetRandomSplineActor() { return this->SplineActors[FMath::RandRange(0, SplineActors.Num() - 1)]; }
 };
 
 USTRUCT(BlueprintType)
@@ -44,14 +41,12 @@ struct FDataPirateSpawn
     UPROPERTY(EditAnywhere, BlueprintReadOnly)
     float DelayTimeSpawn{0.1f};
 
-    FDataPirateSpawn(){}
-    FDataPirateSpawn(const FSoftObjectPath& NewPirateAsset, const int32 NewCountSpawn, const float NewDelayTimeSpawn): PirateAsset(NewPirateAsset),
-    CountSpawn(NewCountSpawn), DelayTimeSpawn(NewDelayTimeSpawn)
-    {}
-    FDataPirateSpawn(const FDataPirateSpawn& Other)
+    FDataPirateSpawn() {}
+    FDataPirateSpawn(const FSoftObjectPath& NewPirateAsset, const int32 NewCountSpawn, const float NewDelayTimeSpawn)
+        : PirateAsset(NewPirateAsset), CountSpawn(NewCountSpawn), DelayTimeSpawn(NewDelayTimeSpawn)
     {
-        *this = Other;
     }
+    FDataPirateSpawn(const FDataPirateSpawn& Other) { *this = Other; }
     void operator=(const FDataPirateSpawn& Other)
     {
         this->PirateAsset = Other.PirateAsset;
@@ -59,10 +54,5 @@ struct FDataPirateSpawn
         this->DelayTimeSpawn = Other.DelayTimeSpawn;
     }
 
-    FString ToString() const
-    {
-        return FString::Printf(TEXT("PirateAsset: [%s] | CountSpawn: [%i] | Delay time: [%f]"),
-            *PirateAsset.ToString(), CountSpawn, DelayTimeSpawn);
-    }
-    
+    FString ToString() const { return FString::Printf(TEXT("PirateAsset: [%s] | CountSpawn: [%i] | Delay time: [%f]"), *PirateAsset.ToString(), CountSpawn, DelayTimeSpawn); }
 };

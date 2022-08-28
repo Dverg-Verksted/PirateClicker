@@ -37,8 +37,8 @@ struct FDataUnderWave
 
     FString ToString() const
     {
-        return FString::Printf(TEXT("Spawner NPC: [%s] | Pirate Asset: [%s] | Count spawn: [%i] | Next spawn delay: [%f]"),
-            *this->SoftPtrSpawnerNPC.ToString(), *this->PirateAsset.ToString(), this->CountSpawn, this->NextSpawnUnderWave);
+        return FString::Printf(TEXT("Spawner NPC: [%s] | Pirate Asset: [%s] | Count spawn: [%i] | Next spawn delay: [%f]"), *this->SoftPtrSpawnerNPC.ToString(), *this->PirateAsset.ToString(),
+            this->CountSpawn, this->NextSpawnUnderWave);
     }
 };
 

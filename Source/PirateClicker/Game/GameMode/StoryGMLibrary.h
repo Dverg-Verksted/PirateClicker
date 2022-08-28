@@ -13,12 +13,11 @@
 UCLASS()
 class PIRATECLICKER_API UStoryGMLibrary : public UBlueprintFunctionLibrary
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 #pragma region Checked
-    
-public:
 
+public:
     /**
      * @public Checks the validity of data on waves
      * @param1 TArray<FDataGameWave>
@@ -31,7 +30,6 @@ public:
 #pragma region FindData
 
 public:
-
     /**
      * @public Checks the validity of data on waves
      * @param1 UDataTable

@@ -16,11 +16,11 @@ enum class EStateMovement : uint8
 UENUM()
 enum class EStateBrain : uint8
 {
-    NoneInit        UMETA(DisplayName = "Не иницилизированный пират"),
-    Idle            UMETA(DisplayName = "Стоит"),
-    WalkToStorage   UMETA(DisplayName = "Идет до золота"),
-    WalkToBack      UMETA(DisplayName = "Идет обратно"),
-    WaitFor         UMETA(DisplayName = "Отдыхает"),
+    NoneInit UMETA(DisplayName = "Не иницилизированный пират"),
+    Idle UMETA(DisplayName = "Стоит"),
+    WalkToStorage UMETA(DisplayName = "Идет до золота"),
+    WalkToBack UMETA(DisplayName = "Идет обратно"),
+    WaitFor UMETA(DisplayName = "Отдыхает"),
 };
 
 USTRUCT()

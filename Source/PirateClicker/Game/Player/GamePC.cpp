@@ -1,6 +1,5 @@
 // This section is the property of the Dverg Verksted team
 
-
 #include "Game/Player/GamePC.h"
 
 #include "DrawDebugHelpers.h"
@@ -53,8 +52,8 @@ void AGamePC::RegisterTouchPressed(ETouchIndex::Type FingerIndex, FVector Locati
     GetHitResultUnderFinger(FingerIndex, ECollisionChannel::ECC_Visibility, false, HitResult);
     if (HitResult.bBlockingHit && HitResult.GetActor())
     {
-        LOG_PIRATE(ELogRSVerb::Display, FString::Printf(TEXT("Pressed touch index: [%s] | Location: [%s] | Actor: [%s]"),
-            *UEnum::GetValueAsString(FingerIndex), *HitResult.Location.ToString(), *HitResult.GetActor()->GetName()));
+        LOG_PIRATE(ELogRSVerb::Display,
+            FString::Printf(TEXT("Pressed touch index: [%s] | Location: [%s] | Actor: [%s]"), *UEnum::GetValueAsString(FingerIndex), *HitResult.Location.ToString(), *HitResult.GetActor()->GetName()));
         TouchLocation = HitResult.Location;
         OnHitActor.Broadcast(HitResult.GetActor());
     }
