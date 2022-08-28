@@ -2,6 +2,7 @@
 
 #include "Game/HUD/GameHUD.h"
 #include "Library/PirateClickerLibrary.h"
+#include "UI/GameUserWidgetBase.h"
 
 #if UE_EDITOR || UE_BUILD_DEVELOPMENT
 static TAutoConsoleVariable<bool> EnableD_HUD(TEXT("Pirate.ShowDebugHUD"), false, TEXT("Enable the display of debag information on HUD from canvas panel"), ECVF_Cheat);
@@ -39,4 +40,29 @@ void AGameHUD::BeginPlay()
 
     StoryGM = Cast<AStoryGMBase>(GetWorld()->GetAuthGameMode());
     if (!CHECKED(StoryGM != nullptr, "Story game mode is nullptr")) return;
+
+    GameWidgets.Add(EStateGame::InProgress, CreateWidget<UGameUserWidgetBase>(GetWorld(), ProgressWidget));
+    for (auto& Pair : GameWidgets)
+    {
+        Pair.Value->AddToViewport();
+        Pair.Value->SetVisibility(ESlateVisibility::Collapsed);
+    }
+
+    StoryGM->OnChangeStateGame.AddDynamic(this, &ThisClass::RegisterChangedStateGame);
+}
+
+void AGameHUD::RegisterChangedStateGame(const EStateGame& NewState)
+{
+    if (!CHECKED(GameWidgets.Contains(NewState), FString::Printf(TEXT("NewState: [%s] doesn't contains in GameWidgets"),
+        *UEnum::GetValueAsString(NewState)))) return;
+
+    if (ActiveWidget)
+    {
+        ActiveWidget->SetVisibility(ESlateVisibility::Collapsed);
+    }
+
+    ActiveWidget = GameWidgets[NewState];
+    ActiveWidget->SetVisibility(ESlateVisibility::Visible);
+    LOG_PIRATE(ELogRSVerb::Display, FString::Printf(TEXT("State: [%s] | Active widget: [%s]"),
+        *UEnum::GetValueAsString(NewState), *ActiveWidget->GetName()));
 }

@@ -12,6 +12,7 @@ class AGamePC;
 class UDataTable;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FChangeStateGameSignature, const EStateGame&, StateGame);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FRunGameWaveSignature, int32, NumWave);
 
 /**
  * @class Story GM
@@ -48,11 +49,41 @@ public:
      **/
     UFUNCTION(BlueprintCallable, Category = "AStoryGMBase | Action")
     void ChangeStateGame(const EStateGame& NewState);
+
+    /**
+     * @public Get count waves
+     * @return int32
+     **/
+    UFUNCTION(BlueprintCallable, Category = "AStoryGMBase | Action")
+    int32 GetCountWaves() const { return (GameRule) ? GameRule->ArrWaves.Num() : INDEX_NONE; }
+
+    /**
+     * @public Get count waves
+     * @return int32
+     **/
+    UFUNCTION(BlueprintCallable, Category = "AStoryGMBase | Action")
+    int32 GetNumRunWave() const { return TargetIndexWave; }
     
 private:
-    
+
+    /**
+     * @public Run waves
+     * @param1 int32
+     **/
     void RunWaves(int32 IndexWave);
+
+    /**
+      * @public Run under waves
+      * @param1 FDataGameWave
+     **/
     void RunUnderWaves(FDataGameWave DataGameWave);
+    
+    /**
+      * @public Registration of the spawner shutdown event
+      * @param1 ASpawnerNPC
+     **/
+    UFUNCTION()
+    void RegisterCompleteWorkSpawner(ASpawnerNPC* SpawnerNPC);
 
 #pragma endregion
 
@@ -78,6 +109,11 @@ private:
     // @private Current state game
     EStateGame StateGame = EStateGame::Loading;
 
+    int32 TargetIndexWave{0};
+
+    // @private Storing the status of NPC spawners
+    TMap<ASpawnerNPC*, bool> StatusSpawners;
+
 #pragma endregion
 
 #pragma region Signature
@@ -86,6 +122,9 @@ public:
 
     UPROPERTY(BlueprintAssignable)
     FChangeStateGameSignature OnChangeStateGame;
+
+    UPROPERTY(BlueprintAssignable)
+    FRunGameWaveSignature OnRunGameWave;
 
 #pragma endregion 
     

@@ -48,6 +48,9 @@ struct FDataGameWave
 {
     GENERATED_BODY()
 
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ToolTip = "Название волны"))
+    FText NameWave{FText::FromString("Name Wave #")};
+
     UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ToolTip = "Задержки перед стартом волны", ClampMin = "1.0", ForceUnits = "s"))
     float DelayForStart = 1.0f;
 

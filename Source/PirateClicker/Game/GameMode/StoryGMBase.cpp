@@ -46,7 +46,8 @@ void AStoryGMBase::StartPlay()
     GetWorldTimerManager().SetTimer(TimerHandle, [&]()
     {
         ChangeStateGame(EStateGame::InProgress);
-        RunWaves(0);
+        TargetIndexWave = 0;
+        RunWaves(TargetIndexWave);
     }, 1.0f, false);
 }
 
@@ -71,7 +72,9 @@ void AStoryGMBase::RunWaves(int32 IndexWave)
     FTimerHandle TimerHandle;
     FTimerDelegate TimerDelegate;
     TimerDelegate.BindUObject(this, &ThisClass::RunUnderWaves, DataGameWave);
+    StatusSpawners.Empty();
     GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, DataGameWave.DelayForStart, false);
+    OnRunGameWave.Broadcast(IndexWave);
 }
 
 void AStoryGMBase::RunUnderWaves(FDataGameWave DataGameWave)
@@ -82,7 +85,29 @@ void AStoryGMBase::RunUnderWaves(FDataGameWave DataGameWave)
         ASpawnerNPC* SpawnerNPC = UnderWave.SoftPtrSpawnerNPC.Get();
         if (!CHECKED(SpawnerNPC != nullptr, "Spawner NPC is nullptr")) continue;
         SpawnerNPC->AddDataSpawn(FDataPirateSpawn(UnderWave.PirateAsset, UnderWave.CountSpawn, UnderWave.NextSpawnUnderWave));
+        if (!StatusSpawners.Contains(SpawnerNPC))
+        {
+            StatusSpawners.Add(SpawnerNPC, false);
+            SpawnerNPC->OnCompleteWorkSpawner.AddDynamic(this, &ThisClass::RegisterCompleteWorkSpawner);
+        }
     }
+}
+
+void AStoryGMBase::RegisterCompleteWorkSpawner(ASpawnerNPC* SpawnerNPC)
+{
+    if (!CHECKED(SpawnerNPC != nullptr, "Spawner NPC is nullptr")) return;
+    if (!CHECKED(StatusSpawners.Contains(SpawnerNPC), FString::Printf(TEXT("SpawnerNPC: [%s] is doesn't content"), *SpawnerNPC->GetName()))) return;
+    if (!CHECKED(StatusSpawners[SpawnerNPC] == false, FString::Printf(TEXT("SpawnerNPC: [%s] is already complete"), *SpawnerNPC->GetName()))) return;
+
+    StatusSpawners[SpawnerNPC] = true;
+    SpawnerNPC->OnCompleteWorkSpawner.RemoveDynamic(this, &ThisClass::RegisterCompleteWorkSpawner);
+
+    for (const auto& Pair : StatusSpawners)
+    {
+        if (!Pair.Value) return;
+    }
+    
+    RunWaves(++TargetIndexWave);
 }
 
 #pragma endregion

@@ -136,7 +136,7 @@ void ASpawnerNPC::RegisterPirateDead(APirateActorBase* Pirate)
     if (ArrayPirates.Num() == 0 && QueueDataUnderWaves.IsEmpty())
     {
         LOG_SPAWNER(ELogRSVerb::Display, "All pirate dead on spawner");
-        OnAllPirateDead.Broadcast();
+        OnCompleteWorkSpawner.Broadcast(this);
     }
 }
 

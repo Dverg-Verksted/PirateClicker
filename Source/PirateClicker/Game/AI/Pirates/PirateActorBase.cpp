@@ -91,6 +91,7 @@ void APirateActorBase::RegisterDeadActor()
 {
     if (GetWorldTimerManager().TimerExists(TimerHandle_LifeSpanExpired)) return;
     SetLifeSpan(1.0f);
+    OnPirateDead.Broadcast(this);
 }
 
 void APirateActorBase::NextMoveToPoint()

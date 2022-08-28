@@ -13,7 +13,7 @@ class USphereComponent;
 
 #define LOG_SPAWNER(LogVerb, Text) Print_LogSpawner(LogVerb, Text, __LINE__, __FUNCTION__)
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FAllPirateDeadSignature);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCompleteWorkSpawnerSignature, class ASpawnerNPC*, SpawnerNPC);
 
 UCLASS(HideCategories = ("Replication", "Collision", "Input", "Actor", "LOD", "Cooking"))
 class PIRATECLICKER_API ASpawnerNPC : public AActor
@@ -166,7 +166,7 @@ private:
 
 public:
     UPROPERTY(BlueprintAssignable)
-    FAllPirateDeadSignature OnAllPirateDead;
+    FCompleteWorkSpawnerSignature OnCompleteWorkSpawner;
 
 #pragma endregion
 };
