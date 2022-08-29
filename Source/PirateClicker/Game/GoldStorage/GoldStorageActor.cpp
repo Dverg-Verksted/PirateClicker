@@ -2,7 +2,7 @@
 
 
 #include "Game/GoldStorage/GoldStorageActor.h"
-#include "Components/StaticMeshComponent.h"
+#include "EnvironmentQuery/EnvQueryTypes.h"
 #include "Library/PirateClickerLibrary.h"
 
 // Sets default values
@@ -17,6 +17,16 @@ AGoldStorageActor::AGoldStorageActor()
 
     MeshStorage = CreateDefaultSubobject<UStaticMeshComponent>(FName("Mesh storage component"));
     MeshStorage->SetupAttachment(RootScene);
+
+    BoxCollision = CreateDefaultSubobject<UBoxComponent>(FName("Box Collision"));
+    BoxCollision->SetupAttachment(RootScene);
+    BoxCollision->SetBoxExtent(FVector(BoxCollisionSize));
+    BoxCollision->SetCollisionProfileName("Trigger");
+
+    SphereCollision = CreateDefaultSubobject<USphereComponent>(FName("Sphere Collision"));
+    SphereCollision->SetupAttachment(RootScene);
+    SphereCollision->SetSphereRadius(SphereCollisionRadius);
+    SphereCollision->SetCollisionProfileName("Trigger");
     
 }
 
@@ -38,18 +48,6 @@ void AGoldStorageActor::SetCurrentGold(float GoldToSet)
     CurrentGold = GoldToSet;
 }
 
-void AGoldStorageActor::CollisionChecker()
-{
-    if (TypeCollision == ETypeCollision::Box)
-    {
-        MeshStorage->DestroyComponent();
-    }
-    if (TypeCollision == ETypeCollision::Sphere)
-    {
-        MeshStorage->DestroyComponent();
-    }
-}
-
 #if WITH_EDITOR
 void AGoldStorageActor::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
 {
@@ -63,11 +61,43 @@ void AGoldStorageActor::PostEditChangeProperty(FPropertyChangedEvent& PropertyCh
         if (!MeshToChange) return;
         MeshStorage->SetStaticMesh(MeshToChange);
     }
+
+    if (PropertyChangedEvent.Property->GetName()==TEXT("BoxCollisionSize"))
+    {
+        BoxCollision->SetBoxExtent(FVector(BoxCollisionSize));
+    }
+    if (PropertyChangedEvent.Property->GetName()==TEXT("SphereCollisionRadius"))
+    {
+        SphereCollision->SetSphereRadius(SphereCollisionRadius);
+    }
+
+    CollisionChecker();
     
 }
 #endif
 
-void AGoldStorageActor::OnActorBeginOverlap(AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AGoldStorageActor::RegisterActorBeginOverlap(AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
 {
 
 }
+
+void AGoldStorageActor::CollisionChecker()
+{
+    switch (TypeCollision)
+    {
+        case ETypeCollision::Box:
+        {
+            BoxCollision->SetVisibility(true);
+            SphereCollision->SetVisibility(false);
+            break;
+        }
+        case ETypeCollision::Sphere:
+        {
+            BoxCollision->SetVisibility(false);
+            SphereCollision->SetVisibility(true);
+            break;
+        }
+    }
+}
+
+
