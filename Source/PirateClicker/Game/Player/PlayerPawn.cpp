@@ -12,8 +12,8 @@
 APlayerPawn::APlayerPawn()
 {
     // Set this pawn to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-    PrimaryActorTick.bCanEverTick = false;
-    PrimaryActorTick.bStartWithTickEnabled = false;
+    PrimaryActorTick.bCanEverTick = true;
+    PrimaryActorTick.bStartWithTickEnabled = true;
     PrimaryActorTick.bAllowTickOnDedicatedServer = false;
 
     RootScene = CreateDefaultSubobject<USceneComponent>(FName("Root scene component"));
@@ -41,6 +41,11 @@ void APlayerPawn::BeginPlay()
     if (!CHECKED(SphereCollision != nullptr, "Sphere Collision is nullptr")) return;
     if (!CHECKED(SpringArm != nullptr, "Spring Arm is nullptr")) return;
     if (!CHECKED(Camera != nullptr, "Camera is nullptr")) return;
+}
+
+void APlayerPawn::Tick(float DeltaSeconds)
+{
+    Super::Tick(DeltaSeconds);
 }
 
 #if WITH_EDITOR

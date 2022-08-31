@@ -7,6 +7,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "StoryGMBase.generated.h"
 
+class AGoldStorageActor;
 class APlayerPawn;
 class AGamePC;
 class UDataTable;
@@ -58,11 +59,25 @@ public:
     int32 GetCountWaves() const { return (GameRule) ? GameRule->ArrWaves.Num() : INDEX_NONE; }
 
     /**
-     * @public Get count waves
+     * @public Get number to run wave
      * @return int32
      **/
     UFUNCTION(BlueprintCallable, Category = "AStoryGMBase | Action")
     int32 GetNumRunWave() const { return TargetIndexWave; }
+
+    /**
+     * @public Get count gold on Level
+     * @return int32
+     **/
+    UFUNCTION(BlueprintCallable, Category = "AStoryGMBase | Action")
+    int32 GetCountGoldOnLevel() const;
+
+    /**
+     * @public Get pawn player
+     * @return APlayerPawn*
+     **/
+    UFUNCTION(BlueprintCallable, Category = "AStoryGMBase | Action")
+    APlayerPawn* GetPlayerPawn() const { return PlayerPawn; }
     
 private:
 
@@ -84,6 +99,12 @@ private:
      **/
     UFUNCTION()
     void RegisterCompleteWorkSpawner(ASpawnerNPC* SpawnerNPC);
+
+    /**
+      * @public Complete the gameplay and summarize the game
+      * @param1 int32
+     **/
+    void CompleteGameProcess();
 
 #pragma endregion
 
@@ -113,6 +134,9 @@ private:
 
     // @private Storing the status of NPC spawners
     TMap<ASpawnerNPC*, bool> StatusSpawners;
+
+    // @private Storing the status of NPC spawners
+    TArray<AGoldStorageActor*> ArrayGoldStorage;
 
 #pragma endregion
 

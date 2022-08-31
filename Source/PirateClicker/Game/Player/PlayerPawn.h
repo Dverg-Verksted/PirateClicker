@@ -10,6 +10,14 @@ class UCameraComponent;
 class USpringArmComponent;
 class USphereComponent;
 
+UENUM()
+enum class EStateMoveCamera: uint8
+{
+    Stop,
+    Right,
+    Left
+};
+
 UCLASS(HideCategories = ("Replication", "Collision", "Input", "Actor", "LOD", "Cooking"))
 class PIRATECLICKER_API APlayerPawn : public APawn
 {
@@ -25,11 +33,25 @@ protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
 
+    /** 
+     *	Function called every frame on this Actor. Override this function to implement custom logic to be executed every frame.
+     *	Note that Tick is disabled by default, and you will need to check PrimaryActorTick.bCanEverTick is set to true to enable it.
+     *
+     *	@param	DeltaSeconds	Game time elapsed during last frame modified by the time dilation
+     */
+    virtual void Tick(float DeltaSeconds) override;
+
 #if WITH_EDITOR
 
     virtual void PostEditChangeChainProperty(FPropertyChangedChainEvent& PropertyChangedEvent) override;
 
 #endif
+
+#pragma endregion
+
+#pragma region Action
+
+
 
 #pragma endregion
 
@@ -96,6 +118,10 @@ private:
     // @private Rotation
     UPROPERTY(EditInstanceOnly, Category = "Settings player pawn", meta = (DisplayName = "Поворот камеры"))
     FRotator RotatePawn{FRotator::ZeroRotator};
+
+    // @private Speed rotate camera
+    UPROPERTY(EditInstanceOnly, Category = "Settings player pawn", meta = (DisplayName = "Скорость поворота камеры", ClampMin = "1.0"))
+    float SpeedRotate{0.0f};
 
 #pragma endregion
     

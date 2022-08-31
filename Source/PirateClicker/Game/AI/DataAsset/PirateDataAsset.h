@@ -16,7 +16,7 @@ struct FDataPirate
     UPROPERTY(EditAnywhere)
     TSubclassOf<APirateActorBase> SubClassPirate;
 
-    UPROPERTY(EditAnywhere, meta = (ClampMin = "1", DisplayName = "Жизни пирата"))
+    UPROPERTY(EditAnywhere, meta = (ClampMin = "1", ToolTip = "Жизни пирата"))
     int32 Health{100};
 
     // Movement speed pirate cm/sec

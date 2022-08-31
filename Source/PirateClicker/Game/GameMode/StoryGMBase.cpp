@@ -2,8 +2,10 @@
 
 #include "StoryGMBase.h"
 #include "StoryGMLibrary.h"
+#include "Algo/Accumulate.h"
 #include "Engine/DataTable.h"
 #include "Game/AI/Spawner/SpawnerNPC.h"
+#include "Game/GoldStorage/GoldStorageActor.h"
 #include "Game/Player/GamePC.h"
 #include "Game/Player/PlayerPawn.h"
 #include "Library/PirateClickerLibrary.h"
@@ -23,6 +25,9 @@ void AStoryGMBase::StartPlay()
 {
     Super::StartPlay();
 
+    UPirateClickerLibrary::FindAllActors(GetWorld(), ArrayGoldStorage);
+    if (!CHECKED(ArrayGoldStorage.Num() != 0, "Array gold storage is empty and equal ZERO")) return;
+    
     GamePC = Cast<AGamePC>(GetWorld()->GetFirstPlayerController());
     if (!CHECKED(GamePC != nullptr, "GamePC is nullptr")) return;
     
@@ -106,8 +111,37 @@ void AStoryGMBase::RegisterCompleteWorkSpawner(ASpawnerNPC* SpawnerNPC)
     {
         if (!Pair.Value) return;
     }
-    
-    RunWaves(++TargetIndexWave);
+
+    ++TargetIndexWave;
+    const TArray<FDataGameWave>& ArrayWaves = GameRule->ArrWaves;
+    if (ArrayWaves.IsValidIndex(TargetIndexWave))
+    {
+        RunWaves(TargetIndexWave);
+    }
+    else
+    {
+        CompleteGameProcess();
+    }
+}
+
+void AStoryGMBase::CompleteGameProcess()
+{
+    if (GetCountGoldOnLevel() == 0)
+    {
+        ChangeStateGame(EStateGame::GameLose);
+    }
+    else
+    {
+        ChangeStateGame(EStateGame::GameWin);
+    }
+}
+
+int32 AStoryGMBase::GetCountGoldOnLevel() const
+{
+    return Algo::Accumulate(ArrayGoldStorage, 0, [](int32 Result, AGoldStorageActor* Storage)
+    {
+        return Storage ? Result + Storage->GetCurrentGold() : Result;
+    });
 }
 
 #pragma endregion
