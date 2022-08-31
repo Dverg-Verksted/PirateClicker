@@ -4,6 +4,7 @@
 #include "Game/GoldStorage/GoldStorageActor.h"
 #include "EnvironmentQuery/EnvQueryTypes.h"
 #include "Library/PirateClickerLibrary.h"
+#include "Game/AI/Pirates/PirateActorBase.h"
 
 // Sets default values
 AGoldStorageActor::AGoldStorageActor()
@@ -21,12 +22,10 @@ AGoldStorageActor::AGoldStorageActor()
     BoxCollision = CreateDefaultSubobject<UBoxComponent>(FName("Box Collision"));
     BoxCollision->SetupAttachment(RootScene);
     BoxCollision->SetBoxExtent(FVector(BoxCollisionSize));
-    BoxCollision->SetCollisionProfileName("Trigger");
 
     SphereCollision = CreateDefaultSubobject<USphereComponent>(FName("Sphere Collision"));
     SphereCollision->SetupAttachment(RootScene);
     SphereCollision->SetSphereRadius(SphereCollisionRadius);
-    SphereCollision->SetCollisionProfileName("Trigger");
     
 }
 
@@ -36,7 +35,17 @@ void AGoldStorageActor::BeginPlay()
 
     if (!CHECKED(RootScene != nullptr, "Root scene is nullptr")) return;
     if (!CHECKED(MeshStorage != nullptr, "Mesh storage is nullptr")) return;
+
+    if (isBoxCollision)
+    {
+        SphereCollision->DestroyComponent();
+    }
+    else
+    {
+        BoxCollision->DestroyComponent();
+    }
     
+    OnActorBeginOverlap.AddDynamic(this, &ThisClass::RegisterActorBeginOverlap);
 }
 
 int32 AGoldStorageActor::GetCurrentGold()
@@ -76,9 +85,13 @@ void AGoldStorageActor::PostEditChangeProperty(FPropertyChangedEvent& PropertyCh
 }
 #endif
 
-void AGoldStorageActor::RegisterActorBeginOverlap(AActor* OtherActor, UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult)
+void AGoldStorageActor::RegisterActorBeginOverlap(AActor* OverlappedActor,AActor* OtherActor)
 {
-
+    
+    if (OtherActor)
+    {
+        APirateActorBase().SetupStateBrain(EStateBrain::WalkToBack);
+    }
 }
 
 void AGoldStorageActor::CollisionChecker()
@@ -87,17 +100,17 @@ void AGoldStorageActor::CollisionChecker()
     {
         case ETypeCollision::Box:
         {
+            isBoxCollision = true;
             BoxCollision->SetVisibility(true);
             SphereCollision->SetVisibility(false);
             break;
         }
         case ETypeCollision::Sphere:
         {
+            isBoxCollision = false;
             BoxCollision->SetVisibility(false);
             SphereCollision->SetVisibility(true);
             break;
         }
     }
 }
-
-

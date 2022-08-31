@@ -41,6 +41,8 @@ private:
     UPROPERTY(EditInstanceOnly,Category = "Storage component settings",meta = (ClampMin = "0",ToolTip = "Показывает текущее золото в хранилище"))
     int32 CurrentGold = 0;
 
+    bool isBoxCollision;
+
 protected:
     virtual void BeginPlay() override;
 
@@ -77,7 +79,8 @@ protected:
 #pragma region Action
 
 private:
-    void RegisterActorBeginOverlap(class AActor* OtherActor, class UPrimitiveComponent* OtherComp, int32 OtherBodyIndex, bool bFromSweep, const FHitResult& SweepResult);
+    UFUNCTION()
+    void RegisterActorBeginOverlap(AActor* OverlappedActor,AActor* OtherActor);
     void CollisionChecker();
 
 #pragma endregion
