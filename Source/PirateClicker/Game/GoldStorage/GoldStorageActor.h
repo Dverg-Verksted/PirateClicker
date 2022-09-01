@@ -8,6 +8,7 @@
 #include "GameFramework/Actor.h"
 #include "GoldStorageActor.generated.h"
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGoldStorageEmptySignature);
 
 UENUM()
 enum class ETypeCollision:uint8
@@ -30,6 +31,7 @@ public:
     int32 GetCurrentGold();
     UFUNCTION(BlueprintCallable,Category = "Gold settings",meta = (ToolTip = "Функция назначает текущее кол-во сундуков"))
     void SetCurrentGold(float GoldToSet);
+
 
 #if WITH_EDITOR
 
@@ -78,6 +80,9 @@ protected:
 #pragma endregion
 #pragma region Action
 
+protected:
+    UPROPERTY(BlueprintCallable,Category = "Gold storage.",meta = (ToolTip = "Делегат, который вызывается, когда хранилище пустое"))
+    FGoldStorageEmptySignature GoldStorageEmpty;
 private:
     UFUNCTION()
     void RegisterActorBeginOverlap(AActor* OverlappedActor,AActor* OtherActor);

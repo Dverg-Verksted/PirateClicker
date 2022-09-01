@@ -93,6 +93,13 @@ void AGoldStorageActor::RegisterActorBeginOverlap(AActor* OverlappedActor,AActor
         if (!CHECKED(PirateBase != nullptr, "Cast to class APirateActorBase is fail")) return;
         PirateBase->SetupStateBrain(EStateBrain::WalkToBack);
     }
+
+    if (CurrentGold == 0)
+        GoldStorageEmpty.Broadcast();
+    else
+        CurrentGold -=1;
+
+    UE_LOG(LogTemp,Warning,TEXT("CurrentGold : [%i]"),CurrentGold);
 }
 
 void AGoldStorageActor::CollisionChecker()
