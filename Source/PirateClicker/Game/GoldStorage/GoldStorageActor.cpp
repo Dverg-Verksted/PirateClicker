@@ -87,10 +87,11 @@ void AGoldStorageActor::PostEditChangeProperty(FPropertyChangedEvent& PropertyCh
 
 void AGoldStorageActor::RegisterActorBeginOverlap(AActor* OverlappedActor,AActor* OtherActor)
 {
-    
-    if (OtherActor)
+    if (OtherActor && OtherActor->IsA(APirateActorBase::StaticClass()))
     {
-        APirateActorBase().SetupStateBrain(EStateBrain::WalkToBack);
+        APirateActorBase* PirateBase = Cast<APirateActorBase>(OtherActor);
+        if (!CHECKED(PirateBase != nullptr, "Cast to class APirateActorBase is fail")) return;
+        PirateBase->SetupStateBrain(EStateBrain::WalkToBack);
     }
 }
 

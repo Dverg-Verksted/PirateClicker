@@ -56,8 +56,7 @@ void APirateActorBase::BeginPlay()
 
     GamePC->OnHitActor.AddDynamic(this, &ThisClass::RegisterHitActor);
     MovePirateComponent->OnStopedMove.AddDynamic(this, &ThisClass::NextMoveToPoint);
-    StateBrain = EStateBrain::WalkToStorage;
-    NextMoveToPoint();
+    SetupStateBrain(EStateBrain::WalkToStorage);
 }
 
 #pragma endregion
@@ -77,6 +76,12 @@ void APirateActorBase::SetupStateBrain(const EStateBrain& NewState)
 
     LOG_PIRATE(ELogRSVerb::Display, FString::Printf(TEXT("New brain state: [%s]"), *UEnum::GetValueAsString(NewState)));
     StateBrain = NewState;
+
+    MovePirateComponent->StopMovement();
+    if (StateBrain == EStateBrain::WalkToBack || StateBrain == EStateBrain::WalkToStorage)
+    {
+        NextMoveToPoint();
+    }
 }
 
 void APirateActorBase::RegisterHitActor(AActor* HitActor)
@@ -101,15 +106,15 @@ void APirateActorBase::NextMoveToPoint()
     if (StateBrain == EStateBrain::WalkToStorage)
     {
         TargetIndex++;
-        FVector NewPos = TargetSpline->GetSpline()->GetLocationAtSplinePoint(TargetIndex, ESplineCoordinateSpace::World);
-        NewPos.Z += CapsuleCollision->GetScaledCapsuleHalfHeight();
-        MovePirateComponent->GoAIMove(NewPos);
     }
-
     if (StateBrain == EStateBrain::WalkToBack)
     {
         TargetIndex--;
     }
+
+    FVector NewPos = TargetSpline->GetSpline()->GetLocationAtSplinePoint(TargetIndex, ESplineCoordinateSpace::World);
+    NewPos.Z += CapsuleCollision->GetScaledCapsuleHalfHeight();
+    MovePirateComponent->GoAIMove(NewPos);
 }
 
 #pragma endregion

@@ -54,6 +54,11 @@ private:
 #pragma region DataMove
 
 public:
+    
+    /**
+     * @public Go to movement position for AI
+     * @param1 FVector
+     **/
     UFUNCTION(BlueprintCallable)
     void GoAIMove(const FVector& ToPos);
 
@@ -63,6 +68,12 @@ public:
      * @return bool
      **/
     bool RunMovement(const FMovementData& NewData);
+
+    /**
+     * @public Stop movement
+     **/
+    UFUNCTION(BlueprintCallable)
+    void StopMovement();
 
 protected:
     // Movement speed pirate cm/sec

@@ -99,6 +99,12 @@ bool UMovePirateComponent::RunMovement(const FMovementData& NewData)
     return true;
 }
 
+void UMovePirateComponent::StopMovement()
+{
+    StateMovement = EStateMovement::Off;
+    OnStopedMove.Broadcast();
+}
+
 void UMovePirateComponent::CalculateMove(float DeltaTime)
 {
     if (TargetData.TimeMoveDelta < EndTime)
@@ -109,8 +115,7 @@ void UMovePirateComponent::CalculateMove(float DeltaTime)
     }
     else
     {
-        StateMovement = EStateMovement::Off;
-        OnStopedMove.Broadcast();
+        StopMovement();
     }
 }
 
