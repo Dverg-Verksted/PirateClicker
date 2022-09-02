@@ -11,7 +11,7 @@ class USpringArmComponent;
 class USphereComponent;
 
 UENUM()
-enum class EStateMoveCamera: uint8
+enum class EStateMoveCamera : uint8
 {
     Stop,
     Right,
@@ -24,7 +24,7 @@ class PIRATECLICKER_API APlayerPawn : public APawn
     GENERATED_BODY()
 
 #pragma region Default
-    
+
 public:
     // Sets default values for this pawn's properties
     APlayerPawn();
@@ -33,7 +33,7 @@ protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
 
-    /** 
+    /**
      *	Function called every frame on this Actor. Override this function to implement custom logic to be executed every frame.
      *	Note that Tick is disabled by default, and you will need to check PrimaryActorTick.bCanEverTick is set to true to enable it.
      *
@@ -51,14 +51,11 @@ protected:
 
 #pragma region Action
 
-
-
 #pragma endregion
 
 #pragma region Components
 
 public:
-    
     /**
      * @public Get root scene component
      * @return USceneComponent*
@@ -88,7 +85,6 @@ public:
     FORCEINLINE UCameraComponent* GetCamera() const { return Camera; }
 
 private:
-    
     // @private Root scene component
     UPROPERTY(EditDefaultsOnly, Category = "Components")
     USceneComponent* RootScene{nullptr};
@@ -110,7 +106,6 @@ private:
 #pragma region DataPlayerPawn
 
 private:
-
     // @private Camera distance
     UPROPERTY(EditInstanceOnly, Category = "Settings player pawn", meta = (DisplayName = "Дистанция камеры", ClampMin = "30.0"))
     float CameraDistance{300.0f};
@@ -124,5 +119,4 @@ private:
     float SpeedRotate{0.0f};
 
 #pragma endregion
-    
 };

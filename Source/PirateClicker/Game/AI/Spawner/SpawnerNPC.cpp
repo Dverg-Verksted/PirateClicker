@@ -21,7 +21,7 @@ static TAutoConsoleVariable<bool> EnableD_SpawnerNPC(TEXT("Pirate.ShowDebugSpawn
 
 #pragma region Default
 
-void ASpawnerNPC::Print_LogSpawner(const ELogRSVerb LogVerb, const FString Text, const int Line, const char* Function) const
+void ASpawnerNPC::Print_LogSpawner(const ELogVerb LogVerb, const FString Text, const int Line, const char* Function) const
 {
     UPirateClickerLibrary::Print_Log(LogVerb, FString::Printf(TEXT("Name: [%s] | %s"), *GetName(), *Text), Line, Function);
 }
@@ -113,7 +113,7 @@ void ASpawnerNPC::CheckedDataUnderWaves()
         {
             FDataPirateSpawn DataPirateSpawn;
             QueueDataUnderWaves.Dequeue(DataPirateSpawn);
-            LOG_SPAWNER(ELogRSVerb::Display, FString::Printf(TEXT("Run data pirate spawn: [%s]"), *DataPirateSpawn.ToString()));
+            LOG_SPAWNER(ELogVerb::Display, FString::Printf(TEXT("Run data pirate spawn: [%s]"), *DataPirateSpawn.ToString()));
             RunSpawnPirate(DataPirateSpawn.PirateAsset, DataPirateSpawn.CountSpawn);
             GetWorldTimerManager().ClearTimer(TimerHandleSpawnPirate);
             CheckedDataUnderWaves();
@@ -135,7 +135,7 @@ void ASpawnerNPC::RegisterPirateDead(APirateActorBase* Pirate)
     ArrayPirates.Remove(Pirate);
     if (ArrayPirates.Num() == 0 && QueueDataUnderWaves.IsEmpty())
     {
-        LOG_SPAWNER(ELogRSVerb::Display, "All pirate dead on spawner");
+        LOG_SPAWNER(ELogVerb::Display, "All pirate dead on spawner");
         OnCompleteWorkSpawner.Broadcast(this);
     }
 }
@@ -171,7 +171,7 @@ TArray<FVector> ASpawnerNPC::GeneratePositionPoint(const int32 CountSpawn) const
     {
         const FVector ResCalcPos = CalculateRandomPositionSpawn();
         Result.Add(ResCalcPos);
-        LOG_SPAWNER(ELogRSVerb::Display, FString::Printf(TEXT("Index #%i - [%s]"), i, *ResCalcPos.ToString()));
+        LOG_SPAWNER(ELogVerb::Display, FString::Printf(TEXT("Index #%i - [%s]"), i, *ResCalcPos.ToString()));
     }
     return Result;
 }

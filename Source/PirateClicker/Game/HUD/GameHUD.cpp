@@ -53,8 +53,7 @@ void AGameHUD::BeginPlay()
 
 void AGameHUD::RegisterChangedStateGame(const EStateGame& NewState)
 {
-    if (!CHECKED(GameWidgets.Contains(NewState), FString::Printf(TEXT("NewState: [%s] doesn't contains in GameWidgets"),
-        *UEnum::GetValueAsString(NewState)))) return;
+    if (!CHECKED(GameWidgets.Contains(NewState), FString::Printf(TEXT("NewState: [%s] doesn't contains in GameWidgets"), *UEnum::GetValueAsString(NewState)))) return;
 
     if (ActiveWidget)
     {
@@ -63,6 +62,5 @@ void AGameHUD::RegisterChangedStateGame(const EStateGame& NewState)
 
     ActiveWidget = GameWidgets[NewState];
     ActiveWidget->SetVisibility(ESlateVisibility::Visible);
-    LOG_PIRATE(ELogRSVerb::Display, FString::Printf(TEXT("State: [%s] | Active widget: [%s]"),
-        *UEnum::GetValueAsString(NewState), *ActiveWidget->GetName()));
+    LOG_PIRATE(ELogVerb::Display, FString::Printf(TEXT("State: [%s] | Active widget: [%s]"), *UEnum::GetValueAsString(NewState), *ActiveWidget->GetName()));
 }

@@ -11,27 +11,26 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGoldStorageEmptySignature);
 
 UENUM()
-enum class ETypeCollision:uint8
+enum class ETypeCollision : uint8
 {
     Box UMETA(DisplayName = "Боксовая коллизия"),
     Sphere UMETA(DisplayName = "Сферовая коллизия")
 };
 
-UCLASS(HideCategories = ("Input","Replication","Actor","LOD","Cooking","Rendering","Collision"))
+UCLASS(HideCategories = ("Input", "Replication", "Actor", "LOD", "Cooking", "Rendering", "Collision"))
 class PIRATECLICKER_API AGoldStorageActor : public AActor
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 #pragma region Default
-    
-public:	
-	AGoldStorageActor();
 
-    UFUNCTION(BlueprintCallable,Category = "Gold settings",meta = (ToolTip = "Функция отдает текущее кол-во сундуков"))
+public:
+    AGoldStorageActor();
+
+    UFUNCTION(BlueprintCallable, Category = "Gold settings", meta = (ToolTip = "Функция отдает текущее кол-во сундуков"))
     int32 GetCurrentGold();
-    UFUNCTION(BlueprintCallable,Category = "Gold settings",meta = (ToolTip = "Функция назначает текущее кол-во сундуков"))
+    UFUNCTION(BlueprintCallable, Category = "Gold settings", meta = (ToolTip = "Функция назначает текущее кол-во сундуков"))
     void SetCurrentGold(float GoldToSet);
-
 
 #if WITH_EDITOR
 
@@ -40,7 +39,7 @@ public:
 #endif
 
 private:
-    UPROPERTY(EditInstanceOnly,Category = "Storage component settings",meta = (ClampMin = "0",ToolTip = "Показывает текущее золото в хранилище"))
+    UPROPERTY(EditInstanceOnly, Category = "Storage component settings", meta = (ClampMin = "0", ToolTip = "Показывает текущее золото в хранилище"))
     int32 CurrentGold = 0;
 
     bool isBoxCollision;
@@ -52,40 +51,42 @@ protected:
 #pragma region Components
 
 protected:
-    
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
     USceneComponent* RootScene;
-    
-    UPROPERTY (EditInstanceOnly,Category = "Storage component settings",meta = (ToolTip = "Тут назначаем меш для хранилища"))
-    UStaticMesh *MeshToChange;
+
+    UPROPERTY(EditInstanceOnly, Category = "Storage component settings", meta = (ToolTip = "Тут назначаем меш для хранилища"))
+    UStaticMesh* MeshToChange;
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
     UStaticMeshComponent* MeshStorage;
 
-    
-    UPROPERTY(EditInstanceOnly,Category = "Storage component settings", meta = (ToolTip = "Тут назначаем коллизию, которая будет отправилять пирата обратно"))
+    UPROPERTY(EditInstanceOnly, Category = "Storage component settings", meta = (ToolTip = "Тут назначаем коллизию, которая будет отправилять пирата обратно"))
     ETypeCollision TypeCollision;
 
-    UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category = "Storage component settings")
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Storage component settings")
     UBoxComponent* BoxCollision;
-    UPROPERTY(EditInstanceOnly,Category = "Storage component settings",meta = (ClampMin = "1", EditCondition = "TypeCollision == ETypeCollision::Box",EditConditionHides,
-        ToolTip = "Тут назначаем размер боксовой коллизии"));
-    float BoxCollisionSize {100.f}; 
+    UPROPERTY(EditInstanceOnly, Category = "Storage component settings",
+        meta = (ClampMin = "1", EditCondition = "TypeCollision == ETypeCollision::Box", EditConditionHides, ToolTip = "Тут назначаем размер боксовой коллизии"));
+    float BoxCollisionSize{100.f};
 
-    UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category = "Storage component settings")
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Storage component settings")
     USphereComponent* SphereCollision;
-    UPROPERTY(EditInstanceOnly,Category = "Storage component settings",meta = (Clampmin = "1",EditCondition = "TypeCollision == ETypeCollision::Sphere",EditConditionHides,
-        ToolTip = "Тут назначаем радиус сферовой коллизии"));
-    float SphereCollisionRadius {100.0f}; 
+    UPROPERTY(EditInstanceOnly, Category = "Storage component settings",
+        meta = (Clampmin = "1", EditCondition = "TypeCollision == ETypeCollision::Sphere", EditConditionHides, ToolTip = "Тут назначаем радиус сферовой коллизии"));
+    float SphereCollisionRadius{100.0f};
 
 #pragma endregion
 #pragma region Action
 
 protected:
-    UPROPERTY(BlueprintCallable,Category = "Gold storage.",meta = (ToolTip = "Делегат, который вызывается, когда хранилище пустое"))
+    UPROPERTY(BlueprintCallable, Category = "Gold storage.", meta = (ToolTip = "Делегат, который вызывается, когда хранилище пустое"))
     FGoldStorageEmptySignature GoldStorageEmpty;
+
+    UFUNCTION(BlueprintImplementableEvent)
+    void OnChangeGoldCount();
+
 private:
     UFUNCTION()
-    void RegisterActorBeginOverlap(AActor* OverlappedActor,AActor* OtherActor);
+    void RegisterActorBeginOverlap(AActor* OverlappedActor, AActor* OtherActor);
     void CollisionChecker();
 
 #pragma endregion

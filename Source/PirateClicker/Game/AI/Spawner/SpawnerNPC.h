@@ -48,7 +48,7 @@ private:
     /**
      * @public Write a log
      **/
-    void Print_LogSpawner(const ELogRSVerb LogVerb, const FString Text, const int Line, const char* Function) const;
+    void Print_LogSpawner(const ELogVerb LogVerb, const FString Text, const int Line, const char* Function) const;
 
 #pragma endregion
 

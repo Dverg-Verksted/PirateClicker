@@ -27,7 +27,7 @@ public:
     /**
      * @public Write a log
      **/
-    static void Print_Log(const ELogRSVerb LogVerb, const FString Text, const int Line, const char* Function);
+    static void Print_Log(const ELogVerb LogVerb, const FString Text, const int Line, const char* Function);
 
     /**
      * @public Check the condition

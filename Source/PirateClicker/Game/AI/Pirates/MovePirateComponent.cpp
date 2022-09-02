@@ -29,7 +29,7 @@ void UMovePirateComponent::BeginPlay()
     if (!CHECKED(OwnerPirate != nullptr, "Owner pirate is nullptr")) return;
 }
 
-void UMovePirateComponent::Print_LogMovement(const ELogRSVerb LogVerb, const FString Text, const int Line, const char* Function) const
+void UMovePirateComponent::Print_LogMovement(const ELogVerb LogVerb, const FString Text, const int Line, const char* Function) const
 {
     if (!CHECKED(OwnerPirate != nullptr, "Owner pirate is nullptr")) return;
 

@@ -1,6 +1,5 @@
 // This section is the property of the Dverg Verksted team
 
-
 #include "Game/GoldStorage/GoldStorageActor.h"
 #include "EnvironmentQuery/EnvQueryTypes.h"
 #include "Library/PirateClickerLibrary.h"
@@ -26,12 +25,11 @@ AGoldStorageActor::AGoldStorageActor()
     SphereCollision = CreateDefaultSubobject<USphereComponent>(FName("Sphere Collision"));
     SphereCollision->SetupAttachment(RootScene);
     SphereCollision->SetSphereRadius(SphereCollisionRadius);
-    
 }
 
 void AGoldStorageActor::BeginPlay()
 {
-	Super::BeginPlay();
+    Super::BeginPlay();
 
     if (!CHECKED(RootScene != nullptr, "Root scene is nullptr")) return;
     if (!CHECKED(MeshStorage != nullptr, "Mesh storage is nullptr")) return;
@@ -44,7 +42,7 @@ void AGoldStorageActor::BeginPlay()
     {
         BoxCollision->DestroyComponent();
     }
-    
+
     OnActorBeginOverlap.AddDynamic(this, &ThisClass::RegisterActorBeginOverlap);
 }
 
@@ -63,29 +61,28 @@ void AGoldStorageActor::PostEditChangeProperty(FPropertyChangedEvent& PropertyCh
     Super::PostEditChangeProperty(PropertyChangedEvent);
 
     if (!PropertyChangedEvent.Property) return;
-    LOG_PIRATE(ELogRSVerb::Warning, FString::Printf(TEXT("Name Property[%s]"),*PropertyChangedEvent.Property->GetName()));
+    LOG_PIRATE(ELogVerb::Warning, FString::Printf(TEXT("Name Property[%s]"), *PropertyChangedEvent.Property->GetName()));
 
-    if (PropertyChangedEvent.Property->GetName()==TEXT("MeshToChange"))
+    if (PropertyChangedEvent.Property->GetName() == TEXT("MeshToChange"))
     {
         if (!MeshToChange) return;
         MeshStorage->SetStaticMesh(MeshToChange);
     }
 
-    if (PropertyChangedEvent.Property->GetName()==TEXT("BoxCollisionSize"))
+    if (PropertyChangedEvent.Property->GetName() == TEXT("BoxCollisionSize"))
     {
         BoxCollision->SetBoxExtent(FVector(BoxCollisionSize));
     }
-    if (PropertyChangedEvent.Property->GetName()==TEXT("SphereCollisionRadius"))
+    if (PropertyChangedEvent.Property->GetName() == TEXT("SphereCollisionRadius"))
     {
         SphereCollision->SetSphereRadius(SphereCollisionRadius);
     }
 
     CollisionChecker();
-    
 }
 #endif
 
-void AGoldStorageActor::RegisterActorBeginOverlap(AActor* OverlappedActor,AActor* OtherActor)
+void AGoldStorageActor::RegisterActorBeginOverlap(AActor* OverlappedActor, AActor* OtherActor)
 {
     if (OtherActor && OtherActor->IsA(APirateActorBase::StaticClass()))
     {
@@ -95,11 +92,16 @@ void AGoldStorageActor::RegisterActorBeginOverlap(AActor* OverlappedActor,AActor
     }
 
     if (CurrentGold == 0)
+    {
         GoldStorageEmpty.Broadcast();
+    }
     else
-        CurrentGold -=1;
+    {
+        OnChangeGoldCount();
+        CurrentGold -= 1;
+    }
 
-    UE_LOG(LogTemp,Warning,TEXT("CurrentGold : [%i]"),CurrentGold);
+    LOG_PIRATE(ELogVerb::Display, FString::Printf(TEXT("CurrentGold : [%i]"), CurrentGold));
 }
 
 void AGoldStorageActor::CollisionChecker()

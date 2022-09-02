@@ -5,7 +5,7 @@
 
 // Custom log verbosity
 UENUM(BlueprintType)
-enum class ELogRSVerb : uint8
+enum class ELogVerb : uint8
 {
     Display,
     Warning,

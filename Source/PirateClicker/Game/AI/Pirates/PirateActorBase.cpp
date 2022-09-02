@@ -74,7 +74,7 @@ void APirateActorBase::SetupStateBrain(const EStateBrain& NewState)
 {
     if (!CHECKED(StateBrain != NewState, "Current state brain == New State")) return;
 
-    LOG_PIRATE(ELogRSVerb::Display, FString::Printf(TEXT("New brain state: [%s]"), *UEnum::GetValueAsString(NewState)));
+    LOG_PIRATE(ELogVerb::Display, FString::Printf(TEXT("New brain state: [%s]"), *UEnum::GetValueAsString(NewState)));
     StateBrain = NewState;
 
     MovePirateComponent->StopMovement();

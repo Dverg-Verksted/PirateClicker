@@ -36,14 +36,13 @@ protected:
 #pragma region Action
 
 public:
-
     /**
      * @public Get state game
      * @return EStateGame
      **/
     UFUNCTION(BlueprintCallable, Category = "AStoryGMBase | Action")
     FORCEINLINE EStateGame GetStateGame() const { return StateGame; }
-    
+
     /**
      * @public Change state game
      * @param1 EStateGame
@@ -78,9 +77,8 @@ public:
      **/
     UFUNCTION(BlueprintCallable, Category = "AStoryGMBase | Action")
     APlayerPawn* GetPlayerPawn() const { return PlayerPawn; }
-    
-private:
 
+private:
     /**
      * @public Run waves
      * @param1 int32
@@ -88,21 +86,21 @@ private:
     void RunWaves(int32 IndexWave);
 
     /**
-      * @public Run under waves
-      * @param1 FDataGameWave
+     * @public Run under waves
+     * @param1 FDataGameWave
      **/
     void RunUnderWaves(FDataGameWave DataGameWave);
-    
+
     /**
-      * @public Registration of the spawner shutdown event
-      * @param1 ASpawnerNPC
+     * @public Registration of the spawner shutdown event
+     * @param1 ASpawnerNPC
      **/
     UFUNCTION()
     void RegisterCompleteWorkSpawner(ASpawnerNPC* SpawnerNPC);
 
     /**
-      * @public Complete the gameplay and summarize the game
-      * @param1 int32
+     * @public Complete the gameplay and summarize the game
+     * @param1 int32
      **/
     void CompleteGameProcess();
 
@@ -111,7 +109,6 @@ private:
 #pragma region DataGameMode
 
 private:
-
     // @private Data table for game rule
     UPROPERTY()
     UDataTable* GameRuleDataTable{nullptr};
@@ -143,13 +140,11 @@ private:
 #pragma region Signature
 
 public:
-
     UPROPERTY(BlueprintAssignable)
     FChangeStateGameSignature OnChangeStateGame;
 
     UPROPERTY(BlueprintAssignable)
     FRunGameWaveSignature OnRunGameWave;
 
-#pragma endregion 
-    
+#pragma endregion
 };

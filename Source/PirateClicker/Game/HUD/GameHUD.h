@@ -29,7 +29,6 @@ protected:
 #pragma region DataHUD
 
 public:
-
     /**
      * @public Get Game Widgets
      * @return TMap<EStateGame, UGameUserWidgetBase*>
@@ -38,7 +37,6 @@ public:
     TMap<EStateGame, UGameUserWidgetBase*> GetGameWidgets() const { return GameWidgets; }
 
 protected:
-
     // @protected Game progress widget
     UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (DisplayName = "Виджет игрового процесса"))
     TSubclassOf<UGameUserWidgetBase> ProgressWidget;
@@ -60,7 +58,6 @@ protected:
 #pragma region Action
 
 private:
-
     UFUNCTION()
     void RegisterChangedStateGame(const EStateGame& NewState);
 

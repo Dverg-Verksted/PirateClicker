@@ -27,33 +27,36 @@ void AStoryGMBase::StartPlay()
 
     UPirateClickerLibrary::FindAllActors(GetWorld(), ArrayGoldStorage);
     if (!CHECKED(ArrayGoldStorage.Num() != 0, "Array gold storage is empty and equal ZERO")) return;
-    
+
     GamePC = Cast<AGamePC>(GetWorld()->GetFirstPlayerController());
     if (!CHECKED(GamePC != nullptr, "GamePC is nullptr")) return;
-    
+
     UPirateClickerLibrary::FindActor(GetWorld(), PlayerPawn);
     if (!CHECKED(PlayerPawn != nullptr, "Player Pawne is nullptr")) return;
 
     GamePC->Possess(PlayerPawn);
-    
+
     if (!CHECKED(GameRuleDataTable != nullptr, "Game rule data table is nullptr")) return;
 
     const FName NameGameRule = UStoryGMLibrary::FindRowNameGameRule(GameRuleDataTable, GetWorld()->GetName());
     if (!CHECKED(NameGameRule != NAME_None, "World row name is not found")) return;
 
-    LOG_PIRATE(ELogRSVerb::Display, FString::Printf(TEXT("Current row name: [%s]"), *(NameGameRule.ToString())));
+    LOG_PIRATE(ELogVerb::Display, FString::Printf(TEXT("Current row name: [%s]"), *(NameGameRule.ToString())));
     GameRule = GameRuleDataTable->FindRow<FGameRule>(NameGameRule, "");
 
     const TArray<FDataGameWave>& ArrayWaves = GameRule->ArrWaves;
     if (!UStoryGMLibrary::CheckArrayWaves(ArrayWaves)) return;
 
     FTimerHandle TimerHandle;
-    GetWorldTimerManager().SetTimer(TimerHandle, [&]()
-    {
-        ChangeStateGame(EStateGame::InProgress);
-        TargetIndexWave = 0;
-        RunWaves(TargetIndexWave);
-    }, 1.0f, false);
+    GetWorldTimerManager().SetTimer(
+        TimerHandle,
+        [&]()
+        {
+            ChangeStateGame(EStateGame::InProgress);
+            TargetIndexWave = 0;
+            RunWaves(TargetIndexWave);
+        },
+        1.0f, false);
 }
 
 #pragma endregion
@@ -138,10 +141,7 @@ void AStoryGMBase::CompleteGameProcess()
 
 int32 AStoryGMBase::GetCountGoldOnLevel() const
 {
-    return Algo::Accumulate(ArrayGoldStorage, 0, [](int32 Result, AGoldStorageActor* Storage)
-    {
-        return Storage ? Result + Storage->GetCurrentGold() : Result;
-    });
+    return Algo::Accumulate(ArrayGoldStorage, 0, [](int32 Result, AGoldStorageActor* Storage) { return Storage ? Result + Storage->GetCurrentGold() : Result; });
 }
 
 #pragma endregion
