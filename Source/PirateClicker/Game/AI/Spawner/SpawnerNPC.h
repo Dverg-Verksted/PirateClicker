@@ -14,6 +14,7 @@ class USphereComponent;
 #define LOG_SPAWNER(LogVerb, Text) Print_LogSpawner(LogVerb, Text, __LINE__, __FUNCTION__)
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FCompleteWorkSpawnerSignature, class ASpawnerNPC*, SpawnerNPC);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FLostTreasureNotifySignature);
 
 UCLASS(HideCategories = ("Replication", "Collision", "Input", "Actor", "LOD", "Cooking"))
 class PIRATECLICKER_API ASpawnerNPC : public AActor
@@ -45,10 +46,17 @@ protected:
 #endif
 
 private:
+
     /**
      * @public Write a log
      **/
     void Print_LogSpawner(const ELogVerb LogVerb, const FString Text, const int Line, const char* Function) const;
+
+    /**
+     * @public Register begin overlap actor
+     **/
+    UFUNCTION()
+    void RegisterBeginOverlapActor(AActor* OverlappedActor, AActor* OtherActor );
 
 #pragma endregion
 
@@ -165,8 +173,12 @@ private:
 #pragma region Signature
 
 public:
+    
     UPROPERTY(BlueprintAssignable)
     FCompleteWorkSpawnerSignature OnCompleteWorkSpawner;
+
+    UPROPERTY(BlueprintAssignable)
+    FLostTreasureNotifySignature OnLostTreasureNotify;
 
 #pragma endregion
 };

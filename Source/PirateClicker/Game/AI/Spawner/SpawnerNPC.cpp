@@ -70,7 +70,23 @@ void ASpawnerNPC::BeginPlay()
     if (!CHECKED(SphereCollision != nullptr, "Sphere Collision is nullptr")) return;
 
     ArrSavedPosition = GeneratePositionPoint(CountSpawnPosition);
+
+    OnActorBeginOverlap.AddDynamic(this, &ThisClass::RegisterBeginOverlapActor);
 }
+
+void ASpawnerNPC::RegisterBeginOverlapActor(AActor* OverlappedActor, AActor* OtherActor)
+{
+    if (OtherActor && OtherActor->IsA(APirateActorBase::StaticClass()))
+    {
+        APirateActorBase* PirateActorBase = Cast<APirateActorBase>(OtherActor);
+        if (!PirateActorBase) return;
+        if (PirateActorBase->bHasTreasure)
+        {
+            OnLostTreasureNotify.Broadcast();
+        }
+    }
+}
+
 
 #if WITH_EDITOR
 

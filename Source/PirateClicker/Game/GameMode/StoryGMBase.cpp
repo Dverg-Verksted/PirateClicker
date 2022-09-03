@@ -47,6 +47,29 @@ void AStoryGMBase::StartPlay()
     const TArray<FDataGameWave>& ArrayWaves = GameRule->ArrWaves;
     if (!UStoryGMLibrary::CheckArrayWaves(ArrayWaves)) return;
 
+    TArray<AGoldStorageActor*> GoldStorages;
+    UPirateClickerLibrary::FindAllActors(GetWorld(), GoldStorages);
+
+    // TODO: это хреновая логика надо переписать
+    if (GoldStorages.Num() != 0)
+    {
+        AllCountTreasure = Algo::Accumulate(GoldStorages, 0, [](int32 Result, AGoldStorageActor* GoldStorage)
+        {
+           return Result + (GoldStorage ? GoldStorage->GetCurrentGold() : 0);
+        });
+        
+        OnChangeTreasureCount.Broadcast(AllCountTreasure);
+    }
+
+    TArray<ASpawnerNPC*> AllSpawners;
+    UPirateClickerLibrary::FindAllActors(GetWorld(), AllSpawners);
+
+    // TODO: это хреновая логика надо переписать
+    for (ASpawnerNPC* L_Spawner : AllSpawners)
+    {
+        L_Spawner->OnLostTreasureNotify.AddDynamic(this, &ThisClass::ReduceCountTreasure);
+    }
+    
     FTimerHandle TimerHandle;
     GetWorldTimerManager().SetTimer(
         TimerHandle,
@@ -69,6 +92,14 @@ void AStoryGMBase::ChangeStateGame(const EStateGame& NewState)
 
     StateGame = NewState;
     OnChangeStateGame.Broadcast(StateGame);
+}
+
+FText AStoryGMBase::GetNameWave(const int32 IndexWave) const
+{
+    if (!GameRule) return FText();
+    if (!GameRule->ArrWaves.IsValidIndex(IndexWave)) return FText();
+    
+    return GameRule->ArrWaves[IndexWave].NameWave;
 }
 
 void AStoryGMBase::RunWaves(int32 IndexWave)
@@ -129,13 +160,23 @@ void AStoryGMBase::RegisterCompleteWorkSpawner(ASpawnerNPC* SpawnerNPC)
 
 void AStoryGMBase::CompleteGameProcess()
 {
-    if (GetCountGoldOnLevel() == 0)
+    if (AllCountTreasure == 0)
     {
         ChangeStateGame(EStateGame::GameLose);
     }
     else
     {
         ChangeStateGame(EStateGame::GameWin);
+    }
+}
+
+void AStoryGMBase::ReduceCountTreasure()
+{
+    AllCountTreasure--;
+    OnChangeTreasureCount.Broadcast(AllCountTreasure);
+    if (AllCountTreasure == 0)
+    {
+        ChangeStateGame(EStateGame::GameLose);
     }
 }
 

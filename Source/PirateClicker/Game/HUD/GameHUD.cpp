@@ -42,6 +42,9 @@ void AGameHUD::BeginPlay()
     if (!CHECKED(StoryGM != nullptr, "Story game mode is nullptr")) return;
 
     GameWidgets.Add(EStateGame::InProgress, CreateWidget<UGameUserWidgetBase>(GetWorld(), ProgressWidget));
+    GameWidgets.Add(EStateGame::GameLose, CreateWidget<UGameUserWidgetBase>(GetWorld(), LoseWidget));
+    GameWidgets.Add(EStateGame::GameWin, CreateWidget<UGameUserWidgetBase>(GetWorld(), WinWidget));
+
     for (auto& Pair : GameWidgets)
     {
         Pair.Value->AddToViewport();

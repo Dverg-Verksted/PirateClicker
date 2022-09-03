@@ -92,7 +92,12 @@ protected:
 
 #pragma region DataPirate
 
+public:
+
+    bool bHasTreasure{false};
+
 protected:
+    
     // @protected Target spline
     UPROPERTY()
     ASplineActor* TargetSpline;
@@ -101,6 +106,7 @@ protected:
     EStateBrain StateBrain = EStateBrain::NoneInit;
 
     int32 TargetIndex = -1;
+
 
 #pragma endregion
 

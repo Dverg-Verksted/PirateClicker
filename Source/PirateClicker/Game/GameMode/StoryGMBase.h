@@ -14,6 +14,7 @@ class UDataTable;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FChangeStateGameSignature, const EStateGame&, StateGame);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FRunGameWaveSignature, int32, NumWave);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FChangeTreasureCountSignature, int32, CountTreasure);
 
 /**
  * @class Story GM
@@ -56,6 +57,13 @@ public:
      **/
     UFUNCTION(BlueprintCallable, Category = "AStoryGMBase | Action")
     int32 GetCountWaves() const { return (GameRule) ? GameRule->ArrWaves.Num() : INDEX_NONE; }
+
+    /**
+     * @public Get count waves
+     * @return int32
+     **/
+    UFUNCTION(BlueprintCallable, Category = "AStoryGMBase | Action")
+    FText GetNameWave(const int32 IndexWave) const;
 
     /**
      * @public Get number to run wave
@@ -104,6 +112,11 @@ private:
      **/
     void CompleteGameProcess();
 
+    /**
+     **/
+    UFUNCTION()
+    void ReduceCountTreasure();
+
 #pragma endregion
 
 #pragma region DataGameMode
@@ -135,6 +148,8 @@ private:
     // @private Storing the status of NPC spawners
     TArray<AGoldStorageActor*> ArrayGoldStorage;
 
+    int32 AllCountTreasure{0};
+
 #pragma endregion
 
 #pragma region Signature
@@ -145,6 +160,9 @@ public:
 
     UPROPERTY(BlueprintAssignable)
     FRunGameWaveSignature OnRunGameWave;
+
+    UPROPERTY(BlueprintAssignable)
+    FChangeTreasureCountSignature OnChangeTreasureCount;
 
 #pragma endregion
 };

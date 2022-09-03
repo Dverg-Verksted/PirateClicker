@@ -89,6 +89,10 @@ void AGoldStorageActor::RegisterActorBeginOverlap(AActor* OverlappedActor, AActo
         APirateActorBase* PirateBase = Cast<APirateActorBase>(OtherActor);
         if (!CHECKED(PirateBase != nullptr, "Cast to class APirateActorBase is fail")) return;
         PirateBase->SetupStateBrain(EStateBrain::WalkToBack);
+        if (CurrentGold != 0)
+        {
+            PirateBase->bHasTreasure = true;
+        }
     }
 
     if (CurrentGold == 0)
