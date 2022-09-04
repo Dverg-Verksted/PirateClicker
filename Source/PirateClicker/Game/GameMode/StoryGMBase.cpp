@@ -2,8 +2,10 @@
 
 #include "StoryGMBase.h"
 #include "StoryGMLibrary.h"
+#include "Algo/Accumulate.h"
 #include "Engine/DataTable.h"
 #include "Game/AI/Spawner/SpawnerNPC.h"
+#include "Game/GoldStorage/GoldStorageActor.h"
 #include "Game/Player/GamePC.h"
 #include "Game/Player/PlayerPawn.h"
 #include "Library/PirateClickerLibrary.h"
@@ -23,32 +25,61 @@ void AStoryGMBase::StartPlay()
 {
     Super::StartPlay();
 
+    UPirateClickerLibrary::FindAllActors(GetWorld(), ArrayGoldStorage);
+    if (!CHECKED(ArrayGoldStorage.Num() != 0, "Array gold storage is empty and equal ZERO")) return;
+
     GamePC = Cast<AGamePC>(GetWorld()->GetFirstPlayerController());
     if (!CHECKED(GamePC != nullptr, "GamePC is nullptr")) return;
-    
+
     UPirateClickerLibrary::FindActor(GetWorld(), PlayerPawn);
     if (!CHECKED(PlayerPawn != nullptr, "Player Pawne is nullptr")) return;
 
     GamePC->Possess(PlayerPawn);
-    
+
     if (!CHECKED(GameRuleDataTable != nullptr, "Game rule data table is nullptr")) return;
 
     const FName NameGameRule = UStoryGMLibrary::FindRowNameGameRule(GameRuleDataTable, GetWorld()->GetName());
     if (!CHECKED(NameGameRule != NAME_None, "World row name is not found")) return;
 
-    LOG_PIRATE(ELogRSVerb::Display, FString::Printf(TEXT("Current row name: [%s]"), *(NameGameRule.ToString())));
+    LOG_PIRATE(ELogVerb::Display, FString::Printf(TEXT("Current row name: [%s]"), *(NameGameRule.ToString())));
     GameRule = GameRuleDataTable->FindRow<FGameRule>(NameGameRule, "");
 
     const TArray<FDataGameWave>& ArrayWaves = GameRule->ArrWaves;
     if (!UStoryGMLibrary::CheckArrayWaves(ArrayWaves)) return;
 
-    FTimerHandle TimerHandle;
-    GetWorldTimerManager().SetTimer(TimerHandle, [&]()
+    TArray<AGoldStorageActor*> GoldStorages;
+    UPirateClickerLibrary::FindAllActors(GetWorld(), GoldStorages);
+
+    // TODO: это хреновая логика надо переписать
+    if (GoldStorages.Num() != 0)
     {
-        ChangeStateGame(EStateGame::InProgress);
-        TargetIndexWave = 0;
-        RunWaves(TargetIndexWave);
-    }, 1.0f, false);
+        AllCountTreasure = Algo::Accumulate(GoldStorages, 0, [](int32 Result, AGoldStorageActor* GoldStorage)
+        {
+           return Result + (GoldStorage ? GoldStorage->GetCurrentGold() : 0);
+        });
+        
+        OnChangeTreasureCount.Broadcast(AllCountTreasure);
+    }
+
+    TArray<ASpawnerNPC*> AllSpawners;
+    UPirateClickerLibrary::FindAllActors(GetWorld(), AllSpawners);
+
+    // TODO: это хреновая логика надо переписать
+    for (ASpawnerNPC* L_Spawner : AllSpawners)
+    {
+        L_Spawner->OnLostTreasureNotify.AddDynamic(this, &ThisClass::ReduceCountTreasure);
+    }
+    
+    FTimerHandle TimerHandle;
+    GetWorldTimerManager().SetTimer(
+        TimerHandle,
+        [&]()
+        {
+            ChangeStateGame(EStateGame::InProgress);
+            TargetIndexWave = 0;
+            RunWaves(TargetIndexWave);
+        },
+        1.0f, false);
 }
 
 #pragma endregion
@@ -61,6 +92,14 @@ void AStoryGMBase::ChangeStateGame(const EStateGame& NewState)
 
     StateGame = NewState;
     OnChangeStateGame.Broadcast(StateGame);
+}
+
+FText AStoryGMBase::GetNameWave(const int32 IndexWave) const
+{
+    if (!GameRule) return FText();
+    if (!GameRule->ArrWaves.IsValidIndex(IndexWave)) return FText();
+    
+    return GameRule->ArrWaves[IndexWave].NameWave;
 }
 
 void AStoryGMBase::RunWaves(int32 IndexWave)
@@ -106,8 +145,44 @@ void AStoryGMBase::RegisterCompleteWorkSpawner(ASpawnerNPC* SpawnerNPC)
     {
         if (!Pair.Value) return;
     }
-    
-    RunWaves(++TargetIndexWave);
+
+    ++TargetIndexWave;
+    const TArray<FDataGameWave>& ArrayWaves = GameRule->ArrWaves;
+    if (ArrayWaves.IsValidIndex(TargetIndexWave))
+    {
+        RunWaves(TargetIndexWave);
+    }
+    else
+    {
+        CompleteGameProcess();
+    }
+}
+
+void AStoryGMBase::CompleteGameProcess()
+{
+    if (AllCountTreasure == 0)
+    {
+        ChangeStateGame(EStateGame::GameLose);
+    }
+    else
+    {
+        ChangeStateGame(EStateGame::GameWin);
+    }
+}
+
+void AStoryGMBase::ReduceCountTreasure()
+{
+    AllCountTreasure--;
+    OnChangeTreasureCount.Broadcast(AllCountTreasure);
+    if (AllCountTreasure == 0)
+    {
+        ChangeStateGame(EStateGame::GameLose);
+    }
+}
+
+int32 AStoryGMBase::GetCountGoldOnLevel() const
+{
+    return Algo::Accumulate(ArrayGoldStorage, 0, [](int32 Result, AGoldStorageActor* Storage) { return Storage ? Result + Storage->GetCurrentGold() : Result; });
 }
 
 #pragma endregion

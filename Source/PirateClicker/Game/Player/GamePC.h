@@ -3,8 +3,11 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Game/GameMode/StoryGMDataTypes.h"
 #include "GameFramework/PlayerController.h"
 #include "GamePC.generated.h"
+
+class AStoryGMBase;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FHitActorSignature, AActor*, HitActor);
 
@@ -40,11 +43,18 @@ private:
     UFUNCTION()
     void RegisterTouchPressed(ETouchIndex::Type FingerIndex, FVector Location);
 
+    UFUNCTION()
+    void RegisterChangeStateGame(const EStateGame& NewState);
+
 #pragma endregion
 
 #pragma region DataController
 
 private:
+
+    UPROPERTY()
+    AStoryGMBase* StoryGM;
+    
     FVector TouchLocation{FVector::ZeroVector};
 
 #pragma endregion

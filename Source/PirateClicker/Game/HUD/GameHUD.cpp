@@ -42,6 +42,9 @@ void AGameHUD::BeginPlay()
     if (!CHECKED(StoryGM != nullptr, "Story game mode is nullptr")) return;
 
     GameWidgets.Add(EStateGame::InProgress, CreateWidget<UGameUserWidgetBase>(GetWorld(), ProgressWidget));
+    GameWidgets.Add(EStateGame::GameLose, CreateWidget<UGameUserWidgetBase>(GetWorld(), LoseWidget));
+    GameWidgets.Add(EStateGame::GameWin, CreateWidget<UGameUserWidgetBase>(GetWorld(), WinWidget));
+
     for (auto& Pair : GameWidgets)
     {
         Pair.Value->AddToViewport();
@@ -53,8 +56,7 @@ void AGameHUD::BeginPlay()
 
 void AGameHUD::RegisterChangedStateGame(const EStateGame& NewState)
 {
-    if (!CHECKED(GameWidgets.Contains(NewState), FString::Printf(TEXT("NewState: [%s] doesn't contains in GameWidgets"),
-        *UEnum::GetValueAsString(NewState)))) return;
+    if (!CHECKED(GameWidgets.Contains(NewState), FString::Printf(TEXT("NewState: [%s] doesn't contains in GameWidgets"), *UEnum::GetValueAsString(NewState)))) return;
 
     if (ActiveWidget)
     {
@@ -63,6 +65,5 @@ void AGameHUD::RegisterChangedStateGame(const EStateGame& NewState)
 
     ActiveWidget = GameWidgets[NewState];
     ActiveWidget->SetVisibility(ESlateVisibility::Visible);
-    LOG_PIRATE(ELogRSVerb::Display, FString::Printf(TEXT("State: [%s] | Active widget: [%s]"),
-        *UEnum::GetValueAsString(NewState), *ActiveWidget->GetName()));
+    LOG_PIRATE(ELogVerb::Display, FString::Printf(TEXT("State: [%s] | Active widget: [%s]"), *UEnum::GetValueAsString(NewState), *ActiveWidget->GetName()));
 }

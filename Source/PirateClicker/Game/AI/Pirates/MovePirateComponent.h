@@ -47,13 +47,17 @@ private:
     /**
      * @public Write a log
      **/
-    void Print_LogMovement(const ELogRSVerb LogVerb, const FString Text, const int Line, const char* Function) const;
+    void Print_LogMovement(const ELogVerb LogVerb, const FString Text, const int Line, const char* Function) const;
 
 #pragma endregion
 
 #pragma region DataMove
 
 public:
+    /**
+     * @public Go to movement position for AI
+     * @param1 FVector
+     **/
     UFUNCTION(BlueprintCallable)
     void GoAIMove(const FVector& ToPos);
 
@@ -63,6 +67,12 @@ public:
      * @return bool
      **/
     bool RunMovement(const FMovementData& NewData);
+
+    /**
+     * @public Stop movement
+     **/
+    UFUNCTION(BlueprintCallable)
+    void StopMovement();
 
 protected:
     // Movement speed pirate cm/sec

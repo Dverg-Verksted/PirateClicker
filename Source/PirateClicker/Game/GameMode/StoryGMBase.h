@@ -7,12 +7,14 @@
 #include "GameFramework/GameModeBase.h"
 #include "StoryGMBase.generated.h"
 
+class AGoldStorageActor;
 class APlayerPawn;
 class AGamePC;
 class UDataTable;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FChangeStateGameSignature, const EStateGame&, StateGame);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FRunGameWaveSignature, int32, NumWave);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FChangeTreasureCountSignature, int32, CountTreasure);
 
 /**
  * @class Story GM
@@ -35,14 +37,13 @@ protected:
 #pragma region Action
 
 public:
-
     /**
      * @public Get state game
      * @return EStateGame
      **/
     UFUNCTION(BlueprintCallable, Category = "AStoryGMBase | Action")
     FORCEINLINE EStateGame GetStateGame() const { return StateGame; }
-    
+
     /**
      * @public Change state game
      * @param1 EStateGame
@@ -62,10 +63,30 @@ public:
      * @return int32
      **/
     UFUNCTION(BlueprintCallable, Category = "AStoryGMBase | Action")
-    int32 GetNumRunWave() const { return TargetIndexWave; }
-    
-private:
+    FText GetNameWave(const int32 IndexWave) const;
 
+    /**
+     * @public Get number to run wave
+     * @return int32
+     **/
+    UFUNCTION(BlueprintCallable, Category = "AStoryGMBase | Action")
+    int32 GetNumRunWave() const { return TargetIndexWave; }
+
+    /**
+     * @public Get count gold on Level
+     * @return int32
+     **/
+    UFUNCTION(BlueprintCallable, Category = "AStoryGMBase | Action")
+    int32 GetCountGoldOnLevel() const;
+
+    /**
+     * @public Get pawn player
+     * @return APlayerPawn*
+     **/
+    UFUNCTION(BlueprintCallable, Category = "AStoryGMBase | Action")
+    APlayerPawn* GetPlayerPawn() const { return PlayerPawn; }
+
+private:
     /**
      * @public Run waves
      * @param1 int32
@@ -73,24 +94,34 @@ private:
     void RunWaves(int32 IndexWave);
 
     /**
-      * @public Run under waves
-      * @param1 FDataGameWave
+     * @public Run under waves
+     * @param1 FDataGameWave
      **/
     void RunUnderWaves(FDataGameWave DataGameWave);
-    
+
     /**
-      * @public Registration of the spawner shutdown event
-      * @param1 ASpawnerNPC
+     * @public Registration of the spawner shutdown event
+     * @param1 ASpawnerNPC
      **/
     UFUNCTION()
     void RegisterCompleteWorkSpawner(ASpawnerNPC* SpawnerNPC);
+
+    /**
+     * @public Complete the gameplay and summarize the game
+     * @param1 int32
+     **/
+    void CompleteGameProcess();
+
+    /**
+     **/
+    UFUNCTION()
+    void ReduceCountTreasure();
 
 #pragma endregion
 
 #pragma region DataGameMode
 
 private:
-
     // @private Data table for game rule
     UPROPERTY()
     UDataTable* GameRuleDataTable{nullptr};
@@ -114,18 +145,24 @@ private:
     // @private Storing the status of NPC spawners
     TMap<ASpawnerNPC*, bool> StatusSpawners;
 
+    // @private Storing the status of NPC spawners
+    TArray<AGoldStorageActor*> ArrayGoldStorage;
+
+    int32 AllCountTreasure{0};
+
 #pragma endregion
 
 #pragma region Signature
 
 public:
-
     UPROPERTY(BlueprintAssignable)
     FChangeStateGameSignature OnChangeStateGame;
 
     UPROPERTY(BlueprintAssignable)
     FRunGameWaveSignature OnRunGameWave;
 
-#pragma endregion 
-    
+    UPROPERTY(BlueprintAssignable)
+    FChangeTreasureCountSignature OnChangeTreasureCount;
+
+#pragma endregion
 };

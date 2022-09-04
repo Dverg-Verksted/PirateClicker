@@ -7,11 +7,10 @@
 #include "GameUserWidgetBase.generated.h"
 
 /**
- * 
+ *
  */
 UCLASS()
 class PIRATECLICKER_API UGameUserWidgetBase : public UUserWidget
 {
-	GENERATED_BODY()
-	
+    GENERATED_BODY()
 };

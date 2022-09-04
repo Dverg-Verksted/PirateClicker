@@ -1,21 +1,20 @@
 // This section is the property of the Dverg Verksted team
 
 #include "Library/PirateClickerLibrary.h"
-
 #include "Engine/AssetManager.h"
 #include "Engine/StreamableManager.h"
 
-void UPirateClickerLibrary::Print_Log(const ELogRSVerb LogVerb, const FString Text, const int Line, const char* Function)
+void UPirateClickerLibrary::Print_Log(const ELogVerb LogVerb, const FString Text, const int Line, const char* Function)
 {
-    if (LogVerb == ELogRSVerb::Display)
+    if (LogVerb == ELogVerb::Display)
     {
         UE_LOG(LogPirateClicker, Display, TEXT("[%s][%d] TEXT:[%s]"), ANSI_TO_TCHAR(Function), Line, *Text);
     }
-    else if (LogVerb == ELogRSVerb::Warning)
+    else if (LogVerb == ELogVerb::Warning)
     {
         UE_LOG(LogPirateClicker, Warning, TEXT("[%s][%d] TEXT:[%s]"), ANSI_TO_TCHAR(Function), Line, *Text);
     }
-    else if (LogVerb == ELogRSVerb::Error)
+    else if (LogVerb == ELogVerb::Error)
     {
         UE_LOG(LogPirateClicker, Error, TEXT("[%s][%d] TEXT:[%s]"), ANSI_TO_TCHAR(Function), Line, *Text);
     }
@@ -25,7 +24,7 @@ bool UPirateClickerLibrary::CheckedCondition(const bool bCondition, const FStrin
 {
     if (!bCondition)
     {
-        Print_Log(ELogRSVerb::Error, Text, Line, Function);
+        Print_Log(ELogVerb::Error, Text, Line, Function);
         return false;
     }
     return true;
