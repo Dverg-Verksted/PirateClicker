@@ -84,6 +84,11 @@ void ASpawnerNPC::RegisterBeginOverlapActor(AActor* OverlappedActor, AActor* Oth
         {
             OnLostTreasureNotify.Broadcast();
         }
+
+        if (PirateActorBase->GetStateBrain() == EStateBrain::WalkToBack)
+        {
+            PirateActorBase->RegisterDeadActor();
+        }
     }
 }
 

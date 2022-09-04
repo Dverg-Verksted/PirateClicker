@@ -97,7 +97,7 @@ public:
     bool bHasTreasure{false};
 
 protected:
-    
+
     // @protected Target spline
     UPROPERTY()
     ASplineActor* TargetSpline;
@@ -106,7 +106,6 @@ protected:
     EStateBrain StateBrain = EStateBrain::NoneInit;
 
     int32 TargetIndex = -1;
-
 
 #pragma endregion
 
@@ -126,6 +125,18 @@ public:
     UFUNCTION(BlueprintCallable, Category = "APirateActorBase | Action")
     void SetupStateBrain(const EStateBrain& NewState);
 
+    /**
+     * @public Getting state brain
+     **/
+    UFUNCTION(BlueprintCallable, Category = "APirateActorBase | Action")
+    EStateBrain GetStateBrain() const { return StateBrain; }
+    
+    /**
+     * @public Register death
+     **/
+    UFUNCTION()
+    void RegisterDeadActor();
+
 private:
     /**
      * @private Register hit on actor
@@ -133,12 +144,6 @@ private:
      **/
     UFUNCTION()
     void RegisterHitActor(AActor* HitActor);
-
-    /**
-     * @private Register death
-     **/
-    UFUNCTION()
-    void RegisterDeadActor();
 
     /**
      * @private Next Move To Point

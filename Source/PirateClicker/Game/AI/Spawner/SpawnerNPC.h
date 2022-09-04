@@ -10,6 +10,7 @@
 
 class APirateActorBase;
 class USphereComponent;
+class UBillboardComponent;
 
 #define LOG_SPAWNER(LogVerb, Text) Print_LogSpawner(LogVerb, Text, __LINE__, __FUNCTION__)
 
