@@ -24,6 +24,7 @@ AGoldStorageActor::AGoldStorageActor()
     SphereCollision = CreateDefaultSubobject<USphereComponent>(FName("Sphere Collision"));
     SphereCollision->SetupAttachment(RootScene);
     SphereCollision->SetSphereRadius(SphereCollisionRadius);
+    
 }
 
 void AGoldStorageActor::BeginPlay()

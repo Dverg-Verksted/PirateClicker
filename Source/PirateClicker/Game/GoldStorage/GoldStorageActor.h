@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/BoxComponent.h"
 #include "Components/SphereComponent.h"
+#include "Game/GoldChest/GoldChest.h"
 #include "GameFramework/Actor.h"
 #include "GoldStorageActor.generated.h"
 
@@ -73,6 +74,9 @@ protected:
     UPROPERTY(EditInstanceOnly, Category = "Storage component settings",
         meta = (Clampmin = "1", EditCondition = "TypeCollision == ETypeCollision::Sphere", EditConditionHides, ToolTip = "Тут назначаем радиус сферовой коллизии"));
     float SphereCollisionRadius{100.0f};
+
+    UPROPERTY(EditInstanceOnly,Category = "Storage component settings",meta = (ToolTip = "Тут назначаем сундук, который будет выдаваться пирату при оверлепе"))
+    TSubclassOf<AGoldChest> GoldChestToGive;
 
 #pragma endregion
 #pragma region Action
