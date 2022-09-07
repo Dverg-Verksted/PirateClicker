@@ -60,6 +60,7 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Components")
     UStaticMeshComponent* MeshStorage;
 
+    
     UPROPERTY(EditInstanceOnly, Category = "Storage component settings", meta = (ToolTip = "Тут назначаем коллизию, которая будет отправилять пирата обратно"))
     ETypeCollision TypeCollision;
 
@@ -75,6 +76,7 @@ protected:
         meta = (Clampmin = "1", EditCondition = "TypeCollision == ETypeCollision::Sphere", EditConditionHides, ToolTip = "Тут назначаем радиус сферовой коллизии"));
     float SphereCollisionRadius{100.0f};
 
+    
     UPROPERTY(EditInstanceOnly,Category = "Storage component settings",meta = (ToolTip = "Тут назначаем сундук, который будет выдаваться пирату при оверлепе"))
     TSubclassOf<AGoldChest> GoldChestToGive;
 

@@ -6,21 +6,56 @@
 #include "GameFramework/Actor.h"
 #include "GoldChest.generated.h"
 
-UCLASS()
+//Chest States
+UENUM()
+enum class EGoldChestState:uint8
+{
+    Taken UMETA (DisplayName = "Взят в руки"),
+    Dropped UMETA (DisplayName = "Лежит на земле")
+};
+
+UCLASS(HideCategories = ("Rendering","Collision","Input","Actor","Cooking","LOD","Replication"))
 class PIRATECLICKER_API AGoldChest : public AActor
 {
 	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
+
+#pragma region Default
+public:
+//Set Default Values
 	AGoldChest();
 
+#if WITH_EDITOR
+    virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
+#endif
+
 protected:
-	// Called when the game starts or when spawned
 	virtual void BeginPlay() override;
 
-public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
+#pragma endregion
+
+#pragma region Components
+
+public:
+    UFUNCTION(BlueprintCallable,Category = "Chest State",meta = (ToolTip = "Функция для получения текущего состояния сундука"))
+    EGoldChestState GetGoldChestState();
+    
+protected:
+//Scene root component
+    UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category = "Gold Chest Blueprint Settings")
+    USceneComponent* SceneRootComponent;
+
+//Mesh Settings
+    UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category = "Gold Chest Blueprint Settings")
+    UStaticMeshComponent* MeshStorage;
+    UPROPERTY(EditInstanceOnly,Category = "Gold Chest settings",meta = (ToolTip= "Тут назначается меш для сундука"))
+    UStaticMesh* MeshToChange;
+    
+private:
+//Chest State Variable
+    UPROPERTY(EditInstanceOnly,Category = "Gold Chest settings")
+    EGoldChestState ChestState ;
+
+#pragma endregion 
+   
 
 };

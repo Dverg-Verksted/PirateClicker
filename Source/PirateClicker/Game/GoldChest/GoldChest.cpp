@@ -2,26 +2,50 @@
 
 
 #include "Game/GoldChest/GoldChest.h"
+#include "Components/StaticMeshComponent.h"
+#include "Library/PirateClickerLibrary.h"
 
-// Sets default values
 AGoldChest::AGoldChest()
 {
- 	// Set this actor to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
-	PrimaryActorTick.bCanEverTick = true;
+	PrimaryActorTick.bCanEverTick = false;
 
+//creating subobjects for chest actor
+    SceneRootComponent = CreateDefaultSubobject<USceneComponent>(FName("Root scene component"));
+    SetRootComponent(SceneRootComponent);
+
+    MeshStorage = CreateDefaultSubobject<UStaticMeshComponent>(FName("Mesh storage component"));
+    MeshStorage->SetupAttachment(RootComponent);
+    
 }
 
-// Called when the game starts or when spawned
 void AGoldChest::BeginPlay()
 {
 	Super::BeginPlay();
+
+//Checkers
+    if (!CHECKED(RootComponent != nullptr, "Root scene is nullptr")) return;
+    if (!CHECKED(MeshStorage != nullptr, "Mesh storage is nullptr")) return;
 	
 }
 
-// Called every frame
-void AGoldChest::Tick(float DeltaTime)
+//Chest state get
+EGoldChestState AGoldChest::GetGoldChestState()
 {
-	Super::Tick(DeltaTime);
-
+    return ChestState;
 }
 
+#if WITH_EDITOR
+
+void AGoldChest::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
+{
+    Super::PostEditChangeProperty(PropertyChangedEvent);
+
+//Chest mesh change function
+    if (PropertyChangedEvent.Property->GetName() == TEXT("MeshToChange"))
+    {
+        if (!MeshToChange) return;
+        MeshStorage->SetStaticMesh(MeshToChange);
+    }
+}
+
+#endif
