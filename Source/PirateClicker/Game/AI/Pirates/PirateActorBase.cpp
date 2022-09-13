@@ -55,7 +55,6 @@ void APirateActorBase::BeginPlay()
     if (!CHECKED(GamePC != nullptr, "Game player controller is nullptr")) return;
 
     GamePC->OnHitActor.AddDynamic(this, &ThisClass::RegisterHitActor);
-    MovePirateComponent->OnStopedMove.AddDynamic(this, &ThisClass::NextMoveToPoint);
     SetupStateBrain(EStateBrain::WalkToStorage);
 }
 
@@ -68,6 +67,7 @@ void APirateActorBase::SetupTargetSpline(ASplineActor* NewSpline)
     if (!CHECKED(NewSpline != nullptr, "New Spline is nullptr")) return;
 
     TargetSpline = NewSpline;
+    MoveToPoint();
 }
 
 void APirateActorBase::SetupStateBrain(const EStateBrain& NewState)
@@ -80,7 +80,7 @@ void APirateActorBase::SetupStateBrain(const EStateBrain& NewState)
     MovePirateComponent->StopMovement();
     if (StateBrain == EStateBrain::WalkToBack || StateBrain == EStateBrain::WalkToStorage)
     {
-        NextMoveToPoint();
+        MoveToPoint();
     }
 }
 
@@ -99,22 +99,41 @@ void APirateActorBase::RegisterDeadActor()
     OnPirateDead.Broadcast(this);
 }
 
-void APirateActorBase::NextMoveToPoint()
+void APirateActorBase::MoveToPoint()
 {
-    if (!CHECKED(StateBrain != EStateBrain::Idle, "State brain equal idle")) return;
+    if (!TargetSpline) return;
 
-    if (StateBrain == EStateBrain::WalkToStorage)
+    const int32 Index = GetIndexAlongDistPlayer(TargetSpline);
+    const FVector TargetPos = TargetSpline->GetSpline()->FindLocationClosestToWorldLocation(GetActorLocation(), ESplineCoordinateSpace::World);
+    const float Duration = FMath::Clamp(TargetSpline->GetSpline()->GetDistanceAlongSplineAtSplinePoint(Index) / TargetSpline->GetSpline()->GetSplineLength(), 0.0f, 1.0f);
+    const bool bRev = StateBrain == EStateBrain::WalkToBack;
+    MovePirateComponent->GoAIMoveAdvance(TargetPos, TargetSpline, Duration, bRev);
+}
+
+int32 APirateActorBase::GetIndexAlongDistPlayer(const ASplineActor* Spline) const
+{
+    if (!Spline) return INDEX_NONE;
+
+    TMap<int32, float> TempContains;
+    const int32 Numbers = Spline->GetSpline()->GetNumberOfSplinePoints();
+    for (int32 i = 0; i < Numbers; ++i)
     {
-        TargetIndex++;
-    }
-    if (StateBrain == EStateBrain::WalkToBack)
-    {
-        TargetIndex--;
+        float Dist = FVector::Dist(GetActorLocation(), Spline->GetSpline()->GetWorldLocationAtSplinePoint(i));
+        TempContains.Add(i, Dist);
     }
 
-    FVector NewPos = TargetSpline->GetSpline()->GetLocationAtSplinePoint(TargetIndex, ESplineCoordinateSpace::World);
-    NewPos.Z += CapsuleCollision->GetScaledCapsuleHalfHeight();
-    MovePirateComponent->GoAIMove(NewPos);
+    float Distance = MAX_FLT;
+    int32 TempTargetIndex = INDEX_NONE;
+    for (const auto& Pair : TempContains)
+    {
+        if (Pair.Value < Distance)
+        {
+            Distance = Pair.Value;
+            TempTargetIndex = Pair.Key;
+        }
+    }
+
+    return TempTargetIndex;
 }
 
 #pragma endregion

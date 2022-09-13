@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "AIDataTypes.h"
 #include "Game/AI/DataAsset/PirateDataAsset.h"
+#include "Game/AI/Spawner/SplineActor.h"
 #include "GameFramework/Actor.h"
 #include "PirateActorBase.generated.h"
 
@@ -146,10 +147,17 @@ private:
     void RegisterHitActor(AActor* HitActor);
 
     /**
-     * @private Next Move To Point
+     * @private Move To Point
      **/
     UFUNCTION()
-    void NextMoveToPoint();
+    void MoveToPoint();
+
+    /**
+     * @private Get index along distance player
+     * @param1 ASplineActor*
+     * @return int32
+     **/
+    int32 GetIndexAlongDistPlayer(const ASplineActor* Spline) const;
 
 #pragma endregion
 

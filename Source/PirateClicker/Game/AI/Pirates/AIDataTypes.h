@@ -4,12 +4,14 @@
 
 #define M_TO_CM 100.0f
 
+class ASplineActor;
 UENUM()
 enum class EStateMovement : uint8
 {
     Off,
     Rotating,
-    Moving
+    Moving,
+    ForSpline
 };
 
 // A special state for pirate
@@ -45,6 +47,13 @@ struct FMovementData
 
     // Intermediate value for Rotate travel
     float TimeRotateDelta{0.0f};
+
+    float Duration{0.0f};
+    
+    UPROPERTY()
+    ASplineActor* TargetSpline{nullptr};
+
+    bool bReverse{false};
 
     bool IsValid() const { return this->StartPointPosition != FVector::ZeroVector && this->EndPointPosition != FVector::ZeroVector && this->TimeMoveDelta == 0.0f && this->TimeRotateDelta == 0.0f; }
 };

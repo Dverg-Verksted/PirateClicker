@@ -2,6 +2,8 @@
 
 #include "Game/AI/Pirates/MovePirateComponent.h"
 #include "DrawDebugHelpers.h"
+#include "Components/SplineComponent.h"
+#include "Game/AI/Spawner/SplineActor.h"
 #include "Library/PirateClickerLibrary.h"
 
 #if UE_EDITOR || UE_BUILD_DEVELOPMENT
@@ -25,15 +27,14 @@ void UMovePirateComponent::BeginPlay()
 {
     Super::BeginPlay();
 
-    OwnerPirate = GetOwner();
-    if (!CHECKED(OwnerPirate != nullptr, "Owner pirate is nullptr")) return;
+    if (!CHECKED(GetOwner() != nullptr, "Owner pirate is nullptr")) return;
 }
 
 void UMovePirateComponent::Print_LogMovement(const ELogVerb LogVerb, const FString Text, const int Line, const char* Function) const
 {
-    if (!CHECKED(OwnerPirate != nullptr, "Owner pirate is nullptr")) return;
+    if (!CHECKED(GetOwner() != nullptr, "Owner pirate is nullptr")) return;
 
-    UPirateClickerLibrary::Print_Log(LogVerb, FString::Printf(TEXT("Name: [%s] | State movement: [%s] | %s"), *OwnerPirate->GetName(), *UEnum::GetValueAsString(StateMovement), *Text), Line, Function);
+    UPirateClickerLibrary::Print_Log(LogVerb, FString::Printf(TEXT("Name: [%s] | State movement: [%s] | %s"), *GetOwner()->GetName(), *UEnum::GetValueAsString(StateMovement), *Text), Line, Function);
 }
 
 // Called every frame
@@ -59,6 +60,11 @@ void UMovePirateComponent::TickComponent(float DeltaTime, ELevelTick TickType, F
     {
         CalculateRotate(DeltaTime);
     }
+
+    if (StateMovement == EStateMovement::ForSpline)
+    {
+        MoveToSpline(DeltaTime);
+    }
 }
 
 void UMovePirateComponent::InitMoveData(const float SpeedMove, const float SpeedRotate)
@@ -71,15 +77,34 @@ void UMovePirateComponent::InitMoveData(const float SpeedMove, const float Speed
 
 #pragma region DataMove
 
-void UMovePirateComponent::GoAIMove(const FVector& ToPos)
+void UMovePirateComponent::GoAIMoveAdvance(const FVector& ToPos, ASplineActor* SplineActor, const float Duration, bool const bReverse)
 {
-    if (!CHECKED(OwnerPirate != nullptr, "Owner pirate is nullptr")) return;
+    if (!CHECKED(GetOwner() != nullptr, "Owner pirate is nullptr")) return;
 
     FMovementData MovementData;
-    MovementData.StartPointPosition = OwnerPirate->GetActorLocation();
+    MovementData.StartPointPosition = GetOwner()->GetActorLocation();
     MovementData.EndPointPosition = ToPos;
-    MovementData.StartRotatePosition = OwnerPirate->GetActorRotation();
-    FVector StartPoint = OwnerPirate->GetActorLocation();
+    MovementData.StartRotatePosition = GetOwner()->GetActorRotation();
+    FVector StartPoint = GetOwner()->GetActorLocation();
+    StartPoint.Z = 0.0f;
+    FVector EndPoint = ToPos;
+    EndPoint.Z = 0.0f;
+    MovementData.EndRotatePosition = (EndPoint - StartPoint).Rotation();
+    MovementData.TargetSpline = SplineActor;
+    MovementData.Duration = Duration;
+    MovementData.bReverse = bReverse;
+    RunMovement(MovementData);
+}
+
+void UMovePirateComponent::GoAIMove(const FVector& ToPos)
+{
+    if (!CHECKED(GetOwner() != nullptr, "Owner pirate is nullptr")) return;
+
+    FMovementData MovementData;
+    MovementData.StartPointPosition = GetOwner()->GetActorLocation();
+    MovementData.EndPointPosition = ToPos;
+    MovementData.StartRotatePosition = GetOwner()->GetActorRotation();
+    FVector StartPoint = GetOwner()->GetActorLocation();
     StartPoint.Z = 0.0f;
     FVector EndPoint = ToPos;
     EndPoint.Z = 0.0f;
@@ -89,7 +114,7 @@ void UMovePirateComponent::GoAIMove(const FVector& ToPos)
 
 bool UMovePirateComponent::RunMovement(const FMovementData& NewData)
 {
-    if (!CHECKED(OwnerPirate != nullptr, "Owner pirate is nullptr")) return false;
+    if (!CHECKED(GetOwner() != nullptr, "Owner pirate is nullptr")) return false;
     if (!CHECKED(NewData.IsValid() != false, "Target position is not valid")) return false;
 
     TargetData = NewData;
@@ -110,12 +135,19 @@ void UMovePirateComponent::CalculateMove(float DeltaTime)
     if (TargetData.TimeMoveDelta < EndTime)
     {
         const FVector NewPointLocation = FMath::Lerp(TargetData.StartPointPosition, TargetData.EndPointPosition, TargetData.TimeMoveDelta / EndTime);
-        OwnerPirate->SetActorLocation(NewPointLocation);
+        GetOwner()->SetActorLocation(NewPointLocation);
         TargetData.TimeMoveDelta += DeltaTime;
     }
     else
     {
-        StopMovement();
+        if (TargetData.TargetSpline)
+        {
+            StateMovement = EStateMovement::ForSpline;
+        }
+        else
+        {
+            StopMovement();
+        }
     }
 }
 
@@ -124,15 +156,41 @@ void UMovePirateComponent::CalculateRotate(float DeltaTime)
     if (TargetData.TimeRotateDelta < EndTime)
     {
         const FRotator NewRotate = FMath::Lerp(TargetData.StartRotatePosition, TargetData.EndRotatePosition, TargetData.TimeRotateDelta / EndTime);
-        OwnerPirate->SetActorRotation(NewRotate);
+        GetOwner()->SetActorRotation(NewRotate);
         TargetData.TimeRotateDelta += DeltaTime;
     }
     else
     {
-        OwnerPirate->SetActorRotation(TargetData.EndRotatePosition);
+        GetOwner()->SetActorRotation(TargetData.EndRotatePosition);
         EndTime = (TargetData.EndPointPosition - TargetData.StartPointPosition).Size() / (DefaultSpeedMove * M_TO_CM);
         StateMovement = EStateMovement::Moving;
     }
+}
+
+void UMovePirateComponent::MoveToSpline(float DeltaTime)
+{
+    const FVector TempPos = TargetData.TargetSpline->GetSpline()->GetLocationAtTime(TargetData.Duration, ESplineCoordinateSpace::World, true);
+    const FRotator TempRot = TargetData.TargetSpline->GetSpline()->GetRotationAtTime(TargetData.Duration, ESplineCoordinateSpace::World, true);
+    GetOwner()->SetActorLocation(TempPos);
+    GetOwner()->SetActorRotation(TempRot);
+    TargetData.Duration = TargetData.bReverse ? TargetData.Duration - ((DefaultSpeedMove / M_TO_CM) * DeltaTime) : TargetData.Duration + ((DefaultSpeedMove / M_TO_CM) * DeltaTime);
+    if (TargetData.bReverse && TargetData.Duration <= 0.0f)
+    {
+        StopMovement();
+    }
+
+    if (!TargetData.bReverse && TargetData.Duration >= 1.0f)
+    {
+        StopMovement();
+    }
+
+#if UE_EDITOR || UE_BUILD_DEVELOPMENT
+    if (EnableD_MovementPirate.GetValueOnGameThread())
+    {
+        LOG_MOVE(ELogVerb::Display, FString::Printf(TEXT("New pos: [%s] | New rot: [%s] | Duration: [%f]"),
+            *TempPos.ToString(), *TempRot.ToString(), TargetData.Duration));
+    }
+#endif
 }
 
 #pragma endregion

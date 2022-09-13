@@ -5,10 +5,10 @@
 #include "CoreMinimal.h"
 #include "AIDataTypes.h"
 #include "Components/ActorComponent.h"
-#include "Game/AI/DataAsset/PirateDataAsset.h"
 #include "Library/LibraryDataTypes.h"
 #include "MovePirateComponent.generated.h"
 
+class ASplineActor;
 class USplineComponent;
 
 #define LOG_MOVE(LogVerb, Text) Print_LogMovement(LogVerb, Text, __LINE__, __FUNCTION__)
@@ -54,6 +54,13 @@ private:
 #pragma region DataMove
 
 public:
+
+    /**
+     * @public Go to movement position for AI
+     * @param1 FVector
+     **/
+    void GoAIMoveAdvance(const FVector& ToPos, ASplineActor* SplineActor, const float Duration, const bool bReverse = false);
+
     /**
      * @public Go to movement position for AI
      * @param1 FVector
@@ -84,8 +91,6 @@ protected:
     float DefaultSpeedRotate{0.1f};
 
 private:
-    UPROPERTY()
-    AActor* OwnerPirate;
 
     EStateMovement StateMovement = EStateMovement::Off;
 
@@ -104,6 +109,11 @@ private:
      * @private Calculate rotate
      **/
     void CalculateRotate(float DeltaTime);
+
+    /**
+     * @private Move to Spline
+     **/
+    void MoveToSpline(float DeltaTime);
 
 #pragma endregion
 
