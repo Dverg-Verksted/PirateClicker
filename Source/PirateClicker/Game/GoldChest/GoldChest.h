@@ -23,21 +23,13 @@ class PIRATECLICKER_API AGoldChest : public AActor
 public:
 //Set Default Values
 	AGoldChest();
-
-#if WITH_EDITOR
-    virtual void PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent) override;
-#endif
-
+    
 protected:
 	virtual void BeginPlay() override;
 
 #pragma endregion
 
 #pragma region Components
-
-public:
-    UFUNCTION(BlueprintCallable,Category = "Chest State",meta = (ToolTip = "Функция для получения текущего состояния сундука"))
-    EGoldChestState GetGoldChestState();
     
 protected:
 //Scene root component
@@ -47,15 +39,20 @@ protected:
 //Mesh Settings
     UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category = "Gold Chest Blueprint Settings")
     UStaticMeshComponent* MeshStorage;
-    UPROPERTY(EditInstanceOnly,Category = "Gold Chest settings",meta = (ToolTip= "Тут назначается меш для сундука"))
-    UStaticMesh* MeshToChange;
-    
+
+#pragma endregion 
+   
+#pragma region DataChest
+
+public:
+//Get ChestState
+    UFUNCTION(BlueprintCallable,Category = "Chest State",meta = (ToolTip = "Функция для получения текущего состояния сундука"))
+    EGoldChestState GetGoldChestState();
+
 private:
-//Chest State Variable
+    //Chest State Variable
     UPROPERTY(EditInstanceOnly,Category = "Gold Chest settings")
     EGoldChestState ChestState ;
 
 #pragma endregion 
-   
-
 };

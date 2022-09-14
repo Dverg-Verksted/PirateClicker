@@ -1,6 +1,7 @@
 // This section is the property of the Dverg Verksted team
 
 #include "Game/GoldStorage/GoldStorageActor.h"
+#include "Chaos/AABBTree.h"
 #include "Library/PirateClickerLibrary.h"
 #include "Game/AI/Pirates/PirateActorBase.h"
 
@@ -93,8 +94,11 @@ void AGoldStorageActor::RegisterActorBeginOverlap(AActor* OverlappedActor, AActo
         {
             PirateBase->bHasTreasure = true;
         }
+        //PirateBase->SpawnGoldChest();
     }
-
+    
+    //GoldStorageChestTaken.Broadcast(TakenChestPirate,GoldChestFromStorage);
+    
     if (CurrentGold == 0)
     {
         GoldStorageEmpty.Broadcast();

@@ -9,6 +9,7 @@
 #include "Game/Player/GamePC.h"
 #include "Kismet/GameplayStatics.h"
 #include "Library/PirateClickerLibrary.h"
+#include "Engine/EngineTypes.h"
 
 #pragma region Default
 
@@ -134,6 +135,12 @@ int32 APirateActorBase::GetIndexAlongDistPlayer(const ASplineActor* Spline) cons
     }
 
     return TempTargetIndex;
+}
+
+void APirateActorBase::SpawnGoldChest(const TSubclassOf<AGoldChest>& SubClassGoldChest)
+{
+    AGoldChest* GoldChest = GetWorld()->SpawnActor<AGoldChest>(SubClassGoldChest,FActorSpawnParameters());
+    GoldChest->AttachToComponent(RootComponent,FAttachmentTransformRules::KeepRelativeTransform,(FName("middle_01_lSocket")));
 }
 
 #pragma endregion

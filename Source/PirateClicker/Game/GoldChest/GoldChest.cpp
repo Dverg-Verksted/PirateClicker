@@ -33,19 +33,3 @@ EGoldChestState AGoldChest::GetGoldChestState()
 {
     return ChestState;
 }
-
-#if WITH_EDITOR
-
-void AGoldChest::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
-{
-    Super::PostEditChangeProperty(PropertyChangedEvent);
-
-//Chest mesh change function
-    if (PropertyChangedEvent.Property->GetName() == TEXT("MeshToChange"))
-    {
-        if (!MeshToChange) return;
-        MeshStorage->SetStaticMesh(MeshToChange);
-    }
-}
-
-#endif

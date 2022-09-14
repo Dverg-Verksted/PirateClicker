@@ -7,7 +7,9 @@
 #include "Game/AI/DataAsset/PirateDataAsset.h"
 #include "Game/AI/Spawner/SplineActor.h"
 #include "GameFramework/Actor.h"
+#include "Game/GoldChest/GoldChest.h"
 #include "PirateActorBase.generated.h"
+
 
 class UAbilitySystemComponent;
 class ASplineActor;
@@ -137,6 +139,9 @@ public:
      **/
     UFUNCTION()
     void RegisterDeadActor();
+
+    UFUNCTION()
+    void SpawnGoldChest(const TSubclassOf<AGoldChest>& SubClassGoldChest);
 
 private:
     /**

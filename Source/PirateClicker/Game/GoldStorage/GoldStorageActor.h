@@ -5,11 +5,10 @@
 #include "CoreMinimal.h"
 #include "Components/BoxComponent.h"
 #include "Components/SphereComponent.h"
+#include "Game/AI/Pirates/PirateActorBase.h"
 #include "Game/GoldChest/GoldChest.h"
 #include "GameFramework/Actor.h"
 #include "GoldStorageActor.generated.h"
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGoldStorageEmptySignature);
 
 UENUM()
 enum class ETypeCollision : uint8
@@ -81,12 +80,18 @@ protected:
     TSubclassOf<AGoldChest> GoldChestToGive;
 
 #pragma endregion
-#pragma region Action
+#pragma region Delegate
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGoldStorageChestTaken,APirateActorBase*,TakenChestPirate, AGoldStorageActor*,GoldChestFromStorage);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGoldStorageEmptySignature);
 
 protected:
-    UPROPERTY(BlueprintCallable, Category = "Gold storage.", meta = (ToolTip = "Делегат, который вызывается, когда хранилище пустое"))
+    UPROPERTY(BlueprintCallable, Category = "Gold storage", meta = (ToolTip = "Делегат, который вызывается, когда хранилище пустое"))
     FGoldStorageEmptySignature GoldStorageEmpty;
+    UPROPERTY(BlueprintCallable, Category = "Gold storage", meta = (ToolTip = "Делегат, который вызывается, когда пираты оверлапят хранилище"))
+    FGoldStorageChestTaken GoldStorageChestTaken;
 
+#pragma endregion 
+#pragma region Action
     UFUNCTION(BlueprintImplementableEvent)
     void OnChangeGoldCount();
 
