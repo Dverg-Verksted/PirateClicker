@@ -1,7 +1,6 @@
 // This section is the property of the Dverg Verksted team
 
 #include "Game/GoldStorage/GoldStorageActor.h"
-#include "Chaos/AABBTree.h"
 #include "Library/PirateClickerLibrary.h"
 #include "Game/AI/Pirates/PirateActorBase.h"
 
