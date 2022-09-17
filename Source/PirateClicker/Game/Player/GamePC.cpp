@@ -48,7 +48,7 @@ void AGamePC::Tick(float DeltaSeconds)
 #if UE_EDITOR || UE_BUILD_DEVELOPMENT
     if (EnableD_GamePC.GetValueOnGameThread())
     {
-        DrawDebugSphere(GetWorld(), TouchLocation, 12.0f, 12, FColor::Red, false, 0.0f, 0, 2.0f);
+        DrawDebugSphere(GetWorld(), TouchLocation, 100.0f, 12, FColor::Red, false, 0.0f, 0, 2.0f);
     }
 #endif
 }

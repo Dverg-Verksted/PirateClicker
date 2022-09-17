@@ -128,18 +128,18 @@ void ASpawnerNPC::CheckedDataUnderWaves()
 {
     if (GetWorldTimerManager().TimerExists(TimerHandleSpawnPirate) || QueueDataUnderWaves.IsEmpty()) return;
 
-    GetWorldTimerManager().SetTimer(
-        TimerHandleSpawnPirate,
-        [&]()
-        {
-            FDataPirateSpawn DataPirateSpawn;
-            QueueDataUnderWaves.Dequeue(DataPirateSpawn);
-            LOG_SPAWNER(ELogVerb::Display, FString::Printf(TEXT("Run data pirate spawn: [%s]"), *DataPirateSpawn.ToString()));
-            RunSpawnPirate(DataPirateSpawn.PirateAsset, DataPirateSpawn.CountSpawn);
-            GetWorldTimerManager().ClearTimer(TimerHandleSpawnPirate);
-            CheckedDataUnderWaves();
-        },
+    GetWorldTimerManager().SetTimer(TimerHandleSpawnPirate,this, &ThisClass::RunSpawnPirate_Event,
         QueueDataUnderWaves.Peek()->DelayTimeSpawn, false);
+}
+
+void ASpawnerNPC::RunSpawnPirate_Event()
+{
+    FDataPirateSpawn DataPirateSpawn;
+    QueueDataUnderWaves.Dequeue(DataPirateSpawn);
+    LOG_SPAWNER(ELogVerb::Display, FString::Printf(TEXT("Run data pirate spawn: [%s]"), *DataPirateSpawn.ToString()));
+    RunSpawnPirate(DataPirateSpawn.PirateAsset, DataPirateSpawn.CountSpawn);
+    GetWorldTimerManager().ClearTimer(TimerHandleSpawnPirate);
+    CheckedDataUnderWaves();
 }
 
 void ASpawnerNPC::RunSpawnPirate(const FSoftObjectPath& PirateAsset, const int32 CountSpawn)
@@ -231,7 +231,7 @@ ASplineActor* ASpawnerNPC::GetRandomTargetSpline()
     FDataSplineInfo TargetDataSplineInfo;
     for (const FDataSplineInfo& DataSplineInfo : ArrDataSplineInfo)
     {
-        if (DataSplineInfo.Distance < MinDist)
+        if (DataSplineInfo.Distance < MinDist && DataSplineInfo.TargetGoldStorage.Get() && DataSplineInfo.TargetGoldStorage.Get()->GetCurrentGold() != 0)
         {
             MinDist = DataSplineInfo.Distance;
             TargetDataSplineInfo = DataSplineInfo;

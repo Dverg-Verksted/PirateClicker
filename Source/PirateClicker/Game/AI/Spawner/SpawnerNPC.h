@@ -121,6 +121,11 @@ private:
     void CheckedDataUnderWaves();
 
     /**
+      * @private pre init to run spawn pirate
+     **/
+    void RunSpawnPirate_Event();
+
+    /**
      * @private Start the spawn process
      * @param1 FSoftObjectPath
      * @param2 int32
