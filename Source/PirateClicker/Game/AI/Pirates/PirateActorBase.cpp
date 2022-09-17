@@ -140,7 +140,8 @@ int32 APirateActorBase::GetIndexAlongDistPlayer(const ASplineActor* Spline) cons
 void APirateActorBase::SpawnGoldChest(const TSubclassOf<AGoldChest>& SubClassGoldChest)
 {
     AGoldChest* GoldChest = GetWorld()->SpawnActor<AGoldChest>(SubClassGoldChest,FActorSpawnParameters());
-    GoldChest->AttachToComponent(RootComponent,FAttachmentTransformRules::KeepRelativeTransform,(FName("middle_01_lSocket")));
+    if (!CHECKED(GoldChest != nullptr, "Gold chest is nullptr")) return;
+    GoldChest->AttachToComponent(PirateMesh, FAttachmentTransformRules::KeepRelativeTransform,(FName("middle_01_lSocket")));
 }
 
 #pragma endregion

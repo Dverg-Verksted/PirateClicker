@@ -24,7 +24,6 @@ AGoldStorageActor::AGoldStorageActor()
     SphereCollision = CreateDefaultSubobject<USphereComponent>(FName("Sphere Collision"));
     SphereCollision->SetupAttachment(RootScene);
     SphereCollision->SetSphereRadius(SphereCollisionRadius);
-    
 }
 
 void AGoldStorageActor::BeginPlay()
@@ -50,6 +49,7 @@ int32 AGoldStorageActor::GetCurrentGold()
 {
     return CurrentGold;
 }
+
 void AGoldStorageActor::SetCurrentGold(float GoldToSet)
 {
     CurrentGold = GoldToSet;
@@ -91,24 +91,20 @@ void AGoldStorageActor::RegisterActorBeginOverlap(AActor* OverlappedActor, AActo
         PirateBase->SetupStateBrain(EStateBrain::WalkToBack);
         if (CurrentGold != 0)
         {
+            if (PirateBase->bHasTreasure) return;
             PirateBase->bHasTreasure = true;
+            PirateBase->SpawnGoldChest(GoldChestToGive);
+            GoldStorageChestTaken.Broadcast(PirateBase,this);
+            OnChangeGoldCount();
+            CurrentGold -= 1;
+            if (CurrentGold == 0)
+            {
+                GoldStorageEmpty.Broadcast();
+            }
         }
-        //PirateBase->SpawnGoldChest();
+        
+        LOG_PIRATE(ELogVerb::Display, FString::Printf(TEXT("CurrentGold : [%i]"), CurrentGold));
     }
-    
-    //GoldStorageChestTaken.Broadcast(TakenChestPirate,GoldChestFromStorage);
-    
-    if (CurrentGold == 0)
-    {
-        GoldStorageEmpty.Broadcast();
-    }
-    else
-    {
-        OnChangeGoldCount();
-        CurrentGold -= 1;
-    }
-
-    LOG_PIRATE(ELogVerb::Display, FString::Printf(TEXT("CurrentGold : [%i]"), CurrentGold));
 }
 
 void AGoldStorageActor::CollisionChecker()
