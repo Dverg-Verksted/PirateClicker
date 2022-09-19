@@ -27,9 +27,3 @@ void AGoldChest::BeginPlay()
     if (!CHECKED(MeshStorage != nullptr, "Mesh storage is nullptr")) return;
 	
 }
-
-//Chest state get
-EGoldChestState AGoldChest::GetGoldChestState()
-{
-    return ChestState;
-}
