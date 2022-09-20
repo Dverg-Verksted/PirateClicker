@@ -1,11 +1,11 @@
 // This section is the property of the Dverg Verksted team
 
 #include "Game/Player/GamePC.h"
-
 #include "DrawDebugHelpers.h"
 #include "Game/AI/Pirates/PirateActorBase.h"
 #include "Game/GameMode/StoryGMBase.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Game/ScreenTap/ScreenTapActor.h"
 #include "Library/PirateClickerLibrary.h"
 
 #if UE_EDITOR || UE_BUILD_DEVELOPMENT
@@ -70,6 +70,7 @@ void AGamePC::RegisterTouchPressed(ETouchIndex::Type FingerIndex, FVector Locati
             if (Actor->IsA(APirateActorBase::StaticClass()))
             {
                 OnHitActor.Broadcast(Actor);
+                SpawnActorWithTap(Location);
             }
         }
     }
@@ -101,6 +102,11 @@ void AGamePC::RegisterChangeStateGame(const EStateGame& NewState)
             break;
         }
     }
+}
+void AGamePC::SpawnActorWithTap(FVector TapLocation)
+{
+    //AScreenTapActor* ScreenTapActor = Cast<AScreenTapActor>(OtherActor);
+    //ScreenTapActor->SpawnActorByTap(TapLocation);
 }
 
 #pragma endregion

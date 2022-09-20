@@ -66,4 +66,11 @@ public:
     FHitActorSignature OnHitActor;
 
 #pragma endregion
+
+#pragma region Action
+
+    UFUNCTION()
+    void SpawnActorWithTap(FVector TapLocation);
+
+#pragma endregion 
 };
