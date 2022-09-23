@@ -8,6 +8,7 @@
 #include "Game/AI/Spawner/SplineActor.h"
 #include "GameFramework/Actor.h"
 #include "Game/GoldChest/GoldChest.h"
+#include "Game/GoldStorage/GoldStorageActor.h"
 #include "PirateActorBase.generated.h"
 
 
@@ -142,6 +143,9 @@ public:
 
     UFUNCTION()
     void SpawnGoldChest(const TSubclassOf<AGoldChest>& SubClassGoldChest);
+
+    UFUNCTION()
+    void BackChestToStorage(AGoldStorageActor* GoldChestFrom,AGoldChest* AttachedGoldChest);
 
 private:
     /**

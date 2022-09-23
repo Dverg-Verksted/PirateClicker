@@ -9,6 +9,7 @@
 #include "Game/Player/GamePC.h"
 #include "Kismet/GameplayStatics.h"
 #include "Library/PirateClickerLibrary.h"
+#include "Game/GoldStorage/GoldStorageActor.h"
 #include "Engine/EngineTypes.h"
 
 #pragma region Default
@@ -29,6 +30,8 @@ APirateActorBase::APirateActorBase()
 
     MovePirateComponent = CreateDefaultSubobject<UMovePirateComponent>(FName("Movement component"));
     AbilitySystem = CreateDefaultSubobject<UAbilitySystemComponent>(FName("Ability system component"));
+
+    //OnPirateDead.AddDynamic(this,BackChestToStorage())
 }
 
 void APirateActorBase::InitParamsPirate(const FDataPirate& DataPirate, ASplineActor* NewSpline)
@@ -142,6 +145,13 @@ void APirateActorBase::SpawnGoldChest(const TSubclassOf<AGoldChest>& SubClassGol
     AGoldChest* GoldChest = GetWorld()->SpawnActor<AGoldChest>(SubClassGoldChest,FActorSpawnParameters());
     if (!CHECKED(GoldChest != nullptr, "Gold chest is nullptr")) return;
     GoldChest->AttachToComponent(PirateMesh, FAttachmentTransformRules::KeepRelativeTransform,(FName("middle_01_lSocket")));
+}
+
+void APirateActorBase::BackChestToStorage(AGoldStorageActor* GoldChestFrom,AGoldChest* AttachedGoldChest)
+{
+    if (!bHasTreasure) return;
+    GoldChestFrom->SetCurrentGold(GoldChestFrom->GetCurrentGold() + 1);
+    AttachedGoldChest->Destroy();
 }
 
 #pragma endregion

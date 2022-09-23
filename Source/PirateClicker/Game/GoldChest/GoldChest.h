@@ -33,5 +33,5 @@ protected:
     UPROPERTY(EditDefaultsOnly,BlueprintReadOnly,Category = "Gold Chest Blueprint Settings")
     UStaticMeshComponent* MeshStorage;
 
-#pragma endregion 
+#pragma endregion
 };

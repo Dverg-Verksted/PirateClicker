@@ -27,3 +27,4 @@ void AGoldChest::BeginPlay()
     if (!CHECKED(MeshStorage != nullptr, "Mesh storage is nullptr")) return;
 	
 }
+
