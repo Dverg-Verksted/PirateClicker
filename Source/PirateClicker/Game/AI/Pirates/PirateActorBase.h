@@ -114,7 +114,9 @@ protected:
 #pragma endregion
 
 #pragma region Action
-
+private:
+    UPROPERTY()
+    AGoldChest* GoldChest;
 public:
     /**
      * @public Change target spline for pirate
@@ -145,7 +147,7 @@ public:
     void SpawnGoldChest(const TSubclassOf<AGoldChest>& SubClassGoldChest);
 
     UFUNCTION()
-    void BackChestToStorage(AGoldStorageActor* GoldChestFrom,AGoldChest* AttachedGoldChest);
+    void BackChestToStorage(AGoldStorageActor* GoldChestFrom);
 
 private:
     /**

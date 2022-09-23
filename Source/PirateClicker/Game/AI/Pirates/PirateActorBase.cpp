@@ -9,6 +9,7 @@
 #include "Game/Player/GamePC.h"
 #include "Kismet/GameplayStatics.h"
 #include "Library/PirateClickerLibrary.h"
+#include "Game/GoldChest/GoldChest.h"
 #include "Game/GoldStorage/GoldStorageActor.h"
 #include "Engine/EngineTypes.h"
 
@@ -142,16 +143,16 @@ int32 APirateActorBase::GetIndexAlongDistPlayer(const ASplineActor* Spline) cons
 
 void APirateActorBase::SpawnGoldChest(const TSubclassOf<AGoldChest>& SubClassGoldChest)
 {
-    AGoldChest* GoldChest = GetWorld()->SpawnActor<AGoldChest>(SubClassGoldChest,FActorSpawnParameters());
+    GoldChest = GetWorld()->SpawnActor<AGoldChest>(SubClassGoldChest,FActorSpawnParameters());
     if (!CHECKED(GoldChest != nullptr, "Gold chest is nullptr")) return;
     GoldChest->AttachToComponent(PirateMesh, FAttachmentTransformRules::KeepRelativeTransform,(FName("middle_01_lSocket")));
 }
 
-void APirateActorBase::BackChestToStorage(AGoldStorageActor* GoldChestFrom,AGoldChest* AttachedGoldChest)
+void APirateActorBase::BackChestToStorage(AGoldStorageActor* GoldChestFrom)
 {
     if (!bHasTreasure) return;
     GoldChestFrom->SetCurrentGold(GoldChestFrom->GetCurrentGold() + 1);
-    AttachedGoldChest->Destroy();
+    GoldChest->Destroy();
 }
 
 #pragma endregion
