@@ -17,10 +17,10 @@ protected:
 
 public:
     AScreenTapActor();
-    void SpawnActorByTap(FVector TapLocation);
 
 private:
-    float ActorLifeSpanTime;
+    UPROPERTY(EditDefaultsOnly, Category = "Settings")
+    float ActorLifeSpanTime{3.0f};
 
     UPROPERTY(EditDefaultsOnly)
     USceneComponent* SceneRootComponent;

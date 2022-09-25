@@ -111,6 +111,11 @@ protected:
 
     int32 TargetIndex = -1;
 
+private:
+
+    UPROPERTY()
+    AGoldStorageActor* GoldStorageFrom{nullptr};
+
 #pragma endregion
 
 #pragma region Action
@@ -144,10 +149,7 @@ public:
     void RegisterDeadActor();
 
     UFUNCTION()
-    void SpawnGoldChest(const TSubclassOf<AGoldChest>& SubClassGoldChest);
-
-    UFUNCTION()
-    void BackChestToStorage(AGoldStorageActor* GoldChestFrom);
+    void SpawnGoldChest(const TSubclassOf<AGoldChest>& SubClassGoldChest, AGoldStorageActor* GoldStorageActor);
 
 private:
     /**
@@ -169,6 +171,9 @@ private:
      * @return int32
      **/
     int32 GetIndexAlongDistPlayer(const ASplineActor* Spline) const;
+
+    UFUNCTION()
+    void BackChestToStorage();
 
 #pragma endregion
 

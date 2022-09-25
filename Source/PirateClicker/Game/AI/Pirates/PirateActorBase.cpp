@@ -31,8 +31,6 @@ APirateActorBase::APirateActorBase()
 
     MovePirateComponent = CreateDefaultSubobject<UMovePirateComponent>(FName("Movement component"));
     AbilitySystem = CreateDefaultSubobject<UAbilitySystemComponent>(FName("Ability system component"));
-
-    //OnPirateDead.AddDynamic(this,BackChestToStorage())
 }
 
 void APirateActorBase::InitParamsPirate(const FDataPirate& DataPirate, ASplineActor* NewSpline)
@@ -100,6 +98,7 @@ void APirateActorBase::RegisterHitActor(AActor* HitActor)
 void APirateActorBase::RegisterDeadActor()
 {
     if (GetWorldTimerManager().TimerExists(TimerHandle_LifeSpanExpired)) return;
+    BackChestToStorage();
     SetLifeSpan(1.0f);
     OnPirateDead.Broadcast(this);
 }
@@ -141,17 +140,18 @@ int32 APirateActorBase::GetIndexAlongDistPlayer(const ASplineActor* Spline) cons
     return TempTargetIndex;
 }
 
-void APirateActorBase::SpawnGoldChest(const TSubclassOf<AGoldChest>& SubClassGoldChest)
+void APirateActorBase::SpawnGoldChest(const TSubclassOf<AGoldChest>& SubClassGoldChest, AGoldStorageActor* GoldStorageActor)
 {
+    GoldStorageFrom = GoldStorageActor;
     GoldChest = GetWorld()->SpawnActor<AGoldChest>(SubClassGoldChest,FActorSpawnParameters());
     if (!CHECKED(GoldChest != nullptr, "Gold chest is nullptr")) return;
     GoldChest->AttachToComponent(PirateMesh, FAttachmentTransformRules::KeepRelativeTransform,(FName("middle_01_lSocket")));
 }
 
-void APirateActorBase::BackChestToStorage(AGoldStorageActor* GoldChestFrom)
+void APirateActorBase::BackChestToStorage()
 {
-    if (!bHasTreasure) return;
-    GoldChestFrom->SetCurrentGold(GoldChestFrom->GetCurrentGold() + 1);
+    if (!bHasTreasure || !GoldStorageFrom) return;
+    GoldStorageFrom->SetCurrentGold(GoldStorageFrom->GetCurrentGold() + 1);
     GoldChest->Destroy();
 }
 

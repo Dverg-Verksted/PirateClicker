@@ -65,12 +65,13 @@ void AGamePC::RegisterTouchPressed(ETouchIndex::Type FingerIndex, FVector Locati
         const TArray<AActor*> ActorsToIgnore{GetPawn()};
         TArray<AActor*> OutActors;
         UKismetSystemLibrary::SphereOverlapActors(GetWorld(), HitResult.Location, 100.0f, ObjectTypes, APirateActorBase::StaticClass(), ActorsToIgnore, OutActors);
+        SpawnActorWithTap(HitResult.Location);
+
         for (AActor* Actor : OutActors)
         {
             if (Actor->IsA(APirateActorBase::StaticClass()))
             {
                 OnHitActor.Broadcast(Actor);
-                SpawnActorWithTap(Location);
             }
         }
     }
@@ -105,8 +106,12 @@ void AGamePC::RegisterChangeStateGame(const EStateGame& NewState)
 }
 void AGamePC::SpawnActorWithTap(FVector TapLocation)
 {
-    //AScreenTapActor* ScreenTapActor = Cast<AScreenTapActor>(OtherActor);
-    //ScreenTapActor->SpawnActorByTap(TapLocation);
+    if (CurrentTapScreen)
+    {
+        CurrentTapScreen->Destroy();
+    }
+    CurrentTapScreen = GetWorld()->SpawnActor<AScreenTapActor>(ScreenTapSubclass);
+    CurrentTapScreen->SetActorLocation(TapLocation);
 }
 
 #pragma endregion

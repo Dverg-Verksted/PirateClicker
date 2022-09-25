@@ -87,7 +87,8 @@ void ASpawnerNPC::RegisterBeginOverlapActor(AActor* OverlappedActor, AActor* Oth
 
         if (PirateActorBase->GetStateBrain() == EStateBrain::WalkToBack)
         {
-            PirateActorBase->RegisterDeadActor();
+            RegisterPirateDead(PirateActorBase);
+            PirateActorBase->SetLifeSpan(1.0f);
         }
     }
 }

@@ -53,6 +53,7 @@ int32 AGoldStorageActor::GetCurrentGold()
 void AGoldStorageActor::SetCurrentGold(float GoldToSet)
 {
     CurrentGold = GoldToSet;
+    OnChangeGoldCount();
 }
 
 #if WITH_EDITOR
@@ -93,10 +94,9 @@ void AGoldStorageActor::RegisterActorBeginOverlap(AActor* OverlappedActor, AActo
         {
             if (PirateBase->bHasTreasure) return;
             PirateBase->bHasTreasure = true;
-            PirateBase->SpawnGoldChest(GoldChestToGive);
+            PirateBase->SpawnGoldChest(GoldChestToGive, this);
             GoldStorageChestTaken.Broadcast(PirateBase,this);
-            OnChangeGoldCount();
-            CurrentGold -= 1;
+            SetCurrentGold(CurrentGold - 1);
             if (CurrentGold == 0)
             {
                 GoldStorageEmpty.Broadcast();

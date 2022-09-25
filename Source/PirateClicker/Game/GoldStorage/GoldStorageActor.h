@@ -5,11 +5,10 @@
 #include "CoreMinimal.h"
 #include "Components/BoxComponent.h"
 #include "Components/SphereComponent.h"
-#include "Game/AI/Pirates/PirateActorBase.h"
-#include "Game/GoldChest/GoldChest.h"
 #include "GameFramework/Actor.h"
 #include "GoldStorageActor.generated.h"
 
+class AGoldChest;
 UENUM()
 enum class ETypeCollision : uint8
 {
@@ -81,7 +80,7 @@ protected:
 
 #pragma endregion
 #pragma region Delegate
-    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGoldStorageChestTaken,APirateActorBase*,TakenChestPirate, AGoldStorageActor*,GoldChestFromStorage);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGoldStorageChestTaken, class APirateActorBase*,TakenChestPirate, AGoldStorageActor*,GoldChestFromStorage);
     DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGoldStorageEmptySignature);
 
 protected:

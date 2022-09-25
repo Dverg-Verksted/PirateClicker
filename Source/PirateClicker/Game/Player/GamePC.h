@@ -7,6 +7,7 @@
 #include "GameFramework/PlayerController.h"
 #include "GamePC.generated.h"
 
+class AScreenTapActor;
 class AStoryGMBase;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FHitActorSignature, AActor*, HitActor);
@@ -50,6 +51,14 @@ private:
 
 #pragma region DataController
 
+protected:
+
+    UPROPERTY(EditDefaultsOnly, Category = "Settings")
+    TSubclassOf<AScreenTapActor> ScreenTapSubclass;
+
+    UPROPERTY()
+    AScreenTapActor* CurrentTapScreen{nullptr};
+    
 private:
 
     UPROPERTY()
