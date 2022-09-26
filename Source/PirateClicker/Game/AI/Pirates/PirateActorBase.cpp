@@ -151,7 +151,9 @@ void APirateActorBase::SpawnGoldChest(const TSubclassOf<AGoldChest>& SubClassGol
 void APirateActorBase::BackChestToStorage()
 {
     if (!bHasTreasure || !GoldStorageFrom) return;
-    GoldStorageFrom->SetCurrentGold(GoldStorageFrom->GetCurrentGold() + 1);
+
+    float ChestToGive = 1.0f;
+    GoldStorageFrom->SetCurrentGold(GoldStorageFrom->GetCurrentGold() + ChestToGive);
     GoldChest->Destroy();
 }
 
