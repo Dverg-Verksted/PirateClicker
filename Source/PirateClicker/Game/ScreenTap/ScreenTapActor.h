@@ -31,9 +31,9 @@ private:
 
 #pragma region Components
 
-    UPROPERTY(EditDefaultsOnly)
+    UPROPERTY()
     USceneComponent* SceneRootComponent;
-    UPROPERTY(EditDefaultsOnly)
+    UPROPERTY()
     UStaticMeshComponent* MeshStorage;
 
     UPROPERTY()

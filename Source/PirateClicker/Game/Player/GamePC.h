@@ -54,10 +54,7 @@ private:
 protected:
 
     UPROPERTY(EditDefaultsOnly, Category = "Settings")
-    TSubclassOf<AScreenTapActor> ScreenTapSubclass;
-
-    UPROPERTY()
-    AScreenTapActor* CurrentTapScreen{nullptr};
+    AScreenTapActor* ScreenTapClass;
     
 private:
 

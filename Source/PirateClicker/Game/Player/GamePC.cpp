@@ -106,12 +106,15 @@ void AGamePC::RegisterChangeStateGame(const EStateGame& NewState)
 }
 void AGamePC::SpawnActorWithTap(FVector TapLocation)
 {
-    if (CurrentTapScreen)
+    if (ScreenTapClass)
     {
-        CurrentTapScreen->Destroy();
+        ScreenTapClass->Destroy();
     }
-    CurrentTapScreen = GetWorld()->SpawnActor<AScreenTapActor>(ScreenTapSubclass);
-    CurrentTapScreen->SetActorLocation(TapLocation);
+    FTransform TapActorSpawnTransform;
+    TapActorSpawnTransform.SetLocation(TapLocation);
+    
+    ScreenTapClass = GetWorld()->SpawnActorDeferred<AScreenTapActor>(AScreenTapActor::StaticClass(),TapActorSpawnTransform);
+    ScreenTapClass->FinishSpawning(TapActorSpawnTransform);
 }
 
 #pragma endregion
