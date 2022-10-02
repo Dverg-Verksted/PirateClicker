@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "AIDataTypes.h"
 #include "Game/AI/DataAsset/PirateDataAsset.h"
-#include "Game/AI/Spawner/SplineActor.h"
 #include "GameFramework/Actor.h"
 #include "Game/GoldChest/GoldChest.h"
 #include "Game/GoldStorage/GoldStorageActor.h"
@@ -18,6 +17,7 @@ class UMovePirateComponent;
 class UCapsuleComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPirateDeadSignature, APirateActorBase*, Pirate);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FStatusTreasureSignature, bool, bHaveTreasure);
 
 UCLASS()
 class PIRATECLICKER_API APirateActorBase : public AActor
@@ -114,14 +114,15 @@ protected:
 private:
 
     UPROPERTY()
+    AGoldChest* GoldChest;
+    
+    UPROPERTY()
     AGoldStorageActor* GoldStorageFrom{nullptr};
 
 #pragma endregion
 
 #pragma region Action
-private:
-    UPROPERTY()
-    AGoldChest* GoldChest;
+
 public:
     /**
      * @public Change target spline for pirate
@@ -150,6 +151,8 @@ public:
 
     UFUNCTION()
     void SpawnGoldChest(const TSubclassOf<AGoldChest>& SubClassGoldChest, AGoldStorageActor* GoldStorageActor);
+
+    
 
 private:
     /**
@@ -183,6 +186,10 @@ public:
     // @public Signature on the death of a pirate
     UPROPERTY(BlueprintAssignable)
     FPirateDeadSignature OnPirateDead;
+
+    // @public notify change status treasure
+    UPROPERTY(BlueprintAssignable)
+    FStatusTreasureSignature OnStatusTreasure;
 
 #pragma endregion
 };

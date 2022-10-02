@@ -146,6 +146,8 @@ void APirateActorBase::SpawnGoldChest(const TSubclassOf<AGoldChest>& SubClassGol
     GoldChest = GetWorld()->SpawnActor<AGoldChest>(SubClassGoldChest,FActorSpawnParameters());
     if (!CHECKED(GoldChest != nullptr, "Gold chest is nullptr")) return;
     GoldChest->AttachToComponent(PirateMesh, FAttachmentTransformRules::KeepRelativeTransform,(FName("middle_01_lSocket")));
+    bHasTreasure = true;
+    OnStatusTreasure.Broadcast(bHasTreasure);
 }
 
 void APirateActorBase::BackChestToStorage()
@@ -155,6 +157,8 @@ void APirateActorBase::BackChestToStorage()
     float ChestToGive = 1.0f;
     GoldStorageFrom->SetCurrentGold(GoldStorageFrom->GetCurrentGold() + ChestToGive);
     GoldChest->Destroy();
+    bHasTreasure = false;
+    OnStatusTreasure.Broadcast(bHasTreasure);
 }
 
 #pragma endregion
