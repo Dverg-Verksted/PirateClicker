@@ -108,12 +108,16 @@ void AGamePC::SpawnActorWithTap(FVector TapLocation)
 {
     if (ScreenTapClass)
     {
+        ScreenTapClass->GetClass()->MarkPendingKill();
         ScreenTapClass->Destroy();
     }
     FTransform TapActorSpawnTransform;
     TapActorSpawnTransform.SetLocation(TapLocation);
+
+    UClass* SubClassTapScreen = PathToScreenTap.TryLoadClass<AScreenTapActor>();
+    if (!SubClassTapScreen) return;
     
-    ScreenTapClass = GetWorld()->SpawnActorDeferred<AScreenTapActor>(AScreenTapActor::StaticClass(),TapActorSpawnTransform);
+    ScreenTapClass = GetWorld()->SpawnActorDeferred<AScreenTapActor>(SubClassTapScreen,TapActorSpawnTransform);
     ScreenTapClass->FinishSpawning(TapActorSpawnTransform);
 }
 

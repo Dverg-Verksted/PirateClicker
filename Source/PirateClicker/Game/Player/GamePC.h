@@ -52,8 +52,10 @@ private:
 #pragma region DataController
 
 protected:
-
-    UPROPERTY(EditDefaultsOnly, Category = "Settings")
+    UPROPERTY(EditDefaultsOnly,Category = "Settings",meta = (MetaClass= "ScreenTapActor"))
+    FSoftClassPath PathToScreenTap;
+    
+    UPROPERTY()
     AScreenTapActor* ScreenTapClass;
     
 private:
