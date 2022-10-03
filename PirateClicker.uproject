@@ -80,10 +80,6 @@
 			"Enabled": false
 		},
 		{
-			"Name": "ChaosNiagara",
-			"Enabled": false
-		},
-		{
 			"Name": "ChaosEditor",
 			"Enabled": false
 		},
