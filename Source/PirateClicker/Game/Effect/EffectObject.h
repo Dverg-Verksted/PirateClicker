@@ -4,9 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "UObject/NoExportTypes.h"
-#include "Game/AI/Pirates/PirateActorBase.h"
 #include "EffectObject.generated.h"
-
 
 /**
  * 
@@ -28,9 +26,6 @@ class PIRATECLICKER_API UEffectObject : public UObject
 };
 
 #pragma region Default
-
-//PirateActor
-APirateActorBase* PirateActor;
 
 //Effects
 float FireDamage{0};
