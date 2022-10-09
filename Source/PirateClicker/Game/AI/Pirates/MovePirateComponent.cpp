@@ -187,8 +187,7 @@ void UMovePirateComponent::MoveToSpline(float DeltaTime)
 #if UE_EDITOR || UE_BUILD_DEVELOPMENT
     if (EnableD_MovementPirate.GetValueOnGameThread())
     {
-        LOG_MOVE(ELogVerb::Display, FString::Printf(TEXT("New pos: [%s] | New rot: [%s] | Duration: [%f]"),
-            *TempPos.ToString(), *TempRot.ToString(), TargetData.Duration));
+        LOG_MOVE(ELogVerb::Display, FString::Printf(TEXT("New pos: [%s] | New rot: [%s] | Duration: [%f]"), *TempPos.ToString(), *TempRot.ToString(), TargetData.Duration));
     }
 #endif
 }

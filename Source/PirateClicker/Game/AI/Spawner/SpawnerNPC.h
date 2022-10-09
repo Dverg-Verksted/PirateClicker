@@ -47,7 +47,6 @@ protected:
 #endif
 
 private:
-
     /**
      * @public Write a log
      **/
@@ -57,7 +56,7 @@ private:
      * @public Register begin overlap actor
      **/
     UFUNCTION()
-    void RegisterBeginOverlapActor(AActor* OverlappedActor, AActor* OtherActor );
+    void RegisterBeginOverlapActor(AActor* OverlappedActor, AActor* OtherActor);
 
 #pragma endregion
 
@@ -121,7 +120,7 @@ private:
     void CheckedDataUnderWaves();
 
     /**
-      * @private pre init to run spawn pirate
+     * @private pre init to run spawn pirate
      **/
     void RunSpawnPirate_Event();
 
@@ -179,7 +178,6 @@ private:
 #pragma region Signature
 
 public:
-    
     UPROPERTY(BlueprintAssignable)
     FCompleteWorkSpawnerSignature OnCompleteWorkSpawner;
 

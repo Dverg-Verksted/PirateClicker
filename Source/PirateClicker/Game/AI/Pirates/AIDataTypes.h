@@ -49,7 +49,7 @@ struct FMovementData
     float TimeRotateDelta{0.0f};
 
     float Duration{0.0f};
-    
+
     UPROPERTY()
     ASplineActor* TargetSpline{nullptr};
 

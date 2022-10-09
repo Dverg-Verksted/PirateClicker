@@ -54,7 +54,6 @@ private:
 #pragma region DataMove
 
 public:
-
     /**
      * @public Go to movement position for AI
      * @param1 FVector
@@ -91,7 +90,6 @@ protected:
     float DefaultSpeedRotate{0.1f};
 
 private:
-
     EStateMovement StateMovement = EStateMovement::Off;
 
     // Target data for movement

@@ -95,14 +95,14 @@ void AGoldStorageActor::RegisterActorBeginOverlap(AActor* OverlappedActor, AActo
             if (PirateBase->bHasTreasure) return;
             PirateBase->bHasTreasure = true;
             PirateBase->SpawnGoldChest(GoldChestToGive, this);
-            GoldStorageChestTaken.Broadcast(PirateBase,this);
+            GoldStorageChestTaken.Broadcast(PirateBase, this);
             SetCurrentGold(CurrentGold - 1);
             if (CurrentGold == 0)
             {
                 GoldStorageEmpty.Broadcast();
             }
         }
-        
+
         LOG_PIRATE(ELogVerb::Display, FString::Printf(TEXT("CurrentGold : [%i]"), CurrentGold));
     }
 }

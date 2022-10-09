@@ -59,9 +59,10 @@ void AGamePC::RegisterTouchPressed(ETouchIndex::Type FingerIndex, FVector Locati
     GetHitResultUnderFinger(FingerIndex, ECollisionChannel::ECC_Visibility, false, HitResult);
     if (HitResult.bBlockingHit && HitResult.GetActor())
     {
-        LOG_PIRATE(ELogVerb::Display, FString::Printf(TEXT("Pressed touch index: [%s] | Location: [%s] | Actor: [%s]"), *UEnum::GetValueAsString(FingerIndex), *HitResult.Location.ToString(), *HitResult.GetActor()->GetName()));
+        LOG_PIRATE(ELogVerb::Display,
+            FString::Printf(TEXT("Pressed touch index: [%s] | Location: [%s] | Actor: [%s]"), *UEnum::GetValueAsString(FingerIndex), *HitResult.Location.ToString(), *HitResult.GetActor()->GetName()));
         TouchLocation = HitResult.Location;
-        const TArray<TEnumAsByte<EObjectTypeQuery> > ObjectTypes{};
+        const TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes{};
         const TArray<AActor*> ActorsToIgnore{GetPawn()};
         TArray<AActor*> OutActors;
         UKismetSystemLibrary::SphereOverlapActors(GetWorld(), HitResult.Location, 100.0f, ObjectTypes, APirateActorBase::StaticClass(), ActorsToIgnore, OutActors);
@@ -116,8 +117,8 @@ void AGamePC::SpawnActorWithTap(FVector TapLocation)
 
     UClass* SubClassTapScreen = PathToScreenTap.TryLoadClass<AScreenTapActor>();
     if (!SubClassTapScreen) return;
-    
-    ScreenTapClass = GetWorld()->SpawnActorDeferred<AScreenTapActor>(SubClassTapScreen,TapActorSpawnTransform);
+
+    ScreenTapClass = GetWorld()->SpawnActorDeferred<AScreenTapActor>(SubClassTapScreen, TapActorSpawnTransform);
     ScreenTapClass->FinishSpawning(TapActorSpawnTransform);
 }
 

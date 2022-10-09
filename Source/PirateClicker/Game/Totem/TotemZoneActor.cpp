@@ -1,11 +1,12 @@
 // This section is the property of the Dverg Verksted team
 
-
 #include "Game/Totem/TotemZoneActor.h"
 #include "DrawDebugHelpers.h"
 #include "PartTotemActor.h"
 #include "TotemDataAsset.h"
 #include "Components/SphereComponent.h"
+#include "Game/AI/Effect/EffectManager.h"
+#include "Game/AI/Pirates/PirateActorBase.h"
 #include "Library/PirateClickerLibrary.h"
 
 #if UE_EDITOR || UE_BUILD_DEVELOPMENT
@@ -37,6 +38,10 @@ void ATotemZoneActor::BeginPlay()
     if (!CHECKED(SphereAttackCollision != nullptr, "Sphere attack component is nullptr")) return;
 
     ArrayDataSlotsTotem = GenerateSetSlotsTotem();
+    if (!CHECKED(ArrayDataSlotsTotem.Num() != 0, "Array data slots totem is Zero")) return;
+
+    OnActorBeginOverlap.AddDynamic(this, &ThisClass::RegisterBeginOverlap);
+    OnActorEndOverlap.AddDynamic(this, &ThisClass::RegisterEndOverlap);
 }
 
 void ATotemZoneActor::OnConstruction(const FTransform& Transform)
@@ -78,7 +83,7 @@ void ATotemZoneActor::PostEditChangeProperty(FPropertyChangedEvent& PropertyChan
     const FString PropertyMemberName = PropertyChangedEvent.MemberProperty->GetName();
     const FString RadiusSphereAttackName = GET_MEMBER_NAME_STRING_CHECKED(ATotemZoneActor, RadiusSphereAttack);
     const FString HeightTotemName = GET_MEMBER_NAME_STRING_CHECKED(ATotemZoneActor, HeightTotem);
-    
+
     if (PropertyName == RadiusSphereAttackName)
     {
         SphereAttackCollision->SetSphereRadius(RadiusSphereAttack);
@@ -128,14 +133,34 @@ void ATotemZoneActor::SetupTotemDA(UTotemDataAsset* TotemDA)
     ArrayDataSlotsTotem[IndexPart].TotemDA = TotemDA;
 }
 
-void ATotemZoneActor::RegisterBeginOverlap()
+void ATotemZoneActor::RegisterBeginOverlap(AActor* OverlappedActor, AActor* OtherActor)
 {
-    
+    if (!CHECKED(OtherActor != nullptr, "Other actor is nullptr")) return;
+
+    if (OtherActor->IsA(APirateActorBase::StaticClass()))
+    {
+        UEffectManager* EffectManager = OtherActor->FindComponentByClass<UEffectManager>();
+        for (const auto& Slot : ArrayDataSlotsTotem)
+        {
+            if (!Slot.IsFreeSlot())
+            {
+                EffectManager->AddEffect(Slot.TotemDA->DataEffect);
+            }
+        }
+        TargetActors.Add(OtherActor);
+    }
 }
 
-void ATotemZoneActor::RegisterEndOverlap()
+void ATotemZoneActor::RegisterEndOverlap(AActor* OverlappedActor, AActor* OtherActor)
 {
-    
+    if (!CHECKED(OtherActor != nullptr, "Other actor is nullptr")) return;
+
+    if (OtherActor->IsA(APirateActorBase::StaticClass()))
+    {
+        UEffectManager* EffectManager = OtherActor->FindComponentByClass<UEffectManager>();
+        EffectManager->ResetEffects(ResetTime);
+        TargetActors.Remove(OtherActor);
+    }
 }
 
 TArray<FDataSlotTotem> ATotemZoneActor::GenerateSetSlotsTotem() const
@@ -156,8 +181,7 @@ int32 ATotemZoneActor::GetFreeSlotIndexForTotem() const
 {
     for (int32 i = 0; i < ArrayDataSlotsTotem.Num(); ++i)
     {
-        if (ArrayDataSlotsTotem.IsValidIndex(i) && ArrayDataSlotsTotem[i].IsFreeSlot())
-            return i;
+        if (ArrayDataSlotsTotem.IsValidIndex(i) && ArrayDataSlotsTotem[i].IsFreeSlot()) return i;
     }
     return INDEX_NONE;
 }

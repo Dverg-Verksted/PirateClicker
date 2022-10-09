@@ -9,7 +9,7 @@
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FHealthUpdateSignature, float, NewHealth);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FDeathSignature);
 
-UCLASS(ClassGroup = (Custom), HideCategories = ("Variable", "Sockets", "Tags", "ComponentTick", "ComponentReplication", "Activation", "Cooking", "Collision", "AssetUserData"),
+UCLASS(ClassGroup = (Managers), HideCategories = ("Variable", "Sockets", "Tags", "ComponentTick", "ComponentReplication", "Activation", "Cooking", "Collision", "AssetUserData"),
     meta = (BlueprintSpawnableComponent))
 class PIRATECLICKER_API UAbilitySystemComponent : public UActorComponent
 {
@@ -38,6 +38,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Damage and Health", meta = (ToolTip = "Функция для изменения максимального хп актера"))
     void SetMaxHealth(const float HealthToSet) { MaxHealth = HealthToSet; }
 
+    UFUNCTION(BlueprintCallable)
+    bool IsDead() const { return bDead; }
+
     UPROPERTY(BlueprintAssignable)
     FHealthUpdateSignature OnUpdateHealth;
 
@@ -53,6 +56,7 @@ private:
     float MaxHealth = 100;
 
     float CurrentHealth = 0;
+    bool bDead{false};
 
 #pragma endregion
 };

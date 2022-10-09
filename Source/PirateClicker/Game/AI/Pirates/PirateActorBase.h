@@ -6,11 +6,11 @@
 #include "AIDataTypes.h"
 #include "Game/AI/DataAsset/PirateDataAsset.h"
 #include "GameFramework/Actor.h"
-#include "Game/GoldChest/GoldChest.h"
-#include "Game/GoldStorage/GoldStorageActor.h"
 #include "PirateActorBase.generated.h"
 
-
+class AGoldStorageActor;
+class AGoldChest;
+class UEffectManager;
 class UAbilitySystemComponent;
 class ASplineActor;
 class UMovePirateComponent;
@@ -92,16 +92,18 @@ protected:
     UPROPERTY(EditDefaultsOnly, Category = "Components")
     UAbilitySystemComponent* AbilitySystem;
 
+    // @protected actor component for health pirate
+    UPROPERTY(EditDefaultsOnly, Category = "Components")
+    UEffectManager* EffectManager;
+
 #pragma endregion
 
 #pragma region DataPirate
 
 public:
-
     bool bHasTreasure{false};
 
 protected:
-
     // @protected Target spline
     UPROPERTY()
     ASplineActor* TargetSpline;
@@ -112,10 +114,9 @@ protected:
     int32 TargetIndex = -1;
 
 private:
-
     UPROPERTY()
     AGoldChest* GoldChest;
-    
+
     UPROPERTY()
     AGoldStorageActor* GoldStorageFrom{nullptr};
 
@@ -142,7 +143,7 @@ public:
      **/
     UFUNCTION(BlueprintCallable, Category = "APirateActorBase | Action")
     EStateBrain GetStateBrain() const { return StateBrain; }
-    
+
     /**
      * @public Register death
      **/
@@ -151,8 +152,6 @@ public:
 
     UFUNCTION()
     void SpawnGoldChest(const TSubclassOf<AGoldChest>& SubClassGoldChest, AGoldStorageActor* GoldStorageActor);
-
-    
 
 private:
     /**

@@ -12,6 +12,7 @@
 #include "Game/GoldChest/GoldChest.h"
 #include "Game/GoldStorage/GoldStorageActor.h"
 #include "Engine/EngineTypes.h"
+#include "Game/AI/Effect/EffectManager.h"
 
 #pragma region Default
 
@@ -31,6 +32,7 @@ APirateActorBase::APirateActorBase()
 
     MovePirateComponent = CreateDefaultSubobject<UMovePirateComponent>(FName("Movement component"));
     AbilitySystem = CreateDefaultSubobject<UAbilitySystemComponent>(FName("Ability system component"));
+    EffectManager = CreateDefaultSubobject<UEffectManager>(FName("Effect manager"));
 }
 
 void APirateActorBase::InitParamsPirate(const FDataPirate& DataPirate, ASplineActor* NewSpline)
@@ -143,9 +145,9 @@ int32 APirateActorBase::GetIndexAlongDistPlayer(const ASplineActor* Spline) cons
 void APirateActorBase::SpawnGoldChest(const TSubclassOf<AGoldChest>& SubClassGoldChest, AGoldStorageActor* GoldStorageActor)
 {
     GoldStorageFrom = GoldStorageActor;
-    GoldChest = GetWorld()->SpawnActor<AGoldChest>(SubClassGoldChest,FActorSpawnParameters());
+    GoldChest = GetWorld()->SpawnActor<AGoldChest>(SubClassGoldChest, FActorSpawnParameters());
     if (!CHECKED(GoldChest != nullptr, "Gold chest is nullptr")) return;
-    GoldChest->AttachToComponent(PirateMesh, FAttachmentTransformRules::KeepRelativeTransform,(FName("middle_01_lSocket")));
+    GoldChest->AttachToComponent(PirateMesh, FAttachmentTransformRules::KeepRelativeTransform, (FName("middle_01_lSocket")));
     bHasTreasure = true;
     OnStatusTreasure.Broadcast(bHasTreasure);
 }

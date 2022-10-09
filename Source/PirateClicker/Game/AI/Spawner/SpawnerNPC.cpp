@@ -93,7 +93,6 @@ void ASpawnerNPC::RegisterBeginOverlapActor(AActor* OverlappedActor, AActor* Oth
     }
 }
 
-
 #if WITH_EDITOR
 
 void ASpawnerNPC::PostEditChangeProperty(FPropertyChangedEvent& PropertyChangedEvent)
@@ -129,8 +128,7 @@ void ASpawnerNPC::CheckedDataUnderWaves()
 {
     if (GetWorldTimerManager().TimerExists(TimerHandleSpawnPirate) || QueueDataUnderWaves.IsEmpty()) return;
 
-    GetWorldTimerManager().SetTimer(TimerHandleSpawnPirate,this, &ThisClass::RunSpawnPirate_Event,
-        QueueDataUnderWaves.Peek()->DelayTimeSpawn, false);
+    GetWorldTimerManager().SetTimer(TimerHandleSpawnPirate, this, &ThisClass::RunSpawnPirate_Event, QueueDataUnderWaves.Peek()->DelayTimeSpawn, false);
 }
 
 void ASpawnerNPC::RunSpawnPirate_Event()

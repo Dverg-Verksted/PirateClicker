@@ -7,10 +7,10 @@
 #include "GameFramework/Actor.h"
 #include "ScreenTapActor.generated.h"
 
-UCLASS(HideCategories = ("Rendering","Replication","Collision","Actor","LOD","Cooking","Input","Actor Tick"))
+UCLASS(HideCategories = ("Rendering", "Replication", "Collision", "Actor", "LOD", "Cooking", "Input", "Actor Tick"))
 class PIRATECLICKER_API AScreenTapActor : public AActor
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 #pragma region Default
 protected:
@@ -24,7 +24,7 @@ public:
 #pragma region Settings
 
 private:
-    UPROPERTY(EditDefaultsOnly, Category = "Settings",meta = (ClampMin = "0"))
+    UPROPERTY(EditDefaultsOnly, Category = "Settings", meta = (ClampMin = "0"))
     float ActorLifeSpanTime{3.0f};
 
 #pragma endregion
@@ -40,6 +40,4 @@ private:
     UWidgetComponent* WidgetComponent;
 
 #pragma endregion
-
-
 };

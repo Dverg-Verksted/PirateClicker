@@ -19,6 +19,7 @@ void UAbilitySystemComponent::TakeDamage(AActor* DamagedActor, float Damage, con
     OnUpdateHealth.Broadcast(CurrentHealth);
     if (CurrentHealth <= 0.0f)
     {
+        bDead = true;
         OnDeath.Broadcast();
     }
 }

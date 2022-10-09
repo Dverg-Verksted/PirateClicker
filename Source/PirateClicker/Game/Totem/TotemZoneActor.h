@@ -23,10 +23,7 @@ struct FDataSlotTotem
     UPROPERTY()
     UTotemDataAsset* TotemDA{nullptr};
 
-    bool IsFreeSlot() const
-    {
-        return TotemActor == nullptr;
-    }
+    bool IsFreeSlot() const { return TotemActor == nullptr; }
 };
 
 UCLASS(HideCategories = ("Replication", "Collision", "Input", "Actor", "LOD", "Cooking"))
@@ -37,7 +34,6 @@ class PIRATECLICKER_API ATotemZoneActor : public AActor
 #pragma region Default
 
 public:
-
     // Sets default values for this actor's properties
     ATotemZoneActor();
 
@@ -49,7 +45,6 @@ protected:
     virtual void BeginPlay() override;
     virtual void OnConstruction(const FTransform& Transform) override;
 
-    
     UFUNCTION(CallInEditor, Category = "Settings Data Totem")
     void DrawDebugTotem();
 
@@ -67,7 +62,6 @@ protected:
 #pragma region Components
 
 public:
-
     /**
      * @public Get root scene component
      * @return USceneComponent
@@ -83,7 +77,6 @@ public:
     FORCEINLINE USphereComponent* GetSphereCollision() const { return SphereAttackCollision; }
 
 private:
-
     // @private Root scene component
     UPROPERTY(EditDefaultsOnly, Category = "Components")
     USceneComponent* RootScene{nullptr};
@@ -97,27 +90,24 @@ private:
 #pragma region Action
 
 public:
-
     UFUNCTION(BlueprintCallable, Category = "Action")
     bool IsFullHeightPartTotem() const { return ArrayDataSlotsTotem.Num() == HeightTotem; }
-    
+
     UFUNCTION(BlueprintCallable, Category = "Action")
     void SetupTotemDA(UTotemDataAsset* TotemDA);
 
 private:
+    UFUNCTION()
+    void RegisterBeginOverlap(AActor* OverlappedActor, AActor* OtherActor);
 
     UFUNCTION()
-    void RegisterBeginOverlap();
-
-    UFUNCTION()
-    void RegisterEndOverlap();
+    void RegisterEndOverlap(AActor* OverlappedActor, AActor* OtherActor);
 
 #pragma endregion
 
 #pragma region DataTotem
 
 protected:
-
     // @protected radius sphere attack
     UPROPERTY(EditAnywhere, Category = "Settings Data Totem", meta = (DisplayName = "Радиус атаки", ClampMin = "10.0"))
     float RadiusSphereAttack{150.0f};
@@ -130,10 +120,15 @@ protected:
     UPROPERTY(EditAnywhere, Category = "Settings Data Totem", meta = (DisplayName = "Расстояние между промежутками", ClampMin = "10.0", ForceUnits = "cm"))
     float DistanceGaps{50.0f};
 
-private:
+    UPROPERTY(EditAnywhere, Category = "Settings Data Totem", meta = (DisplayName = "Время сброса эффектов", ClampMin = "0.1"))
+    float ResetTime{3.0f};
 
+private:
     UPROPERTY()
     TArray<FDataSlotTotem> ArrayDataSlotsTotem;
+
+    UPROPERTY()
+    TArray<AActor*> TargetActors;
 
     TArray<FDataSlotTotem> GenerateSetSlotsTotem() const;
     int32 GetFreeSlotIndexForTotem() const;

@@ -26,7 +26,6 @@ protected:
 #pragma region Components
 
 public:
-    
     /**
      * @public Get root scene component
      * @return USceneComponent
@@ -40,9 +39,8 @@ public:
      **/
     UFUNCTION(BlueprintCallable, Category = "Components")
     FORCEINLINE UStaticMeshComponent* GetMeshPartTotem() const { return MeshPartTotem; }
-    
-protected:
 
+protected:
     UPROPERTY(EditDefaultsOnly, Category = "Components")
     USceneComponent* RootScene;
 
@@ -50,5 +48,4 @@ protected:
     UStaticMeshComponent* MeshPartTotem;
 
 #pragma endregion
-    
 };

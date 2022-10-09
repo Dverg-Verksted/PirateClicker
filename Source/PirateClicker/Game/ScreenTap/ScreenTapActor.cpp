@@ -1,13 +1,12 @@
 // This section is the property of the Dverg Verksted team
 
-
 #include "Game/ScreenTap/ScreenTapActor.h"
 #include "Library/PirateClickerLibrary.h"
 
 // Sets default values
 AScreenTapActor::AScreenTapActor()
 {
-	PrimaryActorTick.bCanEverTick = true;
+    PrimaryActorTick.bCanEverTick = true;
 
     SceneRootComponent = CreateDefaultSubobject<USceneComponent>(FName("Scene Root component"));
     SetRootComponent(SceneRootComponent);
@@ -20,8 +19,7 @@ AScreenTapActor::AScreenTapActor()
 // BeginPlay
 void AScreenTapActor::BeginPlay()
 {
-	Super::BeginPlay();
+    Super::BeginPlay();
 
     SetLifeSpan(ActorLifeSpanTime);
 }
-

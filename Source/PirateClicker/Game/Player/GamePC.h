@@ -52,17 +52,16 @@ private:
 #pragma region DataController
 
 protected:
-    UPROPERTY(EditDefaultsOnly,Category = "Settings",meta = (MetaClass= "ScreenTapActor"))
+    UPROPERTY(EditDefaultsOnly, Category = "Settings", meta = (MetaClass = "ScreenTapActor"))
     FSoftClassPath PathToScreenTap;
-    
-    UPROPERTY()
-    AScreenTapActor* ScreenTapClass;
-    
-private:
 
     UPROPERTY()
+    AScreenTapActor* ScreenTapClass;
+
+private:
+    UPROPERTY()
     AStoryGMBase* StoryGM;
-    
+
     FVector TouchLocation{FVector::ZeroVector};
 
 #pragma endregion
@@ -80,5 +79,5 @@ public:
     UFUNCTION()
     void SpawnActorWithTap(FVector TapLocation);
 
-#pragma endregion 
+#pragma endregion
 };

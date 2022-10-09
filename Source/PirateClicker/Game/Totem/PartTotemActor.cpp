@@ -1,6 +1,5 @@
 // This section is the property of the Dverg Verksted team
 
-
 #include "Game/Totem/PartTotemActor.h"
 #include "Library/PirateClickerLibrary.h"
 
@@ -26,7 +25,6 @@ void APartTotemActor::BeginPlay()
 
     if (!CHECKED(RootScene != nullptr, "Root scene is nullptr")) return;
     if (!CHECKED(MeshPartTotem != nullptr, "Mesh part totem is nullptr")) return;
-    
 }
 
 #pragma endregion
