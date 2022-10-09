@@ -27,10 +27,12 @@ class PIRATECLICKER_API UEffectObject : public UObject
 
 #pragma region Default
 
-//Effects
+//Fire Effect params
 float FireDamage{0};
-float FireDamageCauseTime{0};
+float FireDamageDuration{0};
 
+//Ice Effect params
 float IceSlowMovement {0};
+float IceSlowMovementDuration {0};
 
 #pragma endregion 
