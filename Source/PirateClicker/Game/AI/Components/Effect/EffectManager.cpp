@@ -1,8 +1,8 @@
 // This section is the property of the Dverg Verksted team
 
-#include "Game/AI/Effect/EffectManager.h"
-#include "Game/AI/Pirates/AbilitySystemComponent.h"
-#include "Game/AI/Pirates/MovePirateComponent.h"
+#include "Game/AI/Components/Effect/EffectManager.h"
+#include "Game/AI/Components/AbilitySystemComponent.h"
+#include "Game/AI/Components/MovePirateComponent.h"
 #include "Library/PirateClickerLibrary.h"
 
 #pragma region Default

@@ -5,7 +5,7 @@
 #include "PartTotemActor.h"
 #include "TotemDataAsset.h"
 #include "Components/SphereComponent.h"
-#include "Game/AI/Effect/EffectManager.h"
+#include "Game/AI/Components/Effect/EffectManager.h"
 #include "Game/AI/Pirates/PirateActorBase.h"
 #include "Library/PirateClickerLibrary.h"
 

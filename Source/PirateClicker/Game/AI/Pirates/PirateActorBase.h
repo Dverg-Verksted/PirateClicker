@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "AIDataTypes.h"
+#include "Game/AI/AIDataTypes.h"
 #include "Game/AI/DataAsset/PirateDataAsset.h"
 #include "GameFramework/Actor.h"
 #include "PirateActorBase.generated.h"

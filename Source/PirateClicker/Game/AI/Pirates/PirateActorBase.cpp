@@ -1,8 +1,8 @@
 // This section is the property of the Dverg Verksted team
 
 #include "Game/AI/Pirates/PirateActorBase.h"
-#include "AbilitySystemComponent.h"
-#include "MovePirateComponent.h"
+#include "Game/AI/Components/AbilitySystemComponent.h"
+#include "Game/AI/Components/MovePirateComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SplineComponent.h"
 #include "Game/AI/Spawner/SplineActor.h"
@@ -12,7 +12,7 @@
 #include "Game/GoldChest/GoldChest.h"
 #include "Game/GoldStorage/GoldStorageActor.h"
 #include "Engine/EngineTypes.h"
-#include "Game/AI/Effect/EffectManager.h"
+#include "Game/AI/Components/Effect/EffectManager.h"
 
 #pragma region Default
 

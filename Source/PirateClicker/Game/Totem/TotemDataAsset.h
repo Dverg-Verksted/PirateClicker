@@ -4,7 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Engine/DataAsset.h"
-#include "Game/AI/Effect/EffectDataTypes.h"
+#include "Game/AI/Components/Effect/EffectDataTypes.h"
 #include "TotemDataAsset.generated.h"
 
 class UNiagaraSystem;

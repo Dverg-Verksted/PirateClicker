@@ -1,6 +1,6 @@
 // This section is the property of the Dverg Verksted team
 
-#include "Game/AI/Pirates/MovePirateComponent.h"
+#include "Game/AI/Components/MovePirateComponent.h"
 #include "DrawDebugHelpers.h"
 #include "Components/SplineComponent.h"
 #include "Game/AI/Spawner/SplineActor.h"

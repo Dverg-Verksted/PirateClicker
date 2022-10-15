@@ -1,6 +1,6 @@
 // This section is the property of the Dverg Verksted team
 
-#include "Game/AI/Pirates/AbilitySystemComponent.h"
+#include "Game/AI/Components/AbilitySystemComponent.h"
 #include "Library/PirateClickerLibrary.h"
 
 // Sets default values for this component's properties
