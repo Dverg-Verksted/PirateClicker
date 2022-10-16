@@ -53,11 +53,8 @@ void AStoryGMBase::StartPlay()
     // TODO: это хреновая логика надо переписать
     if (GoldStorages.Num() != 0)
     {
-        AllCountTreasure = Algo::Accumulate(GoldStorages, 0, [](int32 Result, AGoldStorageActor* GoldStorage)
-        {
-           return Result + (GoldStorage ? GoldStorage->GetCurrentGold() : 0);
-        });
-        
+        AllCountTreasure = Algo::Accumulate(GoldStorages, 0, [](int32 Result, AGoldStorageActor* GoldStorage) { return Result + (GoldStorage ? GoldStorage->GetCurrentGold() : 0); });
+
         OnChangeTreasureCount.Broadcast(AllCountTreasure);
     }
 
@@ -69,7 +66,7 @@ void AStoryGMBase::StartPlay()
     {
         L_Spawner->OnLostTreasureNotify.AddDynamic(this, &ThisClass::ReduceCountTreasure);
     }
-    
+
     FTimerHandle TimerHandle;
     GetWorldTimerManager().SetTimer(
         TimerHandle,
@@ -98,7 +95,7 @@ FText AStoryGMBase::GetNameWave(const int32 IndexWave) const
 {
     if (!GameRule) return FText();
     if (!GameRule->ArrWaves.IsValidIndex(IndexWave)) return FText();
-    
+
     return GameRule->ArrWaves[IndexWave].NameWave;
 }
 

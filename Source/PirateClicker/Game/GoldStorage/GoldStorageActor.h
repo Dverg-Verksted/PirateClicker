@@ -8,8 +8,7 @@
 #include "GameFramework/Actor.h"
 #include "GoldStorageActor.generated.h"
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGoldStorageEmptySignature);
-
+class AGoldChest;
 UENUM()
 enum class ETypeCollision : uint8
 {
@@ -74,13 +73,22 @@ protected:
         meta = (Clampmin = "1", EditCondition = "TypeCollision == ETypeCollision::Sphere", EditConditionHides, ToolTip = "Тут назначаем радиус сферовой коллизии"));
     float SphereCollisionRadius{100.0f};
 
+    UPROPERTY(EditInstanceOnly, Category = "Storage component settings", meta = (ToolTip = "Тут назначаем сундук, который будет выдаваться пирату при оверлепе"))
+    TSubclassOf<AGoldChest> GoldChestToGive;
+
 #pragma endregion
-#pragma region Action
+#pragma region Delegate
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FGoldStorageChestTaken, class APirateActorBase*, TakenChestPirate, AGoldStorageActor*, GoldChestFromStorage);
+    DECLARE_DYNAMIC_MULTICAST_DELEGATE(FGoldStorageEmptySignature);
 
 protected:
-    UPROPERTY(BlueprintCallable, Category = "Gold storage.", meta = (ToolTip = "Делегат, который вызывается, когда хранилище пустое"))
+    UPROPERTY(BlueprintCallable, Category = "Gold storage", meta = (ToolTip = "Делегат, который вызывается, когда хранилище пустое"))
     FGoldStorageEmptySignature GoldStorageEmpty;
+    UPROPERTY(BlueprintCallable, Category = "Gold storage", meta = (ToolTip = "Делегат, который вызывается, когда пираты оверлапят хранилище"))
+    FGoldStorageChestTaken GoldStorageChestTaken;
 
+#pragma endregion
+#pragma region Action
     UFUNCTION(BlueprintImplementableEvent)
     void OnChangeGoldCount();
 
