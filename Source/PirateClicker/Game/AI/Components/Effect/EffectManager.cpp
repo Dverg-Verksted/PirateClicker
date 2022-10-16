@@ -69,6 +69,7 @@ void UEffectManager::ResetEffectManager()
 
     GetWorld()->GetTimerManager().ClearTimer(ResetEffectTimerHandle);
     GetWorld()->GetTimerManager().ClearTimer(ApplyEffectTimerHandle);
+    OwnerMoveComponent->ResetSpeedModifyToPercent();
     ArrayDataEffects.Empty();
 }
 
@@ -87,9 +88,12 @@ void UEffectManager::ApplyEffectsToOwner()
             case ETypeEffect::Fire:
             {
                 OwnerAbilitySystemComponent->TakeDamage(GetOwner(), Data.Damage, nullptr, nullptr, nullptr);
+                break;
             }
             case ETypeEffect::Cold:
             {
+                OwnerMoveComponent->SetupSpeedModifyToPercent(Data.SpeedConversion);
+                break;
             }
         }
     }

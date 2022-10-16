@@ -21,8 +21,8 @@ struct FDataEffect
     UPROPERTY(EditAnywhere, meta = (DisplayName = "Наносимый дамаг", ClampMin = "0.01", EditCondition = "TypeEffect == ETypeEffect::Fire", EditConditionHides))
     float Damage{1.0f};
 
-    UPROPERTY(EditAnywhere, meta = (DisplayName = "Скорость замедления", ClampMin = "1.0", ClampMax = "100.0", ForceUnits = "%", EditCondition = "TypeEffect == ETypeEffect::Cold", EditConditionHides))
-    float SpeedConversion{10.0f};
+    UPROPERTY(EditAnywhere, meta = (DisplayName = "Скорость замедления", ClampMin = "0.1", ClampMax = "1.0", ForceUnits = "x", EditCondition = "TypeEffect == ETypeEffect::Cold", EditConditionHides))
+    float SpeedConversion{0.5f};
 
     FString ToString() const { return FString::Printf(TEXT("Type effect: [%s] | Damage: [%f] | SpeedConversion: [%f]"), *UEnum::GetValueAsString(TypeEffect), Damage, SpeedConversion); }
 };

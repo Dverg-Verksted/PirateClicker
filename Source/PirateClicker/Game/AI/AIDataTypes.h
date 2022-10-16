@@ -10,6 +10,7 @@ enum class EStateMovement : uint8
 {
     Stop,
     Move,
+    Pause,
 };
 
 // A special state for pirate

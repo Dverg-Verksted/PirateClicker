@@ -66,6 +66,19 @@ public:
     UFUNCTION(BlueprintCallable)
     void StopMovement();
 
+    /**
+     * @public Setup value in percent on speed move by default
+     * @param1 float
+     **/
+    UFUNCTION(BlueprintCallable)
+    void SetupSpeedModifyToPercent(const float SpeedPercent);
+
+    /**
+     * @public Reset value in percent on speed move by default=
+     **/
+    UFUNCTION(BlueprintCallable)
+    void ResetSpeedModifyToPercent();
+
 #pragma endregion
 
 #pragma region DataMove
@@ -80,15 +93,14 @@ protected:
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Settings Movement", meta = (ToolTip = "Скорость поворота пирата", ClampMin = "0.1", ClampMax = "5.0", ForceUnits = "x"))
     float DefaultSpeedRotate{0.1f};
 
+    // Speed modify
+    float SpeedModify{1.0f};
 private:
-    
+
     EStateMovement StateMovement = EStateMovement::Stop;
 
     // Target data for movement
     FMovementData TargetData;
-    
-    // End time
-    float EndTime{0.0f};
 
     /**
      * @private Move to Spline

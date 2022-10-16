@@ -81,13 +81,23 @@ void UMoveComponent::StopMovement()
     OnStopedMove.Broadcast();
 }
 
+void UMoveComponent::SetupSpeedModifyToPercent(const float SpeedPercent)
+{
+    SpeedModify = FMath::Clamp(SpeedPercent, 0.0f, 1.0f);
+}
+
+void UMoveComponent::ResetSpeedModifyToPercent()
+{
+    SpeedModify = 1.0f;
+}
+
 void UMoveComponent::MoveToSpline(float DeltaTime)
 {
     const FVector TempPos = TargetData.TargetSpline->GetSpline()->GetLocationAtTime(TargetData.Duration, ESplineCoordinateSpace::World, true);
     const FRotator TempRot = ((TempPos - GetOwner()->GetActorLocation()).GetSafeNormal()).Rotation();
     GetOwner()->SetActorLocation(TempPos);
     GetOwner()->SetActorRotation(TempRot);
-    TargetData.Duration = TargetData.bReverse ? TargetData.Duration - ((DefaultSpeedMove / M_TO_CM) * DeltaTime) : TargetData.Duration + ((DefaultSpeedMove / M_TO_CM) * DeltaTime);
+    TargetData.Duration = TargetData.bReverse ? TargetData.Duration - (((DefaultSpeedMove * SpeedModify) / M_TO_CM) * DeltaTime) : TargetData.Duration + (((DefaultSpeedMove * SpeedModify) / M_TO_CM) * DeltaTime);
     if (TargetData.bReverse && TargetData.Duration <= 0.0f)
     {
         StopMovement();
