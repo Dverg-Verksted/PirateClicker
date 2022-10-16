@@ -6,7 +6,7 @@
 #include "Game/AI/AIDataTypes.h"
 #include "Components/ActorComponent.h"
 #include "Library/LibraryDataTypes.h"
-#include "MovePirateComponent.generated.h"
+#include "MoveComponent.generated.h"
 
 class ASplineActor;
 class USplineComponent;
@@ -19,7 +19,7 @@ DECLARE_DYNAMIC_MULTICAST_DELEGATE(FStopedMoveSignature);
  * @class Component for movement pirate
  **/
 UCLASS(ClassGroup = (Custom), meta = (BlueprintSpawnableComponent))
-class PIRATECLICKER_API UMovePirateComponent : public UActorComponent
+class PIRATECLICKER_API UMoveComponent : public UActorComponent
 {
     GENERATED_BODY()
 
@@ -27,7 +27,7 @@ class PIRATECLICKER_API UMovePirateComponent : public UActorComponent
 
 public:
     // Sets default values for this component's properties
-    UMovePirateComponent();
+    UMoveComponent();
 
     // Called every frame
     virtual void TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction) override;
@@ -51,28 +51,14 @@ private:
 
 #pragma endregion
 
-#pragma region DataMove
+#pragma region Action
 
 public:
-    /**
-     * @public Go to movement position for AI
-     * @param1 FVector
-     **/
-    void GoAIMoveAdvance(const FVector& ToPos, ASplineActor* SplineActor, const float Duration, const bool bReverse = false);
 
     /**
-     * @public Go to movement position for AI
-     * @param1 FVector
+     * @public Go move to spline
      **/
-    UFUNCTION(BlueprintCallable)
-    void GoAIMove(const FVector& ToPos);
-
-    /**
-     * @public run movement
-     * @param1 FMovementData
-     * @return bool
-     **/
-    bool RunMovement(const FMovementData& NewData);
+    void GoMove(const FMovementData& MovementData);
 
     /**
      * @public Stop movement
@@ -80,7 +66,12 @@ public:
     UFUNCTION(BlueprintCallable)
     void StopMovement();
 
+#pragma endregion
+
+#pragma region DataMove
+
 protected:
+    
     // Movement speed pirate cm/sec
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Settings Movement", meta = (ToolTip = "Скорость передвижения пирата", ClampMin = "1.0", ClampMax = "1500.0", ForceUnits = "m/s"))
     float DefaultSpeedMove{10.0f};
@@ -90,23 +81,14 @@ protected:
     float DefaultSpeedRotate{0.1f};
 
 private:
-    EStateMovement StateMovement = EStateMovement::Off;
+    
+    EStateMovement StateMovement = EStateMovement::Stop;
 
     // Target data for movement
     FMovementData TargetData;
-
+    
     // End time
     float EndTime{0.0f};
-
-    /**
-     * @private Calculate movement
-     **/
-    void CalculateMove(float DeltaTime);
-
-    /**
-     * @private Calculate rotate
-     **/
-    void CalculateRotate(float DeltaTime);
 
     /**
      * @private Move to Spline

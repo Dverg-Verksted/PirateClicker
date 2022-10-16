@@ -8,12 +8,12 @@
 #include "GameFramework/Actor.h"
 #include "PirateActorBase.generated.h"
 
+class UMoveComponent;
 class AGoldStorageActor;
 class AGoldChest;
 class UEffectManager;
 class UAbilitySystemComponent;
 class ASplineActor;
-class UMovePirateComponent;
 class UCapsuleComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPirateDeadSignature, APirateActorBase*, Pirate);
@@ -66,7 +66,7 @@ public:
      * @return UMovePirateComponent
      **/
     UFUNCTION(BlueprintCallable, Category = "APirateActorBase | Components")
-    UMovePirateComponent* GetMovePirateComponent() const { return MovePirateComponent; }
+    UMoveComponent* GetMovePirateComponent() const { return MoveComponent; }
 
     /**
      * @public Get ability component
@@ -86,7 +86,7 @@ protected:
 
     // @protected actor component for custom movement
     UPROPERTY(EditDefaultsOnly, Category = "Components")
-    UMovePirateComponent* MovePirateComponent{nullptr};
+    UMoveComponent* MoveComponent{nullptr};
 
     // @protected actor component for health pirate
     UPROPERTY(EditDefaultsOnly, Category = "Components")
@@ -165,7 +165,7 @@ private:
      * @private Move To Point
      **/
     UFUNCTION()
-    void MoveToPoint();
+    void MoveToPoint() const;
 
     /**
      * @private Get index along distance player

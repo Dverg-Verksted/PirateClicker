@@ -2,7 +2,7 @@
 
 #include "Game/AI/Components/Effect/EffectManager.h"
 #include "Game/AI/Components/AbilitySystemComponent.h"
-#include "Game/AI/Components/MovePirateComponent.h"
+#include "Game/AI/Components/MoveComponent.h"
 #include "Library/PirateClickerLibrary.h"
 
 #pragma region Default
@@ -16,14 +16,13 @@ void UEffectManager::BeginPlay()
 {
     Super::BeginPlay();
 
-    OwnerPirateActor = Cast<APirateActorBase>(GetOwner());
-    if (!CHECKED(OwnerPirateActor != nullptr, "Owner pirate actor is nullptr")) return;
+    if (!CHECKED(GetOwner() != nullptr, "Owner actor is nullptr")) return;
 
-    OwnerAbilitySystemComponent = OwnerPirateActor->FindComponentByClass<UAbilitySystemComponent>();
+    OwnerAbilitySystemComponent = GetOwner()->FindComponentByClass<UAbilitySystemComponent>();
     if (!CHECKED(OwnerAbilitySystemComponent != nullptr, "Ability component is nullptr")) return;
 
-    OwnerMovePirateComponent = OwnerPirateActor->FindComponentByClass<UMovePirateComponent>();
-    if (!CHECKED(OwnerMovePirateComponent != nullptr, "Move component is nullptr")) return;
+    OwnerMoveComponent = GetOwner()->FindComponentByClass<UMoveComponent>();
+    if (!CHECKED(OwnerMoveComponent != nullptr, "Move component is nullptr")) return;
 
     ResetEffectManager();
 }
@@ -40,7 +39,7 @@ void UEffectManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 void UEffectManager::AddEffect(const FDataEffect& InDataEffect)
 {
     ArrayDataEffects.Add(InDataEffect);
-    LOG_PIRATE(ELogVerb::Display, FString::Printf(TEXT("Add effect in Pirate: [%s] | Data: [%s]"), *OwnerPirateActor->GetName(), *InDataEffect.ToString()));
+    LOG_PIRATE(ELogVerb::Display, FString::Printf(TEXT("Add effect in Pirate: [%s] | Data: [%s]"), *GetOwner()->GetName(), *InDataEffect.ToString()));
 }
 
 void UEffectManager::RunApplyEffect()
@@ -86,7 +85,7 @@ void UEffectManager::ApplyEffectsToOwner()
         {
             case ETypeEffect::Fire:
             {
-                OwnerAbilitySystemComponent->TakeDamage(OwnerPirateActor, Data.Damage, nullptr, nullptr, nullptr);
+                OwnerAbilitySystemComponent->TakeDamage(GetOwner(), Data.Damage, nullptr, nullptr, nullptr);
             }
             case ETypeEffect::Cold:
             {

@@ -2,7 +2,7 @@
 
 #include "Game/AI/Pirates/PirateActorBase.h"
 #include "Game/AI/Components/AbilitySystemComponent.h"
-#include "Game/AI/Components/MovePirateComponent.h"
+#include "Game/AI/Components/MoveComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SplineComponent.h"
 #include "Game/AI/Spawner/SplineActor.h"
@@ -30,7 +30,7 @@ APirateActorBase::APirateActorBase()
     PirateMesh = CreateDefaultSubobject<USkeletalMeshComponent>(FName("Skeletal mesh"));
     PirateMesh->SetupAttachment(CapsuleCollision);
 
-    MovePirateComponent = CreateDefaultSubobject<UMovePirateComponent>(FName("Movement component"));
+    MoveComponent = CreateDefaultSubobject<UMoveComponent>(FName("Movement pirate component"));
     AbilitySystem = CreateDefaultSubobject<UAbilitySystemComponent>(FName("Ability system component"));
     EffectManager = CreateDefaultSubobject<UEffectManager>(FName("Effect manager"));
 }
@@ -39,7 +39,7 @@ void APirateActorBase::InitParamsPirate(const FDataPirate& DataPirate, ASplineAc
 {
     if (!CHECKED(StateBrain == EStateBrain::NoneInit, "Pirate is init!")) return;
 
-    MovePirateComponent->InitMoveData(DataPirate.SpeedMove, DataPirate.SpeedRotate);
+    MoveComponent->InitMoveData(DataPirate.SpeedMove, DataPirate.SpeedRotate);
     SetupTargetSpline(NewSpline);
 }
 
@@ -50,7 +50,7 @@ void APirateActorBase::BeginPlay()
 
     if (!CHECKED(CapsuleCollision != nullptr, "Capsule collision is nullptr")) return;
     if (!CHECKED(PirateMesh != nullptr, "Skeletal mesh is nullptr")) return;
-    if (!CHECKED(MovePirateComponent != nullptr, "Movement pirate component is nullptr")) return;
+    if (!CHECKED(MoveComponent != nullptr, "Movement pirate component is nullptr")) return;
     if (!CHECKED(TargetSpline != nullptr, "Target spline is nullptr")) return;
     if (!CHECKED(TargetSpline->GetSpline() != nullptr, "Spline is nullptr")) return;
     if (!CHECKED(AbilitySystem != nullptr, "AbilitySystem is nullptr")) return;
@@ -82,7 +82,7 @@ void APirateActorBase::SetupStateBrain(const EStateBrain& NewState)
     LOG_PIRATE(ELogVerb::Display, FString::Printf(TEXT("New brain state: [%s]"), *UEnum::GetValueAsString(NewState)));
     StateBrain = NewState;
 
-    MovePirateComponent->StopMovement();
+    MoveComponent->StopMovement();
     if (StateBrain == EStateBrain::WalkToBack || StateBrain == EStateBrain::WalkToStorage)
     {
         MoveToPoint();
@@ -105,15 +105,14 @@ void APirateActorBase::RegisterDeadActor()
     OnPirateDead.Broadcast(this);
 }
 
-void APirateActorBase::MoveToPoint()
+void APirateActorBase::MoveToPoint() const
 {
     if (!TargetSpline) return;
 
     const int32 Index = GetIndexAlongDistPlayer(TargetSpline);
-    const FVector TargetPos = TargetSpline->GetSpline()->FindLocationClosestToWorldLocation(GetActorLocation(), ESplineCoordinateSpace::World);
     const float Duration = FMath::Clamp(TargetSpline->GetSpline()->GetDistanceAlongSplineAtSplinePoint(Index) / TargetSpline->GetSpline()->GetSplineLength(), 0.0f, 1.0f);
     const bool bRev = StateBrain == EStateBrain::WalkToBack;
-    MovePirateComponent->GoAIMoveAdvance(TargetPos, TargetSpline, Duration, bRev);
+    MoveComponent->GoMove(FMovementData(Duration, bRev, TargetSpline));
 }
 
 int32 APirateActorBase::GetIndexAlongDistPlayer(const ASplineActor* Spline) const

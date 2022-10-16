@@ -32,10 +32,7 @@ protected:
     float CallApplyEffect{1.0f};
 
     UPROPERTY()
-    APirateActorBase* OwnerPirateActor;
-
-    UPROPERTY()
-    UMovePirateComponent* OwnerMovePirateComponent;
+    UMoveComponent* OwnerMoveComponent;
 
     UPROPERTY()
     UAbilitySystemComponent* OwnerAbilitySystemComponent;
