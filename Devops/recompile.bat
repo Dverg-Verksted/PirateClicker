@@ -3,18 +3,18 @@
 call "%~dp0\config.bat"
 
 set dirsToRemove=Intermediate Saved DerivedDataCache Binaries .vs .idea Script
-set filesToRemove=*.sln
 
+echo Delete trash directory in project folder
 for %%a in (%dirsToRemove%) do (
 	echo %ProjectRoot%\%%a
     rmdir /S /Q %ProjectRoot%\%%a
 )
 
-for %%a in (%filesToRemove%) do (
-	echo %ProjectRoot%\%%a
-   del %ProjectRoot%\%%a
-)
+echo Delete trash files
+echo %ProjectRoot%\%ProjectPureName%.sln
+del %ProjectRoot%\%ProjectPureName%.sln
 
+echo Delete trash in Plugins
 for /D %%a in ("%ProjectRoot%\Plugins\*") do (
 	echo %%a\Intermediate
 	echo %%a\Binaries
@@ -22,8 +22,7 @@ for /D %%a in ("%ProjectRoot%\Plugins\*") do (
    rmdir /S /Q %%a\Binaries
 )
 
-
 "%UBTRelativePath%" -projectfiles -progress -project="%ProjectPath%"
 "%UBTRelativePath%" DebugGame Win64 -Project="%ProjectPath%" -TargetType=Editor -Progress -NoEngineChanges -NoHotReloadFromIDE
 
-PAUSE
+pause

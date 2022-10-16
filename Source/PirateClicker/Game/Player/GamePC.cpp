@@ -1,11 +1,11 @@
 // This section is the property of the Dverg Verksted team
 
 #include "Game/Player/GamePC.h"
-
 #include "DrawDebugHelpers.h"
 #include "Game/AI/Pirates/PirateActorBase.h"
 #include "Game/GameMode/StoryGMBase.h"
 #include "Kismet/KismetSystemLibrary.h"
+#include "Game/ScreenTap/ScreenTapActor.h"
 #include "Library/PirateClickerLibrary.h"
 
 #if UE_EDITOR || UE_BUILD_DEVELOPMENT
@@ -48,7 +48,7 @@ void AGamePC::Tick(float DeltaSeconds)
 #if UE_EDITOR || UE_BUILD_DEVELOPMENT
     if (EnableD_GamePC.GetValueOnGameThread())
     {
-        DrawDebugSphere(GetWorld(), TouchLocation, 12.0f, 12, FColor::Red, false, 0.0f, 0, 2.0f);
+        DrawDebugSphere(GetWorld(), TouchLocation, 100.0f, 12, FColor::Red, false, 0.0f, 0, 2.0f);
     }
 #endif
 }
@@ -59,12 +59,15 @@ void AGamePC::RegisterTouchPressed(ETouchIndex::Type FingerIndex, FVector Locati
     GetHitResultUnderFinger(FingerIndex, ECollisionChannel::ECC_Visibility, false, HitResult);
     if (HitResult.bBlockingHit && HitResult.GetActor())
     {
-        LOG_PIRATE(ELogVerb::Display, FString::Printf(TEXT("Pressed touch index: [%s] | Location: [%s] | Actor: [%s]"), *UEnum::GetValueAsString(FingerIndex), *HitResult.Location.ToString(), *HitResult.GetActor()->GetName()));
+        LOG_PIRATE(ELogVerb::Display,
+            FString::Printf(TEXT("Pressed touch index: [%s] | Location: [%s] | Actor: [%s]"), *UEnum::GetValueAsString(FingerIndex), *HitResult.Location.ToString(), *HitResult.GetActor()->GetName()));
         TouchLocation = HitResult.Location;
-        const TArray<TEnumAsByte<EObjectTypeQuery> > ObjectTypes{};
+        const TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes{};
         const TArray<AActor*> ActorsToIgnore{GetPawn()};
         TArray<AActor*> OutActors;
         UKismetSystemLibrary::SphereOverlapActors(GetWorld(), HitResult.Location, 100.0f, ObjectTypes, APirateActorBase::StaticClass(), ActorsToIgnore, OutActors);
+        SpawnActorWithTap(HitResult.Location);
+
         for (AActor* Actor : OutActors)
         {
             if (Actor->IsA(APirateActorBase::StaticClass()))
@@ -101,6 +104,22 @@ void AGamePC::RegisterChangeStateGame(const EStateGame& NewState)
             break;
         }
     }
+}
+void AGamePC::SpawnActorWithTap(FVector TapLocation)
+{
+    if (ScreenTapClass)
+    {
+        ScreenTapClass->GetClass()->MarkPendingKill();
+        ScreenTapClass->Destroy();
+    }
+    FTransform TapActorSpawnTransform;
+    TapActorSpawnTransform.SetLocation(TapLocation);
+
+    UClass* SubClassTapScreen = PathToScreenTap.TryLoadClass<AScreenTapActor>();
+    if (!SubClassTapScreen) return;
+
+    ScreenTapClass = GetWorld()->SpawnActorDeferred<AScreenTapActor>(SubClassTapScreen, TapActorSpawnTransform);
+    ScreenTapClass->FinishSpawning(TapActorSpawnTransform);
 }
 
 #pragma endregion

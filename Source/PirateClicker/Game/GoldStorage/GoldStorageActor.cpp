@@ -49,9 +49,11 @@ int32 AGoldStorageActor::GetCurrentGold()
 {
     return CurrentGold;
 }
+
 void AGoldStorageActor::SetCurrentGold(float GoldToSet)
 {
     CurrentGold = GoldToSet;
+    OnChangeGoldCount();
 }
 
 #if WITH_EDITOR
@@ -90,21 +92,19 @@ void AGoldStorageActor::RegisterActorBeginOverlap(AActor* OverlappedActor, AActo
         PirateBase->SetupStateBrain(EStateBrain::WalkToBack);
         if (CurrentGold != 0)
         {
+            if (PirateBase->bHasTreasure) return;
             PirateBase->bHasTreasure = true;
+            PirateBase->SpawnGoldChest(GoldChestToGive, this);
+            GoldStorageChestTaken.Broadcast(PirateBase, this);
+            SetCurrentGold(CurrentGold - 1);
+            if (CurrentGold == 0)
+            {
+                GoldStorageEmpty.Broadcast();
+            }
         }
-    }
 
-    if (CurrentGold == 0)
-    {
-        GoldStorageEmpty.Broadcast();
+        LOG_PIRATE(ELogVerb::Display, FString::Printf(TEXT("CurrentGold : [%i]"), CurrentGold));
     }
-    else
-    {
-        OnChangeGoldCount();
-        CurrentGold -= 1;
-    }
-
-    LOG_PIRATE(ELogVerb::Display, FString::Printf(TEXT("CurrentGold : [%i]"), CurrentGold));
 }
 
 void AGoldStorageActor::CollisionChecker()

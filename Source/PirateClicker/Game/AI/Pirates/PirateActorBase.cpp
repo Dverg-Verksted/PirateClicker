@@ -1,14 +1,18 @@
 // This section is the property of the Dverg Verksted team
 
 #include "Game/AI/Pirates/PirateActorBase.h"
-#include "AbilitySystemComponent.h"
-#include "MovePirateComponent.h"
+#include "Game/AI/Components/AbilitySystemComponent.h"
+#include "Game/AI/Components/MoveComponent.h"
 #include "Components/CapsuleComponent.h"
 #include "Components/SplineComponent.h"
 #include "Game/AI/Spawner/SplineActor.h"
 #include "Game/Player/GamePC.h"
 #include "Kismet/GameplayStatics.h"
 #include "Library/PirateClickerLibrary.h"
+#include "Game/GoldChest/GoldChest.h"
+#include "Game/GoldStorage/GoldStorageActor.h"
+#include "Engine/EngineTypes.h"
+#include "Game/AI/Components/Effect/EffectManager.h"
 
 #pragma region Default
 
@@ -26,15 +30,16 @@ APirateActorBase::APirateActorBase()
     PirateMesh = CreateDefaultSubobject<USkeletalMeshComponent>(FName("Skeletal mesh"));
     PirateMesh->SetupAttachment(CapsuleCollision);
 
-    MovePirateComponent = CreateDefaultSubobject<UMovePirateComponent>(FName("Movement component"));
+    MoveComponent = CreateDefaultSubobject<UMoveComponent>(FName("Movement pirate component"));
     AbilitySystem = CreateDefaultSubobject<UAbilitySystemComponent>(FName("Ability system component"));
+    EffectManager = CreateDefaultSubobject<UEffectManager>(FName("Effect manager"));
 }
 
 void APirateActorBase::InitParamsPirate(const FDataPirate& DataPirate, ASplineActor* NewSpline)
 {
     if (!CHECKED(StateBrain == EStateBrain::NoneInit, "Pirate is init!")) return;
 
-    MovePirateComponent->InitMoveData(DataPirate.SpeedMove, DataPirate.SpeedRotate);
+    MoveComponent->InitMoveData(DataPirate.SpeedMove, DataPirate.SpeedRotate);
     SetupTargetSpline(NewSpline);
 }
 
@@ -45,7 +50,7 @@ void APirateActorBase::BeginPlay()
 
     if (!CHECKED(CapsuleCollision != nullptr, "Capsule collision is nullptr")) return;
     if (!CHECKED(PirateMesh != nullptr, "Skeletal mesh is nullptr")) return;
-    if (!CHECKED(MovePirateComponent != nullptr, "Movement pirate component is nullptr")) return;
+    if (!CHECKED(MoveComponent != nullptr, "Movement pirate component is nullptr")) return;
     if (!CHECKED(TargetSpline != nullptr, "Target spline is nullptr")) return;
     if (!CHECKED(TargetSpline->GetSpline() != nullptr, "Spline is nullptr")) return;
     if (!CHECKED(AbilitySystem != nullptr, "AbilitySystem is nullptr")) return;
@@ -55,7 +60,6 @@ void APirateActorBase::BeginPlay()
     if (!CHECKED(GamePC != nullptr, "Game player controller is nullptr")) return;
 
     GamePC->OnHitActor.AddDynamic(this, &ThisClass::RegisterHitActor);
-    MovePirateComponent->OnStopedMove.AddDynamic(this, &ThisClass::NextMoveToPoint);
     SetupStateBrain(EStateBrain::WalkToStorage);
 }
 
@@ -68,6 +72,7 @@ void APirateActorBase::SetupTargetSpline(ASplineActor* NewSpline)
     if (!CHECKED(NewSpline != nullptr, "New Spline is nullptr")) return;
 
     TargetSpline = NewSpline;
+    MoveToPoint();
 }
 
 void APirateActorBase::SetupStateBrain(const EStateBrain& NewState)
@@ -77,10 +82,10 @@ void APirateActorBase::SetupStateBrain(const EStateBrain& NewState)
     LOG_PIRATE(ELogVerb::Display, FString::Printf(TEXT("New brain state: [%s]"), *UEnum::GetValueAsString(NewState)));
     StateBrain = NewState;
 
-    MovePirateComponent->StopMovement();
+    MoveComponent->StopMovement();
     if (StateBrain == EStateBrain::WalkToBack || StateBrain == EStateBrain::WalkToStorage)
     {
-        NextMoveToPoint();
+        MoveToPoint();
     }
 }
 
@@ -95,26 +100,66 @@ void APirateActorBase::RegisterHitActor(AActor* HitActor)
 void APirateActorBase::RegisterDeadActor()
 {
     if (GetWorldTimerManager().TimerExists(TimerHandle_LifeSpanExpired)) return;
+    BackChestToStorage();
     SetLifeSpan(1.0f);
     OnPirateDead.Broadcast(this);
 }
 
-void APirateActorBase::NextMoveToPoint()
+void APirateActorBase::MoveToPoint() const
 {
-    if (!CHECKED(StateBrain != EStateBrain::Idle, "State brain equal idle")) return;
+    if (!TargetSpline) return;
 
-    if (StateBrain == EStateBrain::WalkToStorage)
+    const int32 Index = GetIndexAlongDistPlayer(TargetSpline);
+    const float Duration = FMath::Clamp(TargetSpline->GetSpline()->GetDistanceAlongSplineAtSplinePoint(Index) / TargetSpline->GetSpline()->GetSplineLength(), 0.0f, 1.0f);
+    const bool bRev = StateBrain == EStateBrain::WalkToBack;
+    MoveComponent->GoMove(FMovementData(Duration, bRev, TargetSpline));
+}
+
+int32 APirateActorBase::GetIndexAlongDistPlayer(const ASplineActor* Spline) const
+{
+    if (!Spline) return INDEX_NONE;
+
+    TMap<int32, float> TempContains;
+    const int32 Numbers = Spline->GetSpline()->GetNumberOfSplinePoints();
+    for (int32 i = 0; i < Numbers; ++i)
     {
-        TargetIndex++;
-    }
-    if (StateBrain == EStateBrain::WalkToBack)
-    {
-        TargetIndex--;
+        float Dist = FVector::Dist(GetActorLocation(), Spline->GetSpline()->GetWorldLocationAtSplinePoint(i));
+        TempContains.Add(i, Dist);
     }
 
-    FVector NewPos = TargetSpline->GetSpline()->GetLocationAtSplinePoint(TargetIndex, ESplineCoordinateSpace::World);
-    NewPos.Z += CapsuleCollision->GetScaledCapsuleHalfHeight();
-    MovePirateComponent->GoAIMove(NewPos);
+    float Distance = MAX_FLT;
+    int32 TempTargetIndex = INDEX_NONE;
+    for (const auto& Pair : TempContains)
+    {
+        if (Pair.Value < Distance)
+        {
+            Distance = Pair.Value;
+            TempTargetIndex = Pair.Key;
+        }
+    }
+
+    return TempTargetIndex;
+}
+
+void APirateActorBase::SpawnGoldChest(const TSubclassOf<AGoldChest>& SubClassGoldChest, AGoldStorageActor* GoldStorageActor)
+{
+    GoldStorageFrom = GoldStorageActor;
+    GoldChest = GetWorld()->SpawnActor<AGoldChest>(SubClassGoldChest, FActorSpawnParameters());
+    if (!CHECKED(GoldChest != nullptr, "Gold chest is nullptr")) return;
+    GoldChest->AttachToComponent(PirateMesh, FAttachmentTransformRules::KeepRelativeTransform, (FName("middle_01_lSocket")));
+    bHasTreasure = true;
+    OnStatusTreasure.Broadcast(bHasTreasure);
+}
+
+void APirateActorBase::BackChestToStorage()
+{
+    if (!bHasTreasure || !GoldStorageFrom) return;
+
+    float ChestToGive = 1.0f;
+    GoldStorageFrom->SetCurrentGold(GoldStorageFrom->GetCurrentGold() + ChestToGive);
+    GoldChest->Destroy();
+    bHasTreasure = false;
+    OnStatusTreasure.Broadcast(bHasTreasure);
 }
 
 #pragma endregion

@@ -7,6 +7,7 @@
 #include "GameFramework/PlayerController.h"
 #include "GamePC.generated.h"
 
+class AScreenTapActor;
 class AStoryGMBase;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FHitActorSignature, AActor*, HitActor);
@@ -50,11 +51,17 @@ private:
 
 #pragma region DataController
 
-private:
+protected:
+    UPROPERTY(EditDefaultsOnly, Category = "Settings", meta = (MetaClass = "ScreenTapActor"))
+    FSoftClassPath PathToScreenTap;
 
     UPROPERTY()
+    AScreenTapActor* ScreenTapClass;
+
+private:
+    UPROPERTY()
     AStoryGMBase* StoryGM;
-    
+
     FVector TouchLocation{FVector::ZeroVector};
 
 #pragma endregion
@@ -64,6 +71,13 @@ private:
 public:
     UPROPERTY(BlueprintAssignable)
     FHitActorSignature OnHitActor;
+
+#pragma endregion
+
+#pragma region Action
+
+    UFUNCTION()
+    void SpawnActorWithTap(FVector TapLocation);
 
 #pragma endregion
 };
