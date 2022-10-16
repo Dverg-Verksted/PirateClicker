@@ -40,6 +40,7 @@ void UEffectManager::AddEffect(const FDataEffect& InDataEffect)
 {
     ArrayDataEffects.Add(InDataEffect);
     LOG_PIRATE(ELogVerb::Display, FString::Printf(TEXT("Add effect in Pirate: [%s] | Data: [%s]"), *GetOwner()->GetName(), *InDataEffect.ToString()));
+    RunApplyEffect();
 }
 
 void UEffectManager::RunApplyEffect()
