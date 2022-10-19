@@ -18,6 +18,7 @@ class UCapsuleComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPirateDeadSignature, APirateActorBase*, Pirate);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FStatusTreasureSignature, bool, bHaveTreasure);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FChangeStateBrainSignature, const EStateBrain&, StateBrain);
 
 UCLASS()
 class PIRATECLICKER_API APirateActorBase : public AActor
@@ -189,6 +190,10 @@ public:
     // @public notify change status treasure
     UPROPERTY(BlueprintAssignable)
     FStatusTreasureSignature OnStatusTreasure;
+
+    // @public notify change status treasure
+    UPROPERTY(BlueprintAssignable)
+    FChangeStateBrainSignature OnChangeStateBrain;
 
 #pragma endregion
 };

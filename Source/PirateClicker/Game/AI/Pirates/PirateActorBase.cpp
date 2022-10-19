@@ -81,6 +81,7 @@ void APirateActorBase::SetupStateBrain(const EStateBrain& NewState)
 
     LOG_PIRATE(ELogVerb::Display, FString::Printf(TEXT("New brain state: [%s]"), *UEnum::GetValueAsString(NewState)));
     StateBrain = NewState;
+    OnChangeStateBrain.Broadcast(StateBrain);
 
     MoveComponent->StopMovement();
     if (StateBrain == EStateBrain::WalkToBack || StateBrain == EStateBrain::WalkToStorage)
