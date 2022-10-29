@@ -104,6 +104,8 @@ void APirateActorBase::RegisterDeadActor()
     BackChestToStorage();
     SetLifeSpan(1.0f);
     OnPirateDead.Broadcast(this);
+    MoveComponent->StopMovement();
+    PlayMontage(DeadMontage);
 }
 
 void APirateActorBase::MoveToPoint() const
@@ -150,6 +152,28 @@ void APirateActorBase::SpawnGoldChest(const TSubclassOf<AGoldChest>& SubClassGol
     GoldChest->AttachToComponent(PirateMesh, FAttachmentTransformRules::KeepRelativeTransform, (FName("middle_01_lSocket")));
     bHasTreasure = true;
     OnStatusTreasure.Broadcast(bHasTreasure);
+}
+
+float APirateActorBase::PlayMontage(UAnimMontage* AnimMontage, const float InPlayRate, const FName StartSectionName) const
+{
+    UAnimInstance * AnimInstance = (PirateMesh) ? PirateMesh->GetAnimInstance() : nullptr;
+    if (AnimMontage && AnimInstance)
+    {
+        float const Duration = AnimInstance->Montage_Play(AnimMontage, InPlayRate);
+
+        if (Duration > 0.f)
+        {
+            // Start at a given Section.
+            if (StartSectionName != NAME_None)
+            {
+                AnimInstance->Montage_JumpToSection(StartSectionName, AnimMontage);
+            }
+
+            return Duration;
+        }
+    }
+
+    return 0.f;
 }
 
 void APirateActorBase::BackChestToStorage()

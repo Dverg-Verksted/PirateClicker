@@ -105,6 +105,10 @@ public:
     bool bHasTreasure{false};
 
 protected:
+
+    UPROPERTY(EditDefaultsOnly, Category = "Settings Pirate")
+    UAnimMontage* DeadMontage{nullptr};
+
     // @protected Target spline
     UPROPERTY()
     ASplineActor* TargetSpline;
@@ -153,6 +157,9 @@ public:
 
     UFUNCTION()
     void SpawnGoldChest(const TSubclassOf<AGoldChest>& SubClassGoldChest, AGoldStorageActor* GoldStorageActor);
+
+    UFUNCTION()
+    float PlayMontage(UAnimMontage* AnimMontage, float InPlayRate = 1.f, FName StartSectionName = NAME_None) const;
 
 private:
     /**
