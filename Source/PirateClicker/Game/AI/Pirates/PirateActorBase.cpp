@@ -182,7 +182,10 @@ void APirateActorBase::BackChestToStorage()
 
     float ChestToGive = 1.0f;
     GoldStorageFrom->SetCurrentGold(GoldStorageFrom->GetCurrentGold() + ChestToGive);
-    GoldChest->Destroy();
+    if (GoldChest)
+    {
+        GoldChest->Destroy();
+    }
     bHasTreasure = false;
     OnStatusTreasure.Broadcast(bHasTreasure);
 }
