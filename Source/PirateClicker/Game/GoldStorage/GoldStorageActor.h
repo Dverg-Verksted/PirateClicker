@@ -9,6 +9,7 @@
 #include "GoldStorageActor.generated.h"
 
 class AGoldChest;
+class APirateActorBase;
 UENUM()
 enum class ETypeCollision : uint8
 {
@@ -29,7 +30,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "Gold settings", meta = (ToolTip = "Функция отдает текущее кол-во сундуков"))
     int32 GetCurrentGold();
     UFUNCTION(BlueprintCallable, Category = "Gold settings", meta = (ToolTip = "Функция назначает текущее кол-во сундуков"))
-    void SetCurrentGold(float GoldToSet);
+    void SetCurrentGold(int32 GoldToSet);
+    UFUNCTION(BlueprintCallable, Category = "Gold settings", meta = (ToolTip = "Функция назначает текущее кол-во сундуков"))
+    void UpperCountGold();
 
 #if WITH_EDITOR
 
@@ -40,6 +43,8 @@ public:
 private:
     UPROPERTY(EditInstanceOnly, Category = "Storage component settings", meta = (ClampMin = "0", ToolTip = "Показывает текущее золото в хранилище"))
     int32 CurrentGold = 0;
+
+    int32 MaxGold = 0;
 
     bool isBoxCollision;
 
@@ -95,7 +100,12 @@ protected:
 private:
     UFUNCTION()
     void RegisterActorBeginOverlap(AActor* OverlappedActor, AActor* OtherActor);
+    UFUNCTION()
+    void RegisterActorEndOverlap(AActor* OverlappedActor, AActor* OtherActor);
     void CollisionChecker();
+
+    UPROPERTY()
+    TArray<APirateActorBase*> ArrayTargetPirate;
 
 #pragma endregion
 };

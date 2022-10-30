@@ -175,13 +175,6 @@ private:
     UFUNCTION()
     void MoveToPoint() const;
 
-    /**
-     * @private Get index along distance player
-     * @param1 ASplineActor*
-     * @return int32
-     **/
-    int32 GetIndexAlongDistPlayer(const ASplineActor* Spline) const;
-
     UFUNCTION()
     void BackChestToStorage();
 

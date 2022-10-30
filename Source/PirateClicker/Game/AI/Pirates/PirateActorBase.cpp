@@ -112,36 +112,10 @@ void APirateActorBase::MoveToPoint() const
 {
     if (!TargetSpline) return;
 
-    const int32 Index = GetIndexAlongDistPlayer(TargetSpline);
+    const int32 Index = UPirateClickerLibrary::GetIndexAlongDistTargetPosition(TargetSpline, GetActorLocation());
     const float Duration = FMath::Clamp(TargetSpline->GetSpline()->GetDistanceAlongSplineAtSplinePoint(Index) / TargetSpline->GetSpline()->GetSplineLength(), 0.0f, 1.0f);
     const bool bRev = StateBrain == EStateBrain::WalkToBack;
     MoveComponent->GoMove(FMovementData(Duration, bRev, TargetSpline));
-}
-
-int32 APirateActorBase::GetIndexAlongDistPlayer(const ASplineActor* Spline) const
-{
-    if (!Spline) return INDEX_NONE;
-
-    TMap<int32, float> TempContains;
-    const int32 Numbers = Spline->GetSpline()->GetNumberOfSplinePoints();
-    for (int32 i = 0; i < Numbers; ++i)
-    {
-        float Dist = FVector::Dist(GetActorLocation(), Spline->GetSpline()->GetWorldLocationAtSplinePoint(i));
-        TempContains.Add(i, Dist);
-    }
-
-    float Distance = MAX_FLT;
-    int32 TempTargetIndex = INDEX_NONE;
-    for (const auto& Pair : TempContains)
-    {
-        if (Pair.Value < Distance)
-        {
-            Distance = Pair.Value;
-            TempTargetIndex = Pair.Key;
-        }
-    }
-
-    return TempTargetIndex;
 }
 
 void APirateActorBase::SpawnGoldChest(const TSubclassOf<AGoldChest>& SubClassGoldChest, AGoldStorageActor* GoldStorageActor)
@@ -180,8 +154,7 @@ void APirateActorBase::BackChestToStorage()
 {
     if (!bHasTreasure || !GoldStorageFrom) return;
 
-    float ChestToGive = 1.0f;
-    GoldStorageFrom->SetCurrentGold(GoldStorageFrom->GetCurrentGold() + ChestToGive);
+    GoldStorageFrom->UpperCountGold();
     if (GoldChest)
     {
         GoldChest->Destroy();

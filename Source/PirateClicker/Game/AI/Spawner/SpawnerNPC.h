@@ -8,6 +8,7 @@
 #include "Library/LibraryDataTypes.h"
 #include "SpawnerNPC.generated.h"
 
+class UPirateDataAsset;
 class APirateActorBase;
 class USphereComponent;
 class UBillboardComponent;
@@ -142,6 +143,11 @@ private:
      * @private The process of spawning pirates after loading into memory
      **/
     void OnSpawnPirateComplete(const FSoftObjectPath PirateAsset, const int32 CountSpawn);
+
+    /**
+     * @private The process of spawning pirate to level
+     **/
+    void OnSpawnPirate_Event(const UPirateDataAsset* PirateDataAsset, const TSubclassOf<APirateActorBase> SubClassPirate);
 
     /**
      * @private Generate point position spawn
