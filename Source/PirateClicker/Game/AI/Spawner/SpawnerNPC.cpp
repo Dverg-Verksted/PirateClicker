@@ -268,12 +268,9 @@ ASplineActor* ASpawnerNPC::GetRandomTargetSpline()
             FindElem->BusySplineActors.Add(Spline);
 
             FTimerHandle TimerHandle;
-            GetWorldTimerManager().SetTimer(TimerHandle, [FindElem, Spline, this]()
+            GetWorldTimerManager().SetTimer(TimerHandle, [FindElem, Spline]()
             {
-                for (FDataSplineInfo& DataSplineInfo : ArrDataSplineInfo)
-                {
-                    FindElem->BusySplineActors.Remove(Spline);
-                }
+                FindElem->BusySplineActors.Remove(Spline);
             }, 1.0f, false);
 
             return Spline;
