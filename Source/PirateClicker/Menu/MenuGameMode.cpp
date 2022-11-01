@@ -5,8 +5,6 @@
 
 void AMenuGameMode::MenuStateChange(EStateMenuMode MenuState)
 {
-    
-    
     StateMenuMode = MenuState;
     ChangeMenuStateNotify.Broadcast(MenuState);
 }
