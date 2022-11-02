@@ -26,9 +26,14 @@ public:
     TSubclassOf<UMenuMasterWidget> ShopWidget;
 
     virtual void BeginPlay() override;
-    void RegisterChangeMenuState();
 
-    TMap<EStateMenuMode,UMenuMasterWidget> SetStateMenuWidgets;
-    
+    UFUNCTION()
+    void RegisterChangeMenuState(EStateMenuMode NewMenuState);
+
+    UPROPERTY()
+    TMap<EStateMenuMode,UMenuMasterWidget*> SetStateMenuWidgets;
+
+    UPROPERTY()
+    UMenuMasterWidget* CurrentVisibleWidget{nullptr};
     
 };

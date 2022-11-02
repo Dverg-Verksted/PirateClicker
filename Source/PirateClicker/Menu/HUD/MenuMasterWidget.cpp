@@ -1,4 +1,5 @@
-﻿// This section is the property of the Dverg Verksted team
+// This section is the property of the Dverg Verksted team
 
 
-#include "MenuMasterWidget.h"
+#include "Menu/HUD/MenuMasterWidget.h"
+

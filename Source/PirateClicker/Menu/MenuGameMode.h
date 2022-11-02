@@ -29,9 +29,14 @@ class PIRATECLICKER_API AMenuGameMode : public AGameModeBase
 
 #pragma region Actions
 public:
+    
     void MenuStateChange(EStateMenuMode);
+    UFUNCTION(BlueprintCallable)
+    EStateMenuMode GetCurrentMenuState();
+    
+    FChangeMenuStateNotifySignature OnChangeMenuStateNotify;
 
-    FChangeMenuStateNotifySignature ChangeMenuStateNotify;
+
     
 private:
     EStateMenuMode StateMenuMode{EStateMenuMode::MainMenu};

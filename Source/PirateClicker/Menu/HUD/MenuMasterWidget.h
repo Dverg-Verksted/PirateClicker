@@ -1,16 +1,17 @@
-﻿// This section is the property of the Dverg Verksted team
+// This section is the property of the Dverg Verksted team
 
 #pragma once
 
 #include "CoreMinimal.h"
-#include "UObject/Object.h"
+#include "Blueprint/UserWidget.h"
 #include "MenuMasterWidget.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PIRATECLICKER_API UMenuMasterWidget : public UObject
+class PIRATECLICKER_API UMenuMasterWidget : public UUserWidget
 {
-    GENERATED_BODY()
+	GENERATED_BODY()
+	
 };
