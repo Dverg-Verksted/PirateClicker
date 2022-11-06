@@ -139,10 +139,6 @@
 			"Enabled": false
 		},
 		{
-			"Name": "MeshPainting",
-			"Enabled": false
-		},
-		{
 			"Name": "GeometryMode",
 			"Enabled": false
 		},
@@ -261,18 +257,6 @@
 				"IOS",
 				"TVOS"
 			]
-		},
-		{
-			"Name": "OodleData",
-			"Enabled": false
-		},
-		{
-			"Name": "OodleNetwork",
-			"Enabled": false
-		},
-		{
-			"Name": "TextureFormatOodle",
-			"Enabled": false
 		},
 		{
 			"Name": "OpenImageDenoise",
@@ -410,6 +394,18 @@
 		{
 			"Name": "XGEController",
 			"Enabled": false
+		},
+		{
+			"Name": "LocationServicesAndroidImpl",
+			"Enabled": true
+		},
+		{
+			"Name": "BlueprintStats",
+			"Enabled": true
+		},
+		{
+			"Name": "BlueprintMaterialTextureNodes",
+			"Enabled": true
 		},
 		{
 			"Name": "NiagaraUIRenderer",
