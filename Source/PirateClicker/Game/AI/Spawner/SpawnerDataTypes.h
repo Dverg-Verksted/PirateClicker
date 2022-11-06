@@ -22,6 +22,8 @@ struct FDataSplineInfo
     float Distance{0.0f};
 
     ASplineActor* GetRandomSplineActor() { return this->SplineActors[FMath::RandRange(0, SplineActors.Num() - 1)]; }
+
+    TArray<ASplineActor*> BusySplineActors;
 };
 
 USTRUCT(BlueprintType)

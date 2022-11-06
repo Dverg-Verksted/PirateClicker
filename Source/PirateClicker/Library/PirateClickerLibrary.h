@@ -8,6 +8,7 @@
 #include "EngineUtils.h"
 #include "PirateClickerLibrary.generated.h"
 
+class ASplineActor;
 DEFINE_LOG_CATEGORY_STATIC(LogPirateClicker, All, All);
 #define LOG_PIRATE(LogVerb, Text) UPirateClickerLibrary::Print_Log(LogVerb, Text, __LINE__, __FUNCTION__)
 #define CHECKED(Cond, Text) UPirateClickerLibrary::CheckedCondition(Cond, Text, __LINE__, __FUNCTION__)
@@ -34,6 +35,19 @@ public:
      * @return bool
      **/
     static bool CheckedCondition(const bool bCondition, const FString Text, const int Line, const char* Function);
+
+#pragma region Action
+
+    /**
+     * @private Get index along distance from target position
+     * @param1 ASplineActor*
+     * @param2 FVector&
+     * @return int32
+     **/
+    static int32 GetIndexAlongDistTargetPosition(const ASplineActor* Spline, const FVector& TargetPosition);
+
+
+#pragma endregion
 
 #pragma region WorldUtils
 

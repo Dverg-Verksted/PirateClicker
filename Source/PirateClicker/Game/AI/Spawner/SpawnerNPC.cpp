@@ -167,20 +167,39 @@ void ASpawnerNPC::OnSpawnPirateComplete(const FSoftObjectPath PirateAsset, const
 
     const TSubclassOf<APirateActorBase> SubClassPirate = PirateDataAsset->GetDataPirate().SubClassPirate;
     if (!CHECKED(SubClassPirate.GetDefaultObject() != nullptr, FString::Printf(TEXT("Sub class failed for path: [%s]"), *PirateAsset.ToString()))) return;
-
+    
     for (int32 i = 0; i < CountSpawn; i++)
     {
-        FTransform Transform;
-        FVector LocationSpawn = GetRandomPositionFromSavePosition();
-        LocationSpawn.Z += PirateDataAsset->GetDataPirate().SubClassPirate.GetDefaultObject()->GetCapsuleCollision()->GetScaledCapsuleHalfHeight();
-        Transform.SetLocation(LocationSpawn);
-        APirateActorBase* Pirate = GetWorld()->SpawnActorDeferred<APirateActorBase>(SubClassPirate, Transform);
-        if (!CHECKED(Pirate != nullptr, FString::Printf(TEXT("Spawn pirate faild from subclass: [%s]"), *SubClassPirate->GetName()))) continue;
-        Pirate->InitParamsPirate(PirateDataAsset->GetDataPirate(), GetRandomTargetSpline());
-        Pirate->FinishSpawning(Transform);
-        Pirate->OnPirateDead.AddDynamic(this, &ThisClass::RegisterPirateDead);
-        ArrayPirates.Add(Pirate);
+        // FTimerHandle TimerHandle;
+        // FTimerDelegate TimerDelegate = FTimerDelegate::CreateUObject(this, &ASpawnerNPC::OnSpawnPirate_Event, PirateDataAsset, SubClassPirate);
+        // GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, 0.1f + 1.0f * i, false);
+        OnSpawnPirate_Event(PirateDataAsset, SubClassPirate);
     }
+}
+
+void ASpawnerNPC::OnSpawnPirate_Event(const UPirateDataAsset* PirateDataAsset, const TSubclassOf<APirateActorBase> SubClassPirate)
+{
+    FTransform Transform;
+    ASplineActor* TargetSplineActor = GetRandomTargetSpline();
+    if (!TargetSplineActor)
+    {
+        FTimerHandle TimerHandle;
+        const FTimerDelegate TimerDelegate = FTimerDelegate::CreateUObject(this, &ThisClass::OnSpawnPirate_Event, PirateDataAsset, SubClassPirate);
+        GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, 1.0f, false);
+        return;
+    }
+
+    FVector LocationSpawn = TargetSplineActor->GetSpline()->GetWorldLocationAtSplinePoint(0);
+    LocationSpawn.Z += PirateDataAsset->GetDataPirate().SubClassPirate.GetDefaultObject()->GetCapsuleCollision()->GetScaledCapsuleHalfHeight();
+    Transform.SetLocation(LocationSpawn);
+
+    APirateActorBase* Pirate = GetWorld()->SpawnActorDeferred<APirateActorBase>(SubClassPirate, Transform);
+    if (!CHECKED(Pirate != nullptr, FString::Printf(TEXT("Spawn pirate faild from subclass: [%s]"), *SubClassPirate->GetName()))) return;
+
+    Pirate->InitParamsPirate(PirateDataAsset->GetDataPirate(), TargetSplineActor);
+    Pirate->FinishSpawning(Transform);
+    Pirate->OnPirateDead.AddDynamic(this, &ThisClass::RegisterPirateDead);
+    ArrayPirates.Add(Pirate);
 }
 
 TArray<FVector> ASpawnerNPC::GeneratePositionPoint(const int32 CountSpawn) const
@@ -236,7 +255,29 @@ ASplineActor* ASpawnerNPC::GetRandomTargetSpline()
             TargetDataSplineInfo = DataSplineInfo;
         }
     }
-    return TargetDataSplineInfo.GetRandomSplineActor();
+
+    auto* FindElem = ArrDataSplineInfo.FindByPredicate([TargetDataSplineInfo](const FDataSplineInfo& Data)
+    {
+        return TargetDataSplineInfo.Distance == Data.Distance;
+    });
+    
+    for (auto*& Spline : FindElem->SplineActors)
+    {
+        if (!FindElem->BusySplineActors.Contains(Spline))
+        {
+            FindElem->BusySplineActors.Add(Spline);
+
+            FTimerHandle TimerHandle;
+            GetWorldTimerManager().SetTimer(TimerHandle, [FindElem, Spline]()
+            {
+                FindElem->BusySplineActors.Remove(Spline);
+            }, 1.0f, false);
+
+            return Spline;
+        }
+    }
+
+    return nullptr;
 }
 
 void ASpawnerNPC::CompileSpline()

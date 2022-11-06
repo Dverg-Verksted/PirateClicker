@@ -3,8 +3,17 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "Components/TimelineComponent.h"
 #include "GameFramework/Actor.h"
 #include "PartTotemActor.generated.h"
+
+UENUM()
+enum class EStatePartTotemAnim
+{
+    Start,
+    Normal,
+    End,
+};
 
 UCLASS(NotBlueprintable, NotBlueprintType)
 class PIRATECLICKER_API APartTotemActor : public AActor
@@ -20,6 +29,7 @@ public:
 protected:
     // Called when the game starts or when spawned
     virtual void BeginPlay() override;
+    virtual void Tick(float DeltaSeconds) override;
 
 #pragma endregion
 
@@ -42,10 +52,52 @@ public:
 
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Components")
-    USceneComponent* RootScene;
+    USceneComponent* RootScene{nullptr};
 
     UPROPERTY(EditDefaultsOnly, Category = "Components")
-    UStaticMeshComponent* MeshPartTotem;
+    UStaticMeshComponent* MeshPartTotem{nullptr};
 
 #pragma endregion
+
+#pragma region DataPartTotem
+
+private:
+
+    FTimeline StartAnimRotateTimeLine;
+    FTimeline StartAnimScaledTimeLine;
+    FTimeline NormalAnimRotateTimeLine;
+    FTimeline NormalAnimPosTimeLine;
+    EStatePartTotemAnim StatePartTotemAnim{EStatePartTotemAnim::Start};
+
+    UPROPERTY(EditDefaultsOnly, Category = "Settings Part Totem")
+    UCurveFloat* StartAnimRotateCurve{nullptr};
+
+    UPROPERTY(EditDefaultsOnly, Category = "Settings Part Totem")
+    UCurveFloat* StartAnimScaledCurve{nullptr};
+
+    UPROPERTY(EditDefaultsOnly, Category = "Settings Part Totem")
+    UCurveFloat* NormalAnimRotateCurve{nullptr};
+
+    UPROPERTY(EditDefaultsOnly, Category = "Settings Part Totem")
+    UCurveFloat* NormalAnimPosCurve{nullptr};
+
+    FVector DefaultActorPosition{FVector::ZeroVector};
+
+#pragma endregion
+
+private:
+
+    UFUNCTION()
+    void UpdateAnimScaled(float Value);
+
+    UFUNCTION()
+    void UpdateAnimRotate(float Value);
+
+    UFUNCTION()
+    void UpdateAnimPos(float Value);
+
+    UFUNCTION()
+    void FinishAnimRotate();
+
 };
+

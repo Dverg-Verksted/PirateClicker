@@ -81,6 +81,7 @@ void APirateActorBase::SetupStateBrain(const EStateBrain& NewState)
 
     LOG_PIRATE(ELogVerb::Display, FString::Printf(TEXT("New brain state: [%s]"), *UEnum::GetValueAsString(NewState)));
     StateBrain = NewState;
+    OnChangeStateBrain.Broadcast(StateBrain);
 
     MoveComponent->StopMovement();
     if (StateBrain == EStateBrain::WalkToBack || StateBrain == EStateBrain::WalkToStorage)
@@ -103,42 +104,18 @@ void APirateActorBase::RegisterDeadActor()
     BackChestToStorage();
     SetLifeSpan(1.0f);
     OnPirateDead.Broadcast(this);
+    MoveComponent->StopMovement();
+    PlayMontage(DeadMontage);
 }
 
 void APirateActorBase::MoveToPoint() const
 {
     if (!TargetSpline) return;
 
-    const int32 Index = GetIndexAlongDistPlayer(TargetSpline);
+    const int32 Index = UPirateClickerLibrary::GetIndexAlongDistTargetPosition(TargetSpline, GetActorLocation());
     const float Duration = FMath::Clamp(TargetSpline->GetSpline()->GetDistanceAlongSplineAtSplinePoint(Index) / TargetSpline->GetSpline()->GetSplineLength(), 0.0f, 1.0f);
     const bool bRev = StateBrain == EStateBrain::WalkToBack;
     MoveComponent->GoMove(FMovementData(Duration, bRev, TargetSpline));
-}
-
-int32 APirateActorBase::GetIndexAlongDistPlayer(const ASplineActor* Spline) const
-{
-    if (!Spline) return INDEX_NONE;
-
-    TMap<int32, float> TempContains;
-    const int32 Numbers = Spline->GetSpline()->GetNumberOfSplinePoints();
-    for (int32 i = 0; i < Numbers; ++i)
-    {
-        float Dist = FVector::Dist(GetActorLocation(), Spline->GetSpline()->GetWorldLocationAtSplinePoint(i));
-        TempContains.Add(i, Dist);
-    }
-
-    float Distance = MAX_FLT;
-    int32 TempTargetIndex = INDEX_NONE;
-    for (const auto& Pair : TempContains)
-    {
-        if (Pair.Value < Distance)
-        {
-            Distance = Pair.Value;
-            TempTargetIndex = Pair.Key;
-        }
-    }
-
-    return TempTargetIndex;
 }
 
 void APirateActorBase::SpawnGoldChest(const TSubclassOf<AGoldChest>& SubClassGoldChest, AGoldStorageActor* GoldStorageActor)
@@ -151,13 +128,37 @@ void APirateActorBase::SpawnGoldChest(const TSubclassOf<AGoldChest>& SubClassGol
     OnStatusTreasure.Broadcast(bHasTreasure);
 }
 
+float APirateActorBase::PlayMontage(UAnimMontage* AnimMontage, const float InPlayRate, const FName StartSectionName) const
+{
+    UAnimInstance * AnimInstance = (PirateMesh) ? PirateMesh->GetAnimInstance() : nullptr;
+    if (AnimMontage && AnimInstance)
+    {
+        float const Duration = AnimInstance->Montage_Play(AnimMontage, InPlayRate);
+
+        if (Duration > 0.f)
+        {
+            // Start at a given Section.
+            if (StartSectionName != NAME_None)
+            {
+                AnimInstance->Montage_JumpToSection(StartSectionName, AnimMontage);
+            }
+
+            return Duration;
+        }
+    }
+
+    return 0.f;
+}
+
 void APirateActorBase::BackChestToStorage()
 {
     if (!bHasTreasure || !GoldStorageFrom) return;
 
-    float ChestToGive = 1.0f;
-    GoldStorageFrom->SetCurrentGold(GoldStorageFrom->GetCurrentGold() + ChestToGive);
-    GoldChest->Destroy();
+    GoldStorageFrom->UpperCountGold();
+    if (GoldChest)
+    {
+        GoldChest->Destroy();
+    }
     bHasTreasure = false;
     OnStatusTreasure.Broadcast(bHasTreasure);
 }

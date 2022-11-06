@@ -124,11 +124,14 @@ void ATotemZoneActor::SetupTotemDA(UTotemDataAsset* TotemDA)
     const int32 IndexPart = GetFreeSlotIndexForTotem();
     if (!CHECKED(IndexPart != INDEX_NONE, "index for free slot is none")) return;
 
-    APartTotemActor* NewPart = GetWorld()->SpawnActor<APartTotemActor>(APartTotemActor::StaticClass());
+    FTransform Transform(ArrayDataSlotsTotem[IndexPart].SlotPosition);
+    APartTotemActor* NewPart = GetWorld()->SpawnActorDeferred<APartTotemActor>(APartTotemActor::StaticClass(), Transform);
     if (!CHECKED(NewPart != nullptr, "New part for totem is nullptr")) return;
 
     NewPart->GetMeshPartTotem()->SetStaticMesh(TotemDA->TotemMesh);
     NewPart->SetActorLocation(ArrayDataSlotsTotem[IndexPart].SlotPosition);
+    NewPart->FinishSpawning(Transform);
+
     ArrayDataSlotsTotem[IndexPart].TotemActor = NewPart;
     ArrayDataSlotsTotem[IndexPart].TotemDA = TotemDA;
 }
