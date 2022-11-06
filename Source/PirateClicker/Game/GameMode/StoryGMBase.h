@@ -7,6 +7,7 @@
 #include "GameFramework/GameModeBase.h"
 #include "StoryGMBase.generated.h"
 
+class ATotemZoneActor;
 class AGoldStorageActor;
 class APlayerPawn;
 class AGamePC;
@@ -86,6 +87,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AStoryGMBase | Action")
     APlayerPawn* GetPlayerPawn() const { return PlayerPawn; }
 
+    UFUNCTION(BlueprintCallable, Category = "AStoryGMBase | Action")
+    const TArray<ATotemZoneActor*>& GetArrayTotemZone() const { return ArrayTotem; }
+
 private:
     /**
      * @public Run waves
@@ -147,6 +151,8 @@ private:
 
     // @private Storing the status of NPC spawners
     TArray<AGoldStorageActor*> ArrayGoldStorage;
+
+    TArray<ATotemZoneActor*> ArrayTotem;
 
     int32 AllCountTreasure{0};
 
