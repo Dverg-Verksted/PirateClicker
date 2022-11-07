@@ -8,9 +8,9 @@
 void AMenuHUD::BeginPlay()
 {
     Super::BeginPlay();
-    if (!CHECKED(StartWidget != nullptr, "StartWidget is nullptr"))return;
-    if (!CHECKED(SettingsWidget != nullptr, "SettingsWidget is nullptr"))return;
-    if (!CHECKED(ShopWidget != nullptr, "ShopWidget is nullptr"))return;
+    if (!CHECKED(StartWidget.GetDefaultObject() != nullptr, "StartWidget is nullptr"))return;
+    if (!CHECKED(SettingsWidget.GetDefaultObject() != nullptr, "SettingsWidget is nullptr"))return;
+    if (!CHECKED(ShopWidget.GetDefaultObject() != nullptr, "ShopWidget is nullptr"))return;
 
     SetStateMenuWidgets.Add(EStateMenuMode::MainMenu,CreateWidget<UMenuMasterWidget>(GetWorld()->GetFirstPlayerController(),StartWidget));
     SetStateMenuWidgets.Add(EStateMenuMode::SettingsMenu,CreateWidget<UMenuMasterWidget>(GetWorld()->GetFirstPlayerController(),SettingsWidget));
@@ -25,7 +25,6 @@ void AMenuHUD::BeginPlay()
 
     void AMenuHUD::RegisterChangeMenuState(EStateMenuMode NewMenuState)
 {
-    if (!CHECKED(CurrentVisibleWidget!= nullptr, "CurrentVisibleWidget is nullptr"))return;
         
     if (SetStateMenuWidgets.Contains(NewMenuState))
     {
