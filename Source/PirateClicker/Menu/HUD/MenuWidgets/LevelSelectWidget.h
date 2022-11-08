@@ -5,30 +5,32 @@
 #include "CoreMinimal.h"
 #include "Components/Button.h"
 #include "Menu/HUD/MenuMasterWidget.h"
-#include "StartWidget.generated.h"
+#include "LevelSelectWidget.generated.h"
 
 /**
  * 
  */
 UCLASS()
-class PIRATECLICKER_API UStartWidget : public UMenuMasterWidget
+class PIRATECLICKER_API ULevelSelectWidget : public UMenuMasterWidget
 {
 	GENERATED_BODY()
 
-#pragma region  WidgetComponents
+#pragma region WidgetComponents
 
 public:
     
     UPROPERTY(Transient,meta = (BindWidget))
-    UButton* StartGameButton;
+    UButton* LevelSwitchLeftArrow;
     UPROPERTY(Transient,meta = (BindWidget))
-    UButton* SettingsButton;
+    UButton* LevelSwitchRightArrow;
     UPROPERTY(Transient,meta = (BindWidget))
-    UButton* OptionsButton;
+    UButton* BackButton;
 
     UPROPERTY(Transient, meta = (BindWidget))
     UWidgetAnimation* ButtonAnimation;
 
 
+
 #pragma endregion
+	
 };
