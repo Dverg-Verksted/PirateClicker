@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/Button.h"
+#include "Components/CanvasPanel.h"
 #include "Menu/HUD/MenuMasterWidget.h"
 #include "StartWidget.generated.h"
 
@@ -20,6 +21,9 @@ class PIRATECLICKER_API UStartWidget : public UMenuMasterWidget
 public:
     
     UPROPERTY(Transient,meta = (BindWidget))
+    UCanvasPanel* WidgetCanvasPanel;
+    
+    UPROPERTY(Transient,meta = (BindWidget))
     UButton* StartGameButton;
     UPROPERTY(Transient,meta = (BindWidget))
     UButton* SettingsButton;
@@ -29,6 +33,18 @@ public:
     UPROPERTY(Transient, meta = (BindWidget))
     UWidgetAnimation* ButtonAnimation;
 
-
 #pragma endregion
+
+#pragma region Actions
+
+private:
+    
+    virtual void NativeConstruct() override;
+
+    UFUNCTION()
+    void OpenLevelSelectWidget();
+    UFUNCTION()
+    void OpenSettingsWidget();
+
+#pragma endregion 
 };

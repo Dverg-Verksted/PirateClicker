@@ -3,3 +3,8 @@
 
 #include "Menu/HUD/MenuWidgets/SettingsWidget.h"
 
+void USettingsWidget::NativeConstruct()
+{
+    Super::NativeConstruct();
+    
+}
