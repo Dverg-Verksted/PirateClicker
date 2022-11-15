@@ -24,6 +24,8 @@ public:
     TSubclassOf<UMenuMasterWidget> SettingsWidget;
     UPROPERTY(EditAnywhere)
     TSubclassOf<UMenuMasterWidget> ShopWidget;
+    UPROPERTY(EditAnywhere)
+    TSubclassOf<UMenuMasterWidget> LevelSelectWidget;
 
     virtual void BeginPlay() override;
 

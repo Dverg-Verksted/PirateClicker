@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Components/Button.h"
-#include "Components/CanvasPanel.h"
 #include "Menu/HUD/MenuMasterWidget.h"
 #include "LevelSelectWidget.generated.h"
 
@@ -19,9 +18,6 @@ class PIRATECLICKER_API ULevelSelectWidget : public UMenuMasterWidget
 #pragma region WidgetComponents
 
 public:
-
-    UPROPERTY(Transient,meta = (BindWidget))
-    UCanvasPanel* WidgetCanvasPanel;
     
     UPROPERTY(Transient,meta = (BindWidget))
     UButton* LevelSwitchLeftArrow;
@@ -30,14 +26,16 @@ public:
     UPROPERTY(Transient,meta = (BindWidget))
     UButton* BackButton;
 
-    UPROPERTY(Transient, meta = (BindWidget))
-    UWidgetAnimation* ButtonAnimation;
+    UPROPERTY(Transient, meta = (BindWidgetAnim))
+    UWidgetAnimation* ArrowButtonsAnimation;
+    UPROPERTY(Transient, meta = (BindWidgetAnim))
+    UWidgetAnimation* BackButtonsAnimation;
 
 #pragma endregion
 
 #pragma region Variables
 
-public:
+protected:
     UPROPERTY(BlueprintReadOnly)
     bool isFirstLvlSelected{false};
     UPROPERTY(BlueprintReadOnly)
@@ -54,8 +52,20 @@ public:
     void MoveLvlAtScreenLeft();
     UFUNCTION()
     void MoveLevelAtScreenRight();
-
+    UFUNCTION()
+    void BackToStartMenuWidget();
 
 #pragma endregion
+
+#pragma region Variables
+
+private:
+
+    UPROPERTY()
+    TArray<FName> LevelsArray;
+    UPROPERTY()
+    int32 LevelNumber;
+
+#pragma endregion 
 	
 };

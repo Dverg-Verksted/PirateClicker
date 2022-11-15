@@ -13,10 +13,12 @@ void UStartWidget::NativeConstruct()
 
 void UStartWidget::OpenSettingsWidget()
 {
-    
+    PlayAnimation(ButtonAnimation);
+    MenuGameMode->MenuStateChange(EStateMenuMode::SettingsMenu);
 }
 
 void UStartWidget::OpenLevelSelectWidget()
 {
-    
+    PlayAnimation(ButtonAnimation);
+    MenuGameMode->MenuStateChange(EStateMenuMode::LevelSelectMenu);
 }

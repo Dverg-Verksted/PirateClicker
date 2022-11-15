@@ -4,7 +4,6 @@
 
 #include "CoreMinimal.h"
 #include "Components/Button.h"
-#include "Components/CanvasPanel.h"
 #include "Components/CheckBox.h"
 #include "Components/ComboBoxString.h"
 #include "Menu/HUD/MenuMasterWidget.h"
@@ -23,9 +22,6 @@ class PIRATECLICKER_API USettingsWidget : public UMenuMasterWidget
 public:
 
     virtual void NativeConstruct() override;
-
-    UPROPERTY(Transient,meta = (BindWidget))
-    UCanvasPanel* WidgetCanvasPanel;
     
     UPROPERTY(Transient,meta = (BindWidget))
     UButton* BackButton;
@@ -37,9 +33,18 @@ public:
     UPROPERTY(Transient,meta = (BindWidget))
     UCheckBox* MusicVolume;
     
-    UPROPERTY(Transient, meta = (BindWidget))
+    UPROPERTY(Transient, meta = (BindWidgetAnim))
+    UWidgetAnimation* BackButtonAnimation;
+    UPROPERTY(Transient, meta = (BindWidgetAnim))
     UWidgetAnimation* ButtonAnimation;
 
+#pragma endregion
+
+#pragma region Action
+
+public:
+    UFUNCTION()
+    void BackToStartMenuWidget();
 
 #pragma endregion
 	

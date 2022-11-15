@@ -6,5 +6,13 @@
 void USettingsWidget::NativeConstruct()
 {
     Super::NativeConstruct();
+
+    BackButton->OnClicked.AddDynamic(this,&ThisClass::USettingsWidget::BackToStartMenuWidget);
     
+}
+
+void USettingsWidget::BackToStartMenuWidget()
+{
+    PlayAnimation(BackButtonAnimation);
+    MenuGameMode->MenuStateChange(EStateMenuMode::MainMenu);
 }
