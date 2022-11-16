@@ -3,7 +3,6 @@
 
 #include "Menu/HUD/MenuHUD.h"
 
-#include "StatTimer.h"
 #include "Library/PirateClickerLibrary.h"
 #include "Blueprint/UserWidget.h"
 
