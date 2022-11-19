@@ -29,7 +29,7 @@ public:
     UPROPERTY(Transient, meta = (BindWidgetAnim))
     UWidgetAnimation* ArrowButtonsAnimation;
     UPROPERTY(Transient, meta = (BindWidgetAnim))
-    UWidgetAnimation* BackButtonsAnimation;
+    UWidgetAnimation* BackButtonAnimation;
 
 #pragma endregion
 

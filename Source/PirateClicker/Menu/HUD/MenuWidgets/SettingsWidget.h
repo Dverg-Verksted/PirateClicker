@@ -20,8 +20,6 @@ class PIRATECLICKER_API USettingsWidget : public UMenuMasterWidget
 #pragma region  WidgetComponents
 
 public:
-
-    virtual void NativeConstruct() override;
     
     UPROPERTY(Transient,meta = (BindWidget))
     UButton* BackButton;
@@ -43,8 +41,16 @@ public:
 #pragma region Action
 
 public:
+
+    virtual void NativeConstruct() override;
+    
     UFUNCTION()
     void BackToStartMenuWidget();
+
+    UFUNCTION()
+    void ChangeMusicVolume(bool bIsMusicChecked);
+    UFUNCTION()
+    void ChangeSoundsVolume(bool bIsSoundsChecked);
 
 #pragma endregion
 	

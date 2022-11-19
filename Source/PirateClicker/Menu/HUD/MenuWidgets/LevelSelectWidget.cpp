@@ -29,7 +29,7 @@ void ULevelSelectWidget::MoveLvlAtScreenLeft()
 
 void ULevelSelectWidget::BackToStartMenuWidget()
 {
-    PlayAnimation(BackButtonsAnimation);
+    PlayAnimation(BackButtonAnimation);
     MenuGameMode->MenuStateChange(EStateMenuMode::MainMenu);
 }
 

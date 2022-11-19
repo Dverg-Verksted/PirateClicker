@@ -2,7 +2,6 @@
 
 
 #include "Menu/HUD/MenuHUD.h"
-
 #include "Library/PirateClickerLibrary.h"
 #include "Blueprint/UserWidget.h"
 
@@ -24,6 +23,7 @@ void AMenuHUD::BeginPlay()
     {
         MenuGameMode->OnChangeMenuStateNotify.AddDynamic(this,&ThisClass::RegisterChangeMenuState);
     }
+    
 }
 
     void AMenuHUD::RegisterChangeMenuState(EStateMenuMode NewMenuState)
