@@ -146,7 +146,7 @@ void ASpawnerNPC::RunSpawnPirate(const FSoftObjectPath& PirateAsset, const int32
     ArrSavedPosition = GeneratePositionPoint(CountSpawn);
 
     FStreamableManager& AssetLoader = UAssetManager::GetStreamableManager();
-    FStreamableDelegate Delegate = FStreamableDelegate::CreateUObject(this, &ThisClass::OnSpawnPirateComplete, PirateAsset, CountSpawn);
+    const FStreamableDelegate Delegate = FStreamableDelegate::CreateUObject(this, &ThisClass::OnSpawnPirateComplete, PirateAsset, CountSpawn);
     AssetLoader.RequestAsyncLoad(PirateAsset, Delegate);
 }
 
@@ -170,9 +170,6 @@ void ASpawnerNPC::OnSpawnPirateComplete(const FSoftObjectPath PirateAsset, const
     
     for (int32 i = 0; i < CountSpawn; i++)
     {
-        // FTimerHandle TimerHandle;
-        // FTimerDelegate TimerDelegate = FTimerDelegate::CreateUObject(this, &ASpawnerNPC::OnSpawnPirate_Event, PirateDataAsset, SubClassPirate);
-        // GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, 0.1f + 1.0f * i, false);
         OnSpawnPirate_Event(PirateDataAsset, SubClassPirate);
     }
 }

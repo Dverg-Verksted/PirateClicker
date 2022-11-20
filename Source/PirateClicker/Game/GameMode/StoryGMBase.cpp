@@ -80,6 +80,8 @@ void AStoryGMBase::StartPlay()
         1.0f, false);
     
     UPirateClickerLibrary::FindAllActors(GetWorld(), ArrayTotem);
+
+    OnSetupTotemPart.Broadcast({EPresetTotems::Fire, EPresetTotems::Frost});
 }
 
 #pragma endregion

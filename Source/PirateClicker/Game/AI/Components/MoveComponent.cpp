@@ -5,8 +5,8 @@
 #include "Components/SplineComponent.h"
 #include "Library/PirateClickerLibrary.h"
 
-#if UE_EDITOR || UE_BUILD_DEVELOPMENT
-static TAutoConsoleVariable<bool> EnableD_MovementPirate(TEXT("Pirate.ShowDebugMovementPirate"), false, TEXT("Enable debag information about the movement of pirates"), ECVF_Cheat);
+#if UE_EDITOR || UE_BUILD_DEVELOPMENT || UE_BUILD_DEBUG
+static TAutoConsoleVariable<bool> EnableD_MovementPirate(TEXT("Pirate.ShowMove"), false, TEXT("Enable debug information about the movement of pirates"), ECVF_Cheat);
 #endif
 
 #pragma region Default
@@ -41,10 +41,10 @@ void UMoveComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 {
     Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
 
-#if UE_EDITOR || UE_BUILD_DEVELOPMENT
-    if (EnableD_MovementPirate.GetValueOnGameThread())
+#if UE_EDITOR || UE_BUILD_DEVELOPMENT || UE_BUILD_DEBUG
+    if (EnableD_MovementPirate.GetValueOnGameThread() && GetOwner())
     {
-        
+        DrawDebugString(GetWorld(), GetOwner()->GetActorLocation(), TargetData.ToStringN(), nullptr, FColor::Orange, 0.0f, false, 1.0f);
     }
 #endif
 
@@ -66,9 +66,10 @@ void UMoveComponent::InitMoveData(const float SpeedMove, const float SpeedRotate
 
 void UMoveComponent::GoMove(const FMovementData& MovementData)
 {
+    StopMovement();
     LOG_MOVE(ELogVerb::Display, FString::Printf(TEXT("Movement Data: [%s]"), *MovementData.ToString()));
     TargetData = MovementData;
-    StateMovement = EStateMovement::Move;
+    ChangeMovementState(EStateMovement::Move);
 }
 
 #pragma endregion
@@ -77,8 +78,7 @@ void UMoveComponent::GoMove(const FMovementData& MovementData)
 
 void UMoveComponent::StopMovement()
 {
-    StateMovement = EStateMovement::Stop;
-    OnStopedMove.Broadcast();
+    ChangeMovementState(EStateMovement::Stop);
 }
 
 void UMoveComponent::SetupSpeedModifyToPercent(const float SpeedPercent)
@@ -89,6 +89,30 @@ void UMoveComponent::SetupSpeedModifyToPercent(const float SpeedPercent)
 void UMoveComponent::ResetSpeedModifyToPercent()
 {
     SpeedModify = 1.0f;
+}
+
+void UMoveComponent::PauseMove()
+{
+    if (StateMovement == EStateMovement::Move)
+    {
+        ChangeMovementState(EStateMovement::Pause);
+    }
+}
+
+void UMoveComponent::ResumeMove()
+{
+    if (StateMovement == EStateMovement::Pause)
+    {
+        ChangeMovementState(EStateMovement::Move);
+    }
+}
+
+void UMoveComponent::ChangeMovementState(const EStateMovement& NewState)
+{
+    if (!CHECKED(StateMovement != NewState, "State movement equal new state")) return;
+
+    StateMovement = NewState;
+    OnChangeMovementState.Broadcast(NewState);
 }
 
 void UMoveComponent::MoveToSpline(float DeltaTime)
@@ -108,7 +132,7 @@ void UMoveComponent::MoveToSpline(float DeltaTime)
         StopMovement();
     }
 
-#if UE_EDITOR || UE_BUILD_DEVELOPMENT
+#if UE_EDITOR || UE_BUILD_DEVELOPMENT || UE_BUILD_DEBUG
     if (EnableD_MovementPirate.GetValueOnGameThread())
     {
         LOG_MOVE(ELogVerb::Display, FString::Printf(TEXT("New pos: [%s] | New rot: [%s] | Duration: [%f]"), *TempPos.ToString(), *TempRot.ToString(), TargetData.Duration));
