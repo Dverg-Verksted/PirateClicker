@@ -1,8 +1,11 @@
 // This section is the property of the Dverg Verksted team
 
 #include "Library/PirateClickerLibrary.h"
+
+#include "Components/SplineComponent.h"
 #include "Engine/AssetManager.h"
 #include "Engine/StreamableManager.h"
+#include "Game/AI/Spawner/SplineActor.h"
 
 void UPirateClickerLibrary::Print_Log(const ELogVerb LogVerb, const FString Text, const int Line, const char* Function)
 {
@@ -29,6 +32,36 @@ bool UPirateClickerLibrary::CheckedCondition(const bool bCondition, const FStrin
     }
     return true;
 }
+
+#pragma region Action
+
+int32 UPirateClickerLibrary::GetIndexAlongDistTargetPosition(const ASplineActor* Spline, const FVector& TargetPosition)
+{
+    if (!Spline) return INDEX_NONE;
+
+    TMap<int32, float> TempContains;
+    const int32 Numbers = Spline->GetSpline()->GetNumberOfSplinePoints();
+    for (int32 i = 0; i < Numbers; ++i)
+    {
+        float Dist = FVector::Dist(TargetPosition, Spline->GetSpline()->GetWorldLocationAtSplinePoint(i));
+        TempContains.Add(i, Dist);
+    }
+
+    float Distance = MAX_FLT;
+    int32 TempTargetIndex = INDEX_NONE;
+    for (const auto& Pair : TempContains)
+    {
+        if (Pair.Value < Distance)
+        {
+            Distance = Pair.Value;
+            TempTargetIndex = Pair.Key;
+        }
+    }
+
+    return TempTargetIndex;
+}
+
+#pragma endregion
 
 #pragma region WorldUtils
 

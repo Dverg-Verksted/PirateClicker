@@ -30,6 +30,7 @@ void AGoldStorageActor::BeginPlay()
 {
     Super::BeginPlay();
 
+    MaxGold = CurrentGold;
     if (!CHECKED(RootScene != nullptr, "Root scene is nullptr")) return;
     if (!CHECKED(MeshStorage != nullptr, "Mesh storage is nullptr")) return;
 
@@ -43,6 +44,7 @@ void AGoldStorageActor::BeginPlay()
     }
 
     OnActorBeginOverlap.AddDynamic(this, &ThisClass::RegisterActorBeginOverlap);
+    OnActorEndOverlap.AddDynamic(this, &ThisClass::RegisterActorEndOverlap);
 }
 
 int32 AGoldStorageActor::GetCurrentGold()
@@ -50,9 +52,15 @@ int32 AGoldStorageActor::GetCurrentGold()
     return CurrentGold;
 }
 
-void AGoldStorageActor::SetCurrentGold(float GoldToSet)
+void AGoldStorageActor::SetCurrentGold(const int32 GoldToSet)
 {
-    CurrentGold = GoldToSet;
+    CurrentGold = FMath::Clamp(GoldToSet, 0, MaxGold);
+    OnChangeGoldCount();
+}
+
+void AGoldStorageActor::UpperCountGold()
+{
+    CurrentGold = FMath::Clamp(CurrentGold + 1, 0, MaxGold);
     OnChangeGoldCount();
 }
 
@@ -89,6 +97,8 @@ void AGoldStorageActor::RegisterActorBeginOverlap(AActor* OverlappedActor, AActo
     {
         APirateActorBase* PirateBase = Cast<APirateActorBase>(OtherActor);
         if (!CHECKED(PirateBase != nullptr, "Cast to class APirateActorBase is fail")) return;
+        if (!CHECKED(!ArrayTargetPirate.Contains(PirateBase), "Pirate actor is overlaped")) return;
+
         PirateBase->SetupStateBrain(EStateBrain::WalkToBack);
         if (CurrentGold != 0)
         {
@@ -103,7 +113,16 @@ void AGoldStorageActor::RegisterActorBeginOverlap(AActor* OverlappedActor, AActo
             }
         }
 
+        ArrayTargetPirate.Add(PirateBase);
         LOG_PIRATE(ELogVerb::Display, FString::Printf(TEXT("CurrentGold : [%i]"), CurrentGold));
+    }
+}
+
+void AGoldStorageActor::RegisterActorEndOverlap(AActor* OverlappedActor, AActor* OtherActor)
+{
+    if (OtherActor && OtherActor->IsA(APirateActorBase::StaticClass()))
+    {
+        ArrayTargetPirate.Remove(Cast<APirateActorBase>(OtherActor));
     }
 }
 

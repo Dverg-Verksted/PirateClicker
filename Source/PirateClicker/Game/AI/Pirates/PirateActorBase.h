@@ -18,6 +18,7 @@ class UCapsuleComponent;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPirateDeadSignature, APirateActorBase*, Pirate);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FStatusTreasureSignature, bool, bHaveTreasure);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FChangeStateBrainSignature, const EStateBrain&, StateBrain);
 
 UCLASS()
 class PIRATECLICKER_API APirateActorBase : public AActor
@@ -104,6 +105,10 @@ public:
     bool bHasTreasure{false};
 
 protected:
+
+    UPROPERTY(EditDefaultsOnly, Category = "Settings Pirate")
+    UAnimMontage* DeadMontage{nullptr};
+
     // @protected Target spline
     UPROPERTY()
     ASplineActor* TargetSpline;
@@ -153,6 +158,9 @@ public:
     UFUNCTION()
     void SpawnGoldChest(const TSubclassOf<AGoldChest>& SubClassGoldChest, AGoldStorageActor* GoldStorageActor);
 
+    UFUNCTION()
+    float PlayMontage(UAnimMontage* AnimMontage, float InPlayRate = 1.f, FName StartSectionName = NAME_None) const;
+
 private:
     /**
      * @private Register hit on actor
@@ -166,13 +174,6 @@ private:
      **/
     UFUNCTION()
     void MoveToPoint() const;
-
-    /**
-     * @private Get index along distance player
-     * @param1 ASplineActor*
-     * @return int32
-     **/
-    int32 GetIndexAlongDistPlayer(const ASplineActor* Spline) const;
 
     UFUNCTION()
     void BackChestToStorage();
@@ -189,6 +190,10 @@ public:
     // @public notify change status treasure
     UPROPERTY(BlueprintAssignable)
     FStatusTreasureSignature OnStatusTreasure;
+
+    // @public notify change status treasure
+    UPROPERTY(BlueprintAssignable)
+    FChangeStateBrainSignature OnChangeStateBrain;
 
 #pragma endregion
 };
