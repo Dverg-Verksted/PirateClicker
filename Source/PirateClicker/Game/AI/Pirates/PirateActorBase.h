@@ -116,6 +116,9 @@ protected:
     // @protected Current state brain
     EStateBrain StateBrain = EStateBrain::NoneInit;
 
+    // @protected Current state brain
+    EStateBrain LastStateBrain = EStateBrain::NoneInit;
+
     int32 TargetIndex = -1;
 
 private:
@@ -141,7 +144,7 @@ public:
      * @public Setup new state brain
      **/
     UFUNCTION(BlueprintCallable, Category = "APirateActorBase | Action")
-    void SetupStateBrain(const EStateBrain& NewState);
+    void SetupStateBrain(const EStateBrain NewState);
 
     /**
      * @public Getting state brain
@@ -162,12 +165,6 @@ public:
     float PlayMontage(UAnimMontage* AnimMontage, float InPlayRate = 1.f, FName StartSectionName = NAME_None) const;
 
 private:
-    /**
-     * @private Register hit on actor
-     * @param1 AActor*
-     **/
-    UFUNCTION()
-    void RegisterHitActor(AActor* HitActor);
 
     /**
      * @private Move To Point
@@ -177,6 +174,18 @@ private:
 
     UFUNCTION()
     void BackChestToStorage();
+
+    /**
+     * @private 
+     **/
+    UFUNCTION()
+    void RegisterStaminaOver();
+    
+    /**
+     * @private 
+     **/
+    UFUNCTION()
+    void RegisterStaminaFull();
 
 #pragma endregion
 

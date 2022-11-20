@@ -15,6 +15,7 @@ enum class EStateMenuMode:uint8
     SettingsMenu,
     ShopMenu,
     LoadMenu,
+    LevelSelectMenu,
 };
 
 #pragma region Delegates

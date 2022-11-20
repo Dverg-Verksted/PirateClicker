@@ -3,3 +3,9 @@
 
 #include "Menu/HUD/MenuMasterWidget.h"
 
+void UMenuMasterWidget::NativeConstruct()
+{
+    Super::NativeConstruct();
+
+    MenuGameMode = Cast<AMenuGameMode>(GetWorld()->GetAuthGameMode());
+}

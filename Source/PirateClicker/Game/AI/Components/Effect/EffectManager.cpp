@@ -87,7 +87,7 @@ void UEffectManager::ApplyEffectsToOwner()
         {
             case ETypeEffect::Fire:
             {
-                OwnerAbilitySystemComponent->TakeDamage(GetOwner(), Data.Damage, nullptr, nullptr, nullptr);
+                OwnerAbilitySystemComponent->TakeDamage(Data.Damage);
                 break;
             }
             case ETypeEffect::Cold:

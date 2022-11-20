@@ -7,14 +7,28 @@
 #include "GameFramework/GameModeBase.h"
 #include "StoryGMBase.generated.h"
 
+class ATotemZoneActor;
 class AGoldStorageActor;
 class APlayerPawn;
 class AGamePC;
 class UDataTable;
 
+/**
+ *
+ */
+UENUM(BlueprintType)
+enum class EPresetTotems : uint8
+{
+    Fire,
+    Frost,
+    ThirdType,
+    FourthType,
+};
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FChangeStateGameSignature, const EStateGame&, StateGame);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FRunGameWaveSignature, int32, NumWave);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FChangeTreasureCountSignature, int32, CountTreasure);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FSetupTotemPartSignature, const TArray<EPresetTotems>&, ArrayPresetTotems);
 
 /**
  * @class Story GM
@@ -86,6 +100,9 @@ public:
     UFUNCTION(BlueprintCallable, Category = "AStoryGMBase | Action")
     APlayerPawn* GetPlayerPawn() const { return PlayerPawn; }
 
+    UFUNCTION(BlueprintCallable, Category = "AStoryGMBase | Action")
+    const TArray<ATotemZoneActor*>& GetArrayTotemZone() const { return ArrayTotem; }
+
 private:
     /**
      * @public Run waves
@@ -148,6 +165,8 @@ private:
     // @private Storing the status of NPC spawners
     TArray<AGoldStorageActor*> ArrayGoldStorage;
 
+    TArray<ATotemZoneActor*> ArrayTotem;
+
     int32 AllCountTreasure{0};
 
 #pragma endregion
@@ -163,6 +182,9 @@ public:
 
     UPROPERTY(BlueprintAssignable)
     FChangeTreasureCountSignature OnChangeTreasureCount;
+
+    UPROPERTY(BlueprintAssignable)
+    FSetupTotemPartSignature OnSetupTotemPart;
 
 #pragma endregion
 };

@@ -40,6 +40,8 @@ void APirateActorBase::InitParamsPirate(const FDataPirate& DataPirate, ASplineAc
     if (!CHECKED(StateBrain == EStateBrain::NoneInit, "Pirate is init!")) return;
 
     MoveComponent->InitMoveData(DataPirate.SpeedMove, DataPirate.SpeedRotate);
+    AbilitySystem->ResetAbilityData();
+    AbilitySystem->InitAbilityData(DataPirate.bEnableHealth, DataPirate.DataHealth, DataPirate.bEnableStamina, DataPirate.DataStamina);
     SetupTargetSpline(NewSpline);
 }
 
@@ -55,11 +57,17 @@ void APirateActorBase::BeginPlay()
     if (!CHECKED(TargetSpline->GetSpline() != nullptr, "Spline is nullptr")) return;
     if (!CHECKED(AbilitySystem != nullptr, "AbilitySystem is nullptr")) return;
     AbilitySystem->OnDeath.AddDynamic(this, &ThisClass::RegisterDeadActor);
+    AbilitySystem->StartAbilitySystem();
+    if (AbilitySystem->IsEnableStamina())
+    {
+        AbilitySystem->StartReduceStamina();
+        AbilitySystem->OnStaminaIsOver.AddDynamic(this, &ThisClass::RegisterStaminaOver);
+        AbilitySystem->OnStaminaIsFull.AddDynamic(this, &ThisClass::RegisterStaminaFull);
+    }
 
-    AGamePC* GamePC = Cast<AGamePC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
+    const AGamePC* GamePC = Cast<AGamePC>(UGameplayStatics::GetPlayerController(GetWorld(), 0));
     if (!CHECKED(GamePC != nullptr, "Game player controller is nullptr")) return;
 
-    GamePC->OnHitActor.AddDynamic(this, &ThisClass::RegisterHitActor);
     SetupStateBrain(EStateBrain::WalkToStorage);
 }
 
@@ -75,26 +83,18 @@ void APirateActorBase::SetupTargetSpline(ASplineActor* NewSpline)
     MoveToPoint();
 }
 
-void APirateActorBase::SetupStateBrain(const EStateBrain& NewState)
+void APirateActorBase::SetupStateBrain(const EStateBrain NewState)
 {
     if (!CHECKED(StateBrain != NewState, "Current state brain == New State")) return;
 
     LOG_PIRATE(ELogVerb::Display, FString::Printf(TEXT("New brain state: [%s]"), *UEnum::GetValueAsString(NewState)));
+    LastStateBrain = StateBrain;
     StateBrain = NewState;
     OnChangeStateBrain.Broadcast(StateBrain);
 
-    MoveComponent->StopMovement();
     if (StateBrain == EStateBrain::WalkToBack || StateBrain == EStateBrain::WalkToStorage)
     {
         MoveToPoint();
-    }
-}
-
-void APirateActorBase::RegisterHitActor(AActor* HitActor)
-{
-    if (this == HitActor && AbilitySystem)
-    {
-        AbilitySystem->TakeDamage(HitActor, 10.0f, nullptr, nullptr, nullptr);
     }
 }
 
@@ -111,7 +111,8 @@ void APirateActorBase::RegisterDeadActor()
 void APirateActorBase::MoveToPoint() const
 {
     if (!TargetSpline) return;
-
+    if (StateBrain != EStateBrain::WalkToBack && StateBrain != EStateBrain::WalkToStorage) return;
+    
     const int32 Index = UPirateClickerLibrary::GetIndexAlongDistTargetPosition(TargetSpline, GetActorLocation());
     const float Duration = FMath::Clamp(TargetSpline->GetSpline()->GetDistanceAlongSplineAtSplinePoint(Index) / TargetSpline->GetSpline()->GetSplineLength(), 0.0f, 1.0f);
     const bool bRev = StateBrain == EStateBrain::WalkToBack;
@@ -161,6 +162,24 @@ void APirateActorBase::BackChestToStorage()
     }
     bHasTreasure = false;
     OnStatusTreasure.Broadcast(bHasTreasure);
+}
+
+void APirateActorBase::RegisterStaminaOver()
+{
+    // Pause move
+    SetupStateBrain(EStateBrain::WaitFor);
+    MoveComponent->PauseMove();
+}
+
+void APirateActorBase::RegisterStaminaFull()
+{
+    // Resume move
+
+    const EStateBrain Temp = LastStateBrain;
+    LastStateBrain = StateBrain;
+    StateBrain = Temp;
+    OnChangeStateBrain.Broadcast(StateBrain);
+    MoveComponent->ResumeMove();
 }
 
 #pragma endregion

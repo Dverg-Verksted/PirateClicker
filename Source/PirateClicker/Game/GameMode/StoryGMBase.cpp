@@ -9,6 +9,7 @@
 #include "Game/Player/GamePC.h"
 #include "Game/Player/PlayerPawn.h"
 #include "Library/PirateClickerLibrary.h"
+#include "Game/Totem/TotemZoneActor.h"
 
 #pragma region Default
 
@@ -77,6 +78,10 @@ void AStoryGMBase::StartPlay()
             RunWaves(TargetIndexWave);
         },
         1.0f, false);
+    
+    UPirateClickerLibrary::FindAllActors(GetWorld(), ArrayTotem);
+
+    OnSetupTotemPart.Broadcast({EPresetTotems::Fire, EPresetTotems::Frost});
 }
 
 #pragma endregion
