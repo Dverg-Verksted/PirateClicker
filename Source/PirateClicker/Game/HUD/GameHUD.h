@@ -34,7 +34,10 @@ public:
      * @return TMap<EStateGame, UGameUserWidgetBase*>
      **/
     UFUNCTION(BlueprintCallable, Category = "AGameHUD | GetDataHUD")
-    TMap<EStateGame, UGameUserWidgetBase*> GetGameWidgets() const { return GameWidgets; }
+    TMap<EStateGame, UGameUserWidgetBase*> GetGameWidgets() const
+    {
+        return GameWidgets;
+    }
 
 protected:
     // @protected Game progress widget

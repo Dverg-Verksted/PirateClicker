@@ -39,7 +39,8 @@ void APirateActorBase::InitParamsPirate(const FDataPirate& DataPirate, ASplineAc
 {
     if (!CHECKED(StateBrain == EStateBrain::NoneInit, "Pirate is init!")) return;
 
-    MoveComponent->InitMoveData(DataPirate.SpeedMove, DataPirate.SpeedRotate);
+    const float SpeedMovePirate = DataPirate.bEnableRandomMove ? FMath::RandRange(DataPirate.RangeSpeedMove.MinSpeed, DataPirate.RangeSpeedMove.MaxSpeed) : DataPirate.SpeedMove;
+    MoveComponent->InitMoveData(SpeedMovePirate, DataPirate.SpeedRotate);
     AbilitySystem->ResetAbilityData();
     AbilitySystem->InitAbilityData(DataPirate.bEnableHealth, DataPirate.DataHealth, DataPirate.bEnableStamina, DataPirate.DataStamina);
     SetupTargetSpline(NewSpline);
@@ -112,7 +113,7 @@ void APirateActorBase::MoveToPoint() const
 {
     if (!TargetSpline) return;
     if (StateBrain != EStateBrain::WalkToBack && StateBrain != EStateBrain::WalkToStorage) return;
-    
+
     const int32 Index = UPirateClickerLibrary::GetIndexAlongDistTargetPosition(TargetSpline, GetActorLocation());
     const float Duration = FMath::Clamp(TargetSpline->GetSpline()->GetDistanceAlongSplineAtSplinePoint(Index) / TargetSpline->GetSpline()->GetSplineLength(), 0.0f, 1.0f);
     const bool bRev = StateBrain == EStateBrain::WalkToBack;
@@ -131,7 +132,7 @@ void APirateActorBase::SpawnGoldChest(const TSubclassOf<AGoldChest>& SubClassGol
 
 float APirateActorBase::PlayMontage(UAnimMontage* AnimMontage, const float InPlayRate, const FName StartSectionName) const
 {
-    UAnimInstance * AnimInstance = (PirateMesh) ? PirateMesh->GetAnimInstance() : nullptr;
+    UAnimInstance* AnimInstance = (PirateMesh) ? PirateMesh->GetAnimInstance() : nullptr;
     if (AnimMontage && AnimInstance)
     {
         float const Duration = AnimInstance->Montage_Play(AnimMontage, InPlayRate);

@@ -167,7 +167,7 @@ void ASpawnerNPC::OnSpawnPirateComplete(const FSoftObjectPath PirateAsset, const
 
     const TSubclassOf<APirateActorBase> SubClassPirate = PirateDataAsset->GetDataPirate().SubClassPirate;
     if (!CHECKED(SubClassPirate.GetDefaultObject() != nullptr, FString::Printf(TEXT("Sub class failed for path: [%s]"), *PirateAsset.ToString()))) return;
-    
+
     for (int32 i = 0; i < CountSpawn; i++)
     {
         OnSpawnPirate_Event(PirateDataAsset, SubClassPirate);
@@ -253,11 +253,8 @@ ASplineActor* ASpawnerNPC::GetRandomTargetSpline()
         }
     }
 
-    auto* FindElem = ArrDataSplineInfo.FindByPredicate([TargetDataSplineInfo](const FDataSplineInfo& Data)
-    {
-        return TargetDataSplineInfo.Distance == Data.Distance;
-    });
-    
+    auto* FindElem = ArrDataSplineInfo.FindByPredicate([TargetDataSplineInfo](const FDataSplineInfo& Data) { return TargetDataSplineInfo.Distance == Data.Distance; });
+
     for (auto*& Spline : FindElem->SplineActors)
     {
         if (!FindElem->BusySplineActors.Contains(Spline))
@@ -265,10 +262,8 @@ ASplineActor* ASpawnerNPC::GetRandomTargetSpline()
             FindElem->BusySplineActors.Add(Spline);
 
             FTimerHandle TimerHandle;
-            GetWorldTimerManager().SetTimer(TimerHandle, [FindElem, Spline]()
-            {
-                FindElem->BusySplineActors.Remove(Spline);
-            }, 1.0f, false);
+            GetWorldTimerManager().SetTimer(
+                TimerHandle, [FindElem, Spline]() { FindElem->BusySplineActors.Remove(Spline); }, 1.0f, false);
 
             return Spline;
         }

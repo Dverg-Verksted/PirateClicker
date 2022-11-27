@@ -41,14 +41,20 @@ public:
      * @return USceneComponent
      **/
     UFUNCTION(BlueprintCallable, Category = "Components")
-    FORCEINLINE USceneComponent* GetRootScene() const { return RootScene; }
+    FORCEINLINE USceneComponent* GetRootScene() const
+    {
+        return RootScene;
+    }
 
     /**
      * @public Get mesh part totem
      * @return UStaticMeshComponent
      **/
     UFUNCTION(BlueprintCallable, Category = "Components")
-    FORCEINLINE UStaticMeshComponent* GetMeshPartTotem() const { return MeshPartTotem; }
+    FORCEINLINE UStaticMeshComponent* GetMeshPartTotem() const
+    {
+        return MeshPartTotem;
+    }
 
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Components")
@@ -62,7 +68,6 @@ protected:
 #pragma region DataPartTotem
 
 private:
-
     FTimeline StartAnimRotateTimeLine;
     FTimeline StartAnimScaledTimeLine;
     FTimeline NormalAnimRotateTimeLine;
@@ -86,7 +91,6 @@ private:
 #pragma endregion
 
 private:
-
     UFUNCTION()
     void UpdateAnimScaled(float Value);
 
@@ -98,6 +102,4 @@ private:
 
     UFUNCTION()
     void FinishAnimRotate();
-
 };
-

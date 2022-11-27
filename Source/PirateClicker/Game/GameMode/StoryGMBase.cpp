@@ -78,7 +78,7 @@ void AStoryGMBase::StartPlay()
             RunWaves(TargetIndexWave);
         },
         1.0f, false);
-    
+
     UPirateClickerLibrary::FindAllActors(GetWorld(), ArrayTotem);
 
     OnSetupTotemPart.Broadcast({EPresetTotems::Fire, EPresetTotems::Frost});

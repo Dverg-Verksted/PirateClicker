@@ -44,7 +44,8 @@ void UMoveComponent::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 #if UE_EDITOR || UE_BUILD_DEVELOPMENT || UE_BUILD_DEBUG
     if (EnableD_MovementPirate.GetValueOnGameThread() && GetOwner())
     {
-        DrawDebugString(GetWorld(), GetOwner()->GetActorLocation(), TargetData.ToStringN(), nullptr, FColor::Orange, 0.0f, false, 1.0f);
+        FString Result = FString::Printf(TEXT("SpeedMove: [%f] \n%s"), DefaultSpeedMove, *TargetData.ToStringN());
+        DrawDebugString(GetWorld(), GetOwner()->GetActorLocation(), Result, nullptr, FColor::Orange, 0.0f, false, 1.0f);
     }
 #endif
 
@@ -121,7 +122,8 @@ void UMoveComponent::MoveToSpline(float DeltaTime)
     const FRotator TempRot = ((TempPos - GetOwner()->GetActorLocation()).GetSafeNormal()).Rotation();
     GetOwner()->SetActorLocation(TempPos);
     GetOwner()->SetActorRotation(TempRot);
-    TargetData.Duration = TargetData.bReverse ? TargetData.Duration - (((DefaultSpeedMove * SpeedModify) / M_TO_CM) * DeltaTime) : TargetData.Duration + (((DefaultSpeedMove * SpeedModify) / M_TO_CM) * DeltaTime);
+    TargetData.Duration =
+        TargetData.bReverse ? TargetData.Duration - (((DefaultSpeedMove * SpeedModify) / M_TO_CM) * DeltaTime) : TargetData.Duration + (((DefaultSpeedMove * SpeedModify) / M_TO_CM) * DeltaTime);
     if (TargetData.bReverse && TargetData.Duration <= 0.0f)
     {
         StopMovement();

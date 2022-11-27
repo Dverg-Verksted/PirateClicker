@@ -56,7 +56,10 @@ public:
      * @return EStateGame
      **/
     UFUNCTION(BlueprintCallable, Category = "AStoryGMBase | Action")
-    FORCEINLINE EStateGame GetStateGame() const { return StateGame; }
+    FORCEINLINE EStateGame GetStateGame() const
+    {
+        return StateGame;
+    }
 
     /**
      * @public Change state game
@@ -70,7 +73,10 @@ public:
      * @return int32
      **/
     UFUNCTION(BlueprintCallable, Category = "AStoryGMBase | Action")
-    int32 GetCountWaves() const { return (GameRule) ? GameRule->ArrWaves.Num() : INDEX_NONE; }
+    int32 GetCountWaves() const
+    {
+        return (GameRule) ? GameRule->ArrWaves.Num() : INDEX_NONE;
+    }
 
     /**
      * @public Get count waves
@@ -84,7 +90,10 @@ public:
      * @return int32
      **/
     UFUNCTION(BlueprintCallable, Category = "AStoryGMBase | Action")
-    int32 GetNumRunWave() const { return TargetIndexWave; }
+    int32 GetNumRunWave() const
+    {
+        return TargetIndexWave;
+    }
 
     /**
      * @public Get count gold on Level
@@ -98,10 +107,16 @@ public:
      * @return APlayerPawn*
      **/
     UFUNCTION(BlueprintCallable, Category = "AStoryGMBase | Action")
-    APlayerPawn* GetPlayerPawn() const { return PlayerPawn; }
+    APlayerPawn* GetPlayerPawn() const
+    {
+        return PlayerPawn;
+    }
 
     UFUNCTION(BlueprintCallable, Category = "AStoryGMBase | Action")
-    const TArray<ATotemZoneActor*>& GetArrayTotemZone() const { return ArrayTotem; }
+    const TArray<ATotemZoneActor*>& GetArrayTotemZone() const
+    {
+        return ArrayTotem;
+    }
 
 private:
     /**
