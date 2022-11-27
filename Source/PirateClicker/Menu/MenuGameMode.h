@@ -11,6 +11,7 @@
 UENUM()
 enum class EStateMenuMode:uint8
 {
+    None,
     MainMenu,
     SettingsMenu,
     ShopMenu,
@@ -37,10 +38,10 @@ public:
     
     FChangeMenuStateNotifySignature OnChangeMenuStateNotify;
 
-
+    virtual void  StartPlay() override;
     
 private:
-    EStateMenuMode StateMenuMode{EStateMenuMode::MainMenu};
+    EStateMenuMode StateMenuMode{EStateMenuMode::None};
 
 #pragma endregion 
 	

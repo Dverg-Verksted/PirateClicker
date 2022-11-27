@@ -14,3 +14,10 @@ EStateMenuMode AMenuGameMode::GetCurrentMenuState()
 {
     return StateMenuMode;
 }
+
+void AMenuGameMode::StartPlay()
+{
+    Super::StartPlay();
+
+    MenuStateChange(EStateMenuMode::MainMenu);
+}
