@@ -8,7 +8,6 @@
 #include "Menu/MenuGameMode.h"
 #include "MenuHUD.generated.h"
 
-
 /**
  * 
  */
@@ -28,7 +27,7 @@ public:
     TSubclassOf<UMenuMasterWidget> LevelSelectWidget;
 
     virtual void BeginPlay() override;
-
+    
     UFUNCTION()
     void RegisterChangeMenuState(EStateMenuMode NewMenuState);
 

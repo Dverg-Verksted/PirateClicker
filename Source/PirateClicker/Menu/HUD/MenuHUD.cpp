@@ -18,12 +18,18 @@ void AMenuHUD::BeginPlay()
     SetStateMenuWidgets.Add(EStateMenuMode::ShopMenu,CreateWidget<UMenuMasterWidget>(GetWorld()->GetFirstPlayerController(),ShopWidget));
     SetStateMenuWidgets.Add(EStateMenuMode::LevelSelectMenu,CreateWidget<UMenuMasterWidget>(GetWorld()->GetFirstPlayerController(),LevelSelectWidget));
     
+    for (const auto& Pair:SetStateMenuWidgets)
+    {
+        Pair.Value->AddToViewport();
+        Pair.Value->SetVisibility(ESlateVisibility::Collapsed);
+    }
+
+    
     AMenuGameMode* MenuGameMode = Cast<AMenuGameMode>(GetWorld()->GetAuthGameMode());
     if (MenuGameMode)
     {
         MenuGameMode->OnChangeMenuStateNotify.AddDynamic(this,&ThisClass::RegisterChangeMenuState);
     }
-    
 }
 
     void AMenuHUD::RegisterChangeMenuState(EStateMenuMode NewMenuState)
