@@ -16,6 +16,8 @@ class PIRATECLICKER_API AMenuHUD : public AHUD
 {
 	GENERATED_BODY()
 
+#pragma region Widgets
+
 public:
     UPROPERTY(EditAnywhere)
     TSubclassOf<UMenuMasterWidget> StartWidget;
@@ -26,15 +28,18 @@ public:
     UPROPERTY(EditAnywhere)
     TSubclassOf<UMenuMasterWidget> LevelSelectWidget;
 
-    virtual void BeginPlay() override;
+    UPROPERTY()
+    TMap<EStateMenuMode,UMenuMasterWidget*> SetStateMenuWidgets;
+    UPROPERTY()
+    UMenuMasterWidget* CurrentVisibleWidget{nullptr};
+
+#pragma endregion
+
+#pragma region Actions
     
+    virtual void BeginPlay() override;
     UFUNCTION()
     void RegisterChangeMenuState(EStateMenuMode NewMenuState);
 
-    UPROPERTY()
-    TMap<EStateMenuMode,UMenuMasterWidget*> SetStateMenuWidgets;
-
-    UPROPERTY()
-    UMenuMasterWidget* CurrentVisibleWidget{nullptr};
-    
+#pragma endregion
 };
