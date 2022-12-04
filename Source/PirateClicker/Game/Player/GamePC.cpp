@@ -65,7 +65,7 @@ void AGamePC::RegisterTouchPressed(ETouchIndex::Type FingerIndex, FVector Locati
         const TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes{};
         const TArray<AActor*> ActorsToIgnore{GetPawn()};
         TArray<AActor*> OutActors;
-        UKismetSystemLibrary::SphereOverlapActors(GetWorld(), HitResult.Location, 100.0f, ObjectTypes, APirateActorBase::StaticClass(), ActorsToIgnore, OutActors);
+        UKismetSystemLibrary::SphereOverlapActors(GetWorld(), HitResult.Location, 100.0f, ObjectTypes, AActor::StaticClass(), ActorsToIgnore, OutActors);
         SpawnActorWithTap(HitResult.Location);
 
         for (AActor* Actor : OutActors)
