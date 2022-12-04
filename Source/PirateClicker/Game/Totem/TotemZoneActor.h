@@ -97,10 +97,7 @@ private:
 
 public:
     UFUNCTION(BlueprintCallable, Category = "Action")
-    bool IsFullHeightPartTotem() const
-    {
-        return ArrayDataSlotsTotem.Num() == HeightTotem;
-    }
+    bool IsFullHeightPartTotem() const;
 
     UFUNCTION(BlueprintCallable, Category = "Action")
     void SetupTotemDA(UTotemDataAsset* TotemDA);
