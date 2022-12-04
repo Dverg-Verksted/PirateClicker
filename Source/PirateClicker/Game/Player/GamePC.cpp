@@ -70,10 +70,7 @@ void AGamePC::RegisterTouchPressed(ETouchIndex::Type FingerIndex, FVector Locati
 
         for (AActor* Actor : OutActors)
         {
-            if (Actor->IsA(APirateActorBase::StaticClass()))
-            {
-                OnHitActor.Broadcast(Actor);
-            }
+            OnHitActor.Broadcast(Actor);
         }
     }
 }
