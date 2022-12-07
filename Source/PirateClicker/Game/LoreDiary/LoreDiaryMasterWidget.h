@@ -11,7 +11,7 @@ enum class EDiaryState:uint8
 {
     None,
     Reading,
-    ChangePage
+    ChangingPage
 };
 
 #pragma region Delegates

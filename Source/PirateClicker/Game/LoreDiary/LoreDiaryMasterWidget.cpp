@@ -27,7 +27,7 @@ void ULoreDiaryMasterWidget::ChangePageLeftEvent()
     if (CurrentPageNumber == MinPageAmount) return;
     if (CurrentDiaryState==EDiaryState::Reading)
     {
-        CurrentDiaryState = EDiaryState::ChangePage;
+        CurrentDiaryState = EDiaryState::ChangingPage;
         CurrentPageNumber--;
         PlayAnimation(ChangePageLeftAnimation);
         CurrentDiaryState = EDiaryState::Reading;
@@ -40,7 +40,7 @@ void ULoreDiaryMasterWidget::ChangePageRightEvent()
     if (CurrentPageNumber == MaxPageAmount) return;
     if (CurrentDiaryState==EDiaryState::Reading)
     {
-        CurrentDiaryState = EDiaryState::ChangePage;
+        CurrentDiaryState = EDiaryState::ChangingPage;
         CurrentPageNumber++;
         PlayAnimation(ChangePageRightAnimation);
         CurrentDiaryState = EDiaryState::Reading;
