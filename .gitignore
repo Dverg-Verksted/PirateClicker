@@ -213,3 +213,8 @@ _ReSharper*/
 ### VisualStudio Patch ###
 # Additional files built by Visual Studio
 !Plugins/FMODStudio/Binaries/*
+Plugins/FMODStudio/Binaries/Win64/UE4Editor-Win64-DebugGame.modules
+Plugins/FMODStudio/Binaries/Win64/UE4Editor-FMODStudioEditor-Win64-DebugGame.pdb
+Plugins/FMODStudio/Binaries/Win64/UE4Editor-FMODStudioEditor-Win64-DebugGame.dll
+Plugins/FMODStudio/Binaries/Win64/UE4Editor-FMODStudio-Win64-DebugGame.pdb
+Plugins/FMODStudio/Binaries/Win64/UE4Editor-FMODStudio-Win64-DebugGame.dll
