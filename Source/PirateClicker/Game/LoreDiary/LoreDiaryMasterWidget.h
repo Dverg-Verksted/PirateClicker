@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
+#include "Components/Button.h"
 #include "LoreDiaryMasterWidget.generated.h"
 
 UENUM()
@@ -46,6 +47,9 @@ public:
 #pragma endregion
 
 #pragma region Components
+//need add event to the button
+    UPROPERTY(Transient,meta = (BindWidget))
+    UButton* BackButton;
     
     UPROPERTY(Transient,meta = (BindWidgetAnim))
     UWidgetAnimation* ChangePageLeftAnimation;
