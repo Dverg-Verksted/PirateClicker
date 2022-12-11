@@ -416,6 +416,10 @@
 				"Win64",
 				"Android"
 			]
+		},
+		{
+			"Name": "FMODStudio",
+			"Enabled": true
 		}
 	],
 	"TargetPlatforms": [
