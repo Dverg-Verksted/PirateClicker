@@ -68,6 +68,7 @@ void AGamePC::RegisterTouchPressed(ETouchIndex::Type FingerIndex, FVector Locati
         UKismetSystemLibrary::SphereOverlapActors(GetWorld(), HitResult.Location, 100.0f, ObjectTypes, AActor::StaticClass(), ActorsToIgnore, OutActors);
         SpawnActorWithTap(HitResult.Location);
 
+        OnPushArrayHit.Broadcast(MoveTemp(OutActors));
         for (AActor* Actor : OutActors)
         {
             OnHitActor.Broadcast(Actor);
