@@ -7,14 +7,6 @@
 #include "Components/Button.h"
 #include "LoreDiaryMasterWidget.generated.h"
 
-UENUM()
-enum class EDiaryState:uint8
-{
-    None,
-    Reading,
-    ChangingPage
-};
-
 #pragma region Delegates
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FChangePageLeftSignature);
@@ -38,16 +30,10 @@ public:
     UFUNCTION()
     void ChangePageRightEvent();
 
-    UFUNCTION(BlueprintCallable)
-    EDiaryState GetCurrentDiaryState();
-
-    UFUNCTION()
-    void SetMaxPageAmount(int32 NewMaxPageAmount);
-
 #pragma endregion
 
 #pragma region Components
-//need add event to the button
+
     UPROPERTY(Transient,meta = (BindWidget))
     UButton* BackButton;
     
@@ -64,14 +50,7 @@ public:
     FChangePageRightSignature ChangePageRightNotify;
     
 private:
-    EDiaryState CurrentDiaryState {EDiaryState::None};
-
-    UPROPERTY()
-    int32 MinPageAmount{1};
-    UPROPERTY()
-    int32 MaxPageAmount{0};
-    UPROPERTY()
-    int32 CurrentPageNumber{0};
+    bool CanChangePage{false};
 
 #pragma endregion
     
