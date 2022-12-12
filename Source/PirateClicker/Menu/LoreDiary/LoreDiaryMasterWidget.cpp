@@ -1,7 +1,7 @@
 // This section is the property of the Dverg Verksted team
 
 
-#include "Game/LoreDiary/LoreDiaryMasterWidget.h"
+#include "Menu/LoreDiary/LoreDiaryMasterWidget.h"
 
 void ULoreDiaryMasterWidget::NativeConstruct()
 {
