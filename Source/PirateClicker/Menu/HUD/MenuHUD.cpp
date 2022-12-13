@@ -12,11 +12,13 @@ void AMenuHUD::BeginPlay()
     if (!CHECKED(SettingsWidget.GetDefaultObject() != nullptr, "SettingsWidget is nullptr"))return;
     if (!CHECKED(ShopWidget.GetDefaultObject() != nullptr, "ShopWidget is nullptr"))return;
     if (!CHECKED(LevelSelectWidget.GetDefaultObject() != nullptr, "ShopWidget is nullptr"))return;
+    if (!CHECKED(LoreDiaryWidget.GetDefaultObject() != nullptr, "LoreDiaryWidget is nullptr"))return;
 
     SetStateMenuWidgets.Add(EStateMenuMode::MainMenu,CreateWidget<UMenuMasterWidget>(GetWorld()->GetFirstPlayerController(),StartWidget));
     SetStateMenuWidgets.Add(EStateMenuMode::SettingsMenu,CreateWidget<UMenuMasterWidget>(GetWorld()->GetFirstPlayerController(),SettingsWidget));
     SetStateMenuWidgets.Add(EStateMenuMode::ShopMenu,CreateWidget<UMenuMasterWidget>(GetWorld()->GetFirstPlayerController(),ShopWidget));
     SetStateMenuWidgets.Add(EStateMenuMode::LevelSelectMenu,CreateWidget<UMenuMasterWidget>(GetWorld()->GetFirstPlayerController(),LevelSelectWidget));
+    SetStateMenuWidgets.Add(EStateMenuMode::LoreDairyMenu,CreateWidget<UMenuMasterWidget>(GetWorld()->GetFirstPlayerController(),LoreDiaryWidget));
     
     for (const auto& Pair:SetStateMenuWidgets)
     {

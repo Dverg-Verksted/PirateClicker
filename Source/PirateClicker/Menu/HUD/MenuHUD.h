@@ -27,6 +27,8 @@ public:
     TSubclassOf<UMenuMasterWidget> ShopWidget;
     UPROPERTY(EditAnywhere)
     TSubclassOf<UMenuMasterWidget> LevelSelectWidget;
+    UPROPERTY(EditAnywhere)
+    TSubclassOf<UMenuMasterWidget> LoreDiaryWidget;
 
     UPROPERTY()
     TMap<EStateMenuMode,UMenuMasterWidget*> SetStateMenuWidgets;

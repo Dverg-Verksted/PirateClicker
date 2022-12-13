@@ -6,8 +6,6 @@
 #include "GameFramework/GameModeBase.h"
 #include "MenuGameMode.generated.h"
 
-
-
 UENUM()
 enum class EStateMenuMode:uint8
 {
@@ -17,6 +15,7 @@ enum class EStateMenuMode:uint8
     ShopMenu,
     LoadMenu,
     LevelSelectMenu,
+    LoreDairyMenu
 };
 
 #pragma region Delegates
