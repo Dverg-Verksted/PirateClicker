@@ -5,7 +5,6 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
-#include "Components/EditableText.h"
 #include "Delegates/DelegateCombinations.h"
 #include "Menu/HUD/MenuMasterWidget.h"
 #include "LoreDiaryMasterWidget.generated.h"
@@ -46,9 +45,6 @@ public:
     UButton* Page2DiaryButton;
     UPROPERTY(Transient,meta = (BindWidget))
     UButton* Page3DiaryButton;
-
-    UPROPERTY(Transient,meta = (BindWidget))
-    UEditableText* LoreDiaryEditableText;
     
     UPROPERTY(Transient,meta = (BindWidgetAnim))
     UWidgetAnimation* OpenDiaryPageAnim;

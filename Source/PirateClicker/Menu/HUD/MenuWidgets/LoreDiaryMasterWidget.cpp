@@ -7,8 +7,6 @@ void ULoreDiaryMasterWidget::NativeConstruct()
 {
     Super::NativeConstruct();
 
-    LoreDiaryEditableText->SetVisibility(ESlateVisibility::Collapsed);
-
     BackDiaryButton->OnClicked.AddDynamic(this,&ThisClass::CloseDiaryEvent);
     Page1DiaryButton->OnClicked.AddDynamic(this,&ThisClass::OpenDiaryPageEvent);
     Page2DiaryButton->OnClicked.AddDynamic(this,&ThisClass::OpenDiaryPageEvent);
@@ -19,11 +17,6 @@ void ULoreDiaryMasterWidget::OpenDiaryPageEvent()
 {
     OpenDiaryPageNotify.Broadcast();
     PlayAnimation(OpenDiaryPageAnim);
-    if (!LoreDiaryEditableText->IsVisible())
-    {
-        LoreDiaryEditableText->SetVisibility(ESlateVisibility::Visible);
-    }
-    
 }
 void ULoreDiaryMasterWidget::CloseDiaryEvent()
 {
