@@ -5,6 +5,9 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
+//can delete later
+#include "Components/MultiLineEditableTextBox.h"
+//
 #include "Delegates/DelegateCombinations.h"
 #include "Menu/HUD/MenuMasterWidget.h"
 #include "LoreDiaryMasterWidget.generated.h"
@@ -32,6 +35,8 @@ public:
     void OpenDiaryPageEvent();
     UFUNCTION()
     void CloseDiaryEvent();
+    UFUNCTION()
+    void ShowDiaryPageTextEvent();
 
 #pragma endregion
 
@@ -60,6 +65,10 @@ protected:
     FOpenDiaryPageSignature OpenDiaryPageNotify;
     FCloseDiarySignature CloseDiaryNotify;
 
+    //can delete later or recreate
+    UPROPERTY(Transient,meta = (BindWidget))
+    UMultiLineEditableTextBox* LoreDiaryText;
+    //
 #pragma endregion
     
 	
