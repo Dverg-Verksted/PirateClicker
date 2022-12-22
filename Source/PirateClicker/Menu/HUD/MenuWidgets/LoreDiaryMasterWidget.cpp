@@ -2,6 +2,7 @@
 
 
 #include "Menu/HUD/MenuWidgets/LoreDiaryMasterWidget.h"
+#include "WidgetsComponents/LoreDiaryPageButtonComponent.h"
 
 void ULoreDiaryMasterWidget::NativeConstruct()
 {
@@ -10,16 +11,6 @@ void ULoreDiaryMasterWidget::NativeConstruct()
     LoreDiaryText->SetVisibility(ESlateVisibility::Collapsed);
     
     BackDiaryButton->OnClicked.AddDynamic(this,&ThisClass::CloseDiaryEvent);
-    Page1DiaryButton->OnClicked.AddDynamic(this,&ThisClass::OpenDiaryPageEvent);
-    Page2DiaryButton->OnClicked.AddDynamic(this,&ThisClass::OpenDiaryPageEvent);
-    Page3DiaryButton->OnClicked.AddDynamic(this,&ThisClass::OpenDiaryPageEvent);
-}
-
-void ULoreDiaryMasterWidget::OpenDiaryPageEvent()
-{
-    OpenDiaryPageNotify.Broadcast();
-    PlayAnimation(OpenDiaryPageAnim);
-    ShowDiaryPageTextEvent();
 }
 void ULoreDiaryMasterWidget::CloseDiaryEvent()
 {
@@ -27,12 +18,20 @@ void ULoreDiaryMasterWidget::CloseDiaryEvent()
     PlayAnimation(CloseDiaryAnim);
     MenuGameMode->MenuStateChange(EStateMenuMode::MainMenu);
 }
-void ULoreDiaryMasterWidget::ShowDiaryPageTextEvent()
+void ULoreDiaryMasterWidget::ShowDiaryPageTextEvent(FText LoreDiaryTextToShow,FText LoreDiaryTextName)
 {
+    if (LoreDiaryText == nullptr) return;
     if (!LoreDiaryText->IsVisible())
     {
         LoreDiaryText->SetVisibility(ESlateVisibility::Visible);
+        LoreDiaryText->SetText(LoreDiaryTextToShow);
     }
+}
+void ULoreDiaryMasterWidget::CreateNewButtonComponentEvent()
+{
+    UWidget* LoreDiaryPageWidget = CreateWidget<ULoreDiaryPageButtonComponent>(this,LoreDiaryButtonClass);
+    LoreDiaryButtonsContainer->AddChildToVerticalBox(LoreDiaryPageWidget);
+    LoreDiaryPageWidget->SetVisibility(ESlateVisibility::Collapsed);
 }
 
 

@@ -5,19 +5,14 @@
 #include "CoreMinimal.h"
 #include "Blueprint/UserWidget.h"
 #include "Components/Button.h"
-//can delete later
-#include "Components/MultiLineEditableTextBox.h"
-//
+#include "Components/TextBlock.h"
+#include "Components/VerticalBox.h"
 #include "Delegates/DelegateCombinations.h"
 #include "Menu/HUD/MenuMasterWidget.h"
+#include "Menu/HUD/MenuWidgets/WidgetsComponents/LoreDiaryPageButtonComponent.h"
 #include "LoreDiaryMasterWidget.generated.h"
 
-#pragma region Delegates
-
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FOpenDiaryPageSignature);
 DECLARE_DYNAMIC_MULTICAST_DELEGATE(FCloseDiarySignature);
-
-#pragma endregion
 
 UCLASS()
 class PIRATECLICKER_API ULoreDiaryMasterWidget : public UMenuMasterWidget
@@ -30,13 +25,14 @@ protected:
     virtual void NativeConstruct() override;
 
 public:
-
-    UFUNCTION()
-    void OpenDiaryPageEvent();
+    
     UFUNCTION()
     void CloseDiaryEvent();
+    UFUNCTION(BlueprintCallable)
+    void ShowDiaryPageTextEvent(FText LoreDiaryTextToShow,FText LoreDiaryTextName);
     UFUNCTION()
-    void ShowDiaryPageTextEvent();
+    void CreateNewButtonComponentEvent();
+
 
 #pragma endregion
 
@@ -45,14 +41,10 @@ public:
     UPROPERTY(Transient,meta = (BindWidget))
     UButton* BackDiaryButton;
     UPROPERTY(Transient,meta = (BindWidget))
-    UButton* Page1DiaryButton;
+    UTextBlock* LoreDiaryText;
     UPROPERTY(Transient,meta = (BindWidget))
-    UButton* Page2DiaryButton;
-    UPROPERTY(Transient,meta = (BindWidget))
-    UButton* Page3DiaryButton;
+    UVerticalBox* LoreDiaryButtonsContainer;
     
-    UPROPERTY(Transient,meta = (BindWidgetAnim))
-    UWidgetAnimation* OpenDiaryPageAnim;
     UPROPERTY(Transient,meta = (BindWidgetAnim))
     UWidgetAnimation* CloseDiaryAnim;
 
@@ -62,14 +54,10 @@ public:
 
 protected:
     
-    FOpenDiaryPageSignature OpenDiaryPageNotify;
     FCloseDiarySignature CloseDiaryNotify;
+    UPROPERTY()
+    TSubclassOf<ULoreDiaryPageButtonComponent> LoreDiaryButtonClass;
 
-    //can delete later or recreate
-    UPROPERTY(Transient,meta = (BindWidget))
-    UMultiLineEditableTextBox* LoreDiaryText;
-    //
 #pragma endregion
     
-	
 };
