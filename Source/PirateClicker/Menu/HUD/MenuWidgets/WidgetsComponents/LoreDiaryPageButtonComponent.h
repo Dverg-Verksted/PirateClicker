@@ -52,10 +52,15 @@ protected:
 public:
     UFUNCTION()
     void OpenDiaryPageEvent();
+
     UFUNCTION(BlueprintCallable)
     FText GetDiaryPageTextBlockEvent();
     UFUNCTION(BlueprintCallable)
     FText GetDiaryPageNameEvent();
+    UFUNCTION(BlueprintCallable)
+    void SetDiaryPageTextBlockEvent(FText NewDiaryPageText);
+    UFUNCTION(BlueprintCallable)
+    void SetDiaryPageNameEvent(FText NewDiaryPageName);
 
 #pragma endregion
 	

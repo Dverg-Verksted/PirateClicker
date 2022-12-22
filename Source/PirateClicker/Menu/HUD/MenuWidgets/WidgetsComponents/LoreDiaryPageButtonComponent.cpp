@@ -8,6 +8,7 @@ void ULoreDiaryPageButtonComponent::NativeConstruct()
     Super::NativeConstruct();
     
     DiaryPageTextBlock->SetText(DiaryPageButtonName);
+    DiaryPageButton->OnClicked.AddDynamic(this,&ULoreDiaryPageButtonComponent::OpenDiaryPageEvent);
     
 }
 void ULoreDiaryPageButtonComponent::OpenDiaryPageEvent()
@@ -24,3 +25,11 @@ FText ULoreDiaryPageButtonComponent::GetDiaryPageTextBlockEvent()
     return DiaryPageButtonLoreText;
 }
 
+void ULoreDiaryPageButtonComponent::SetDiaryPageNameEvent(FText NewDiaryPageName)
+{
+    DiaryPageButtonName = NewDiaryPageName;
+}
+void ULoreDiaryPageButtonComponent::SetDiaryPageTextBlockEvent(FText NewDiaryPageText)
+{
+    DiaryPageButtonLoreText = NewDiaryPageText;
+}
