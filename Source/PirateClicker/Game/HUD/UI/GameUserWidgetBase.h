@@ -6,6 +6,7 @@
 #include "Blueprint/UserWidget.h"
 #include "GameUserWidgetBase.generated.h"
 
+class AStoryGMBase;
 /**
  *
  */
@@ -24,4 +25,33 @@ UCLASS()
 class PIRATECLICKER_API UGameUserWidgetBase : public UUserWidget
 {
     GENERATED_BODY()
+
+#pragma region Default
+
+public:
+
+    virtual void InitWidget() { InitWidget_Event(); }
+    virtual void CompleteWidget() { CompleteWidget_Event(); }
+
+protected:
+
+    virtual void NativeConstruct() override;
+
+    UFUNCTION(BlueprintImplementableEvent)
+    void InitWidget_Event();
+
+    UFUNCTION(BlueprintImplementableEvent)
+    void CompleteWidget_Event();
+
+#pragma endregion
+
+#pragma region GameUserData
+
+protected:
+
+    UPROPERTY(BlueprintReadOnly)
+    AStoryGMBase* StoryGM;
+
+#pragma endregion
+
 };

@@ -52,6 +52,10 @@ protected:
     UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (DisplayName = "Виджет проигрыша"))
     TSubclassOf<UGameUserWidgetBase> LoseWidget;
 
+    // @protected Game progress widget
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (DisplayName = "Виджет диалог"))
+    TSubclassOf<UGameUserWidgetBase> DialogsWidget;
+
     // @protected Current pointer to StoryGM
     UPROPERTY()
     AStoryGMBase* StoryGM;

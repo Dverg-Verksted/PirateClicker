@@ -44,6 +44,7 @@ void AGameHUD::BeginPlay()
     GameWidgets.Add(EStateGame::InProgress, CreateWidget<UGameUserWidgetBase>(GetWorld(), ProgressWidget));
     GameWidgets.Add(EStateGame::GameLose, CreateWidget<UGameUserWidgetBase>(GetWorld(), LoseWidget));
     GameWidgets.Add(EStateGame::GameWin, CreateWidget<UGameUserWidgetBase>(GetWorld(), WinWidget));
+    GameWidgets.Add(EStateGame::Dialog, CreateWidget<UGameUserWidgetBase>(GetWorld(), DialogsWidget));
 
     for (auto& Pair : GameWidgets)
     {
@@ -64,6 +65,7 @@ void AGameHUD::RegisterChangedStateGame(const EStateGame& NewState)
     }
 
     ActiveWidget = GameWidgets[NewState];
+    ActiveWidget->InitWidget();
     ActiveWidget->SetVisibility(ESlateVisibility::Visible);
     LOG_PIRATE(ELogVerb::Display, FString::Printf(TEXT("State: [%s] | Active widget: [%s]"), *UEnum::GetValueAsString(NewState), *ActiveWidget->GetName()));
 }
