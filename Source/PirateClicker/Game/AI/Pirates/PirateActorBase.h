@@ -53,28 +53,40 @@ public:
      * @return UCapsuleComponent
      **/
     UFUNCTION(BlueprintCallable, Category = "APirateActorBase | Components")
-    UCapsuleComponent* GetCapsuleCollision() const { return CapsuleCollision; }
+    UCapsuleComponent* GetCapsuleCollision() const
+    {
+        return CapsuleCollision;
+    }
 
     /**
      * @public Get pirate mesh
      * @return USkeletalMeshComponent
      **/
     UFUNCTION(BlueprintCallable, Category = "APirateActorBase | Components")
-    USkeletalMeshComponent* GetPirateMesh() const { return PirateMesh; }
+    USkeletalMeshComponent* GetPirateMesh() const
+    {
+        return PirateMesh;
+    }
 
     /**
      * @public Get move pirate component
      * @return UMovePirateComponent
      **/
     UFUNCTION(BlueprintCallable, Category = "APirateActorBase | Components")
-    UMoveComponent* GetMovePirateComponent() const { return MoveComponent; }
+    UMoveComponent* GetMovePirateComponent() const
+    {
+        return MoveComponent;
+    }
 
     /**
      * @public Get ability component
      * @return UMovePirateComponent
      **/
     UFUNCTION(BlueprintCallable, Category = "APirateActorBase | Components")
-    UAbilitySystemComponent* GetAbilityComponent() const { return AbilitySystem; }
+    UAbilitySystemComponent* GetAbilityComponent() const
+    {
+        return AbilitySystem;
+    }
 
 protected:
     // @protected Root capsule collision
@@ -105,7 +117,6 @@ public:
     bool bHasTreasure{false};
 
 protected:
-
     UPROPERTY(EditDefaultsOnly, Category = "Settings Pirate")
     UAnimMontage* DeadMontage{nullptr};
 
@@ -115,6 +126,9 @@ protected:
 
     // @protected Current state brain
     EStateBrain StateBrain = EStateBrain::NoneInit;
+
+    // @protected Current state brain
+    EStateBrain LastStateBrain = EStateBrain::NoneInit;
 
     int32 TargetIndex = -1;
 
@@ -141,13 +155,16 @@ public:
      * @public Setup new state brain
      **/
     UFUNCTION(BlueprintCallable, Category = "APirateActorBase | Action")
-    void SetupStateBrain(const EStateBrain& NewState);
+    void SetupStateBrain(const EStateBrain NewState);
 
     /**
      * @public Getting state brain
      **/
     UFUNCTION(BlueprintCallable, Category = "APirateActorBase | Action")
-    EStateBrain GetStateBrain() const { return StateBrain; }
+    EStateBrain GetStateBrain() const
+    {
+        return StateBrain;
+    }
 
     /**
      * @public Register death
@@ -163,13 +180,6 @@ public:
 
 private:
     /**
-     * @private Register hit on actor
-     * @param1 AActor*
-     **/
-    UFUNCTION()
-    void RegisterHitActor(AActor* HitActor);
-
-    /**
      * @private Move To Point
      **/
     UFUNCTION()
@@ -177,6 +187,18 @@ private:
 
     UFUNCTION()
     void BackChestToStorage();
+
+    /**
+     * @private
+     **/
+    UFUNCTION()
+    void RegisterStaminaOver();
+
+    /**
+     * @private
+     **/
+    UFUNCTION()
+    void RegisterStaminaFull();
 
 #pragma endregion
 

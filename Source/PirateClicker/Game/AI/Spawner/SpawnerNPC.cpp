@@ -146,7 +146,7 @@ void ASpawnerNPC::RunSpawnPirate(const FSoftObjectPath& PirateAsset, const int32
     ArrSavedPosition = GeneratePositionPoint(CountSpawn);
 
     FStreamableManager& AssetLoader = UAssetManager::GetStreamableManager();
-    FStreamableDelegate Delegate = FStreamableDelegate::CreateUObject(this, &ThisClass::OnSpawnPirateComplete, PirateAsset, CountSpawn);
+    const FStreamableDelegate Delegate = FStreamableDelegate::CreateUObject(this, &ThisClass::OnSpawnPirateComplete, PirateAsset, CountSpawn);
     AssetLoader.RequestAsyncLoad(PirateAsset, Delegate);
 }
 
@@ -167,12 +167,9 @@ void ASpawnerNPC::OnSpawnPirateComplete(const FSoftObjectPath PirateAsset, const
 
     const TSubclassOf<APirateActorBase> SubClassPirate = PirateDataAsset->GetDataPirate().SubClassPirate;
     if (!CHECKED(SubClassPirate.GetDefaultObject() != nullptr, FString::Printf(TEXT("Sub class failed for path: [%s]"), *PirateAsset.ToString()))) return;
-    
+
     for (int32 i = 0; i < CountSpawn; i++)
     {
-        // FTimerHandle TimerHandle;
-        // FTimerDelegate TimerDelegate = FTimerDelegate::CreateUObject(this, &ASpawnerNPC::OnSpawnPirate_Event, PirateDataAsset, SubClassPirate);
-        // GetWorldTimerManager().SetTimer(TimerHandle, TimerDelegate, 0.1f + 1.0f * i, false);
         OnSpawnPirate_Event(PirateDataAsset, SubClassPirate);
     }
 }
@@ -256,11 +253,8 @@ ASplineActor* ASpawnerNPC::GetRandomTargetSpline()
         }
     }
 
-    auto* FindElem = ArrDataSplineInfo.FindByPredicate([TargetDataSplineInfo](const FDataSplineInfo& Data)
-    {
-        return TargetDataSplineInfo.Distance == Data.Distance;
-    });
-    
+    auto* FindElem = ArrDataSplineInfo.FindByPredicate([TargetDataSplineInfo](const FDataSplineInfo& Data) { return TargetDataSplineInfo.Distance == Data.Distance; });
+
     for (auto*& Spline : FindElem->SplineActors)
     {
         if (!FindElem->BusySplineActors.Contains(Spline))
@@ -268,10 +262,8 @@ ASplineActor* ASpawnerNPC::GetRandomTargetSpline()
             FindElem->BusySplineActors.Add(Spline);
 
             FTimerHandle TimerHandle;
-            GetWorldTimerManager().SetTimer(TimerHandle, [FindElem, Spline]()
-            {
-                FindElem->BusySplineActors.Remove(Spline);
-            }, 1.0f, false);
+            GetWorldTimerManager().SetTimer(
+                TimerHandle, [FindElem, Spline]() { FindElem->BusySplineActors.Remove(Spline); }, 1.0f, false);
 
             return Spline;
         }

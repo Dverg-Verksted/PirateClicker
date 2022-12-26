@@ -5,6 +5,7 @@
 
 void AMenuGameMode::MenuStateChange(EStateMenuMode MenuState)
 {
+    if (StateMenuMode == MenuState) return;
     StateMenuMode = MenuState;
     OnChangeMenuStateNotify.Broadcast(MenuState);
 }
@@ -12,4 +13,11 @@ void AMenuGameMode::MenuStateChange(EStateMenuMode MenuState)
 EStateMenuMode AMenuGameMode::GetCurrentMenuState()
 {
     return StateMenuMode;
+}
+
+void AMenuGameMode::StartPlay()
+{
+    Super::StartPlay();
+
+    MenuStateChange(EStateMenuMode::MainMenu);
 }

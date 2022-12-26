@@ -22,8 +22,11 @@ public:
     UStaticMesh* TotemMesh{nullptr};
 
     UPROPERTY(EditAnywhere, Category = "Settings totem", meta = (DisplayName = "Эффект тотема"))
-    UNiagaraSystem* TotemParticle;
+    UNiagaraSystem* TotemParticle{nullptr};
 
     UPROPERTY(EditAnywhere, Category = "Settings totem", meta = (DisplayName = "Данные по эффекту наложения", ShowOnlyInnerProperties))
     FDataEffect DataEffect;
+
+    UPROPERTY(EditAnywhere, Category = "Settings totem", meta = (DisplayName = "Количество одновременного накладывания эффекта", ClampMin = "1"))
+    int32 CountApplyEffect{2};
 };

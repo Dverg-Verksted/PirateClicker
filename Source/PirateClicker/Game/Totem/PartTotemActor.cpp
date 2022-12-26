@@ -35,7 +35,7 @@ void APartTotemActor::BeginPlay()
     if (!CHECKED(NormalAnimPosCurve != nullptr, "NormalAnimPosCurve is nullptr")) return;
 
     DefaultActorPosition = GetActorLocation();
-    
+
     FOnTimelineFloat OnStartAnimScaledTimelineFloat;
     OnStartAnimScaledTimelineFloat.BindDynamic(this, &ThisClass::UpdateAnimScaled);
 

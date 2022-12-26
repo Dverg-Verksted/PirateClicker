@@ -61,28 +61,40 @@ public:
      * @return USceneComponent*
      **/
     UFUNCTION(BlueprintCallable, Category = "APlayerPawn | Components")
-    FORCEINLINE USceneComponent* GetRootScene() const { return RootScene; }
+    FORCEINLINE USceneComponent* GetRootScene() const
+    {
+        return RootScene;
+    }
 
     /**
      * @public Get Sphere Collision
      * @return USphereComponent*
      **/
     UFUNCTION(BlueprintCallable, Category = "APlayerPawn | Components")
-    FORCEINLINE USphereComponent* GetSphereCollision() const { return SphereCollision; }
+    FORCEINLINE USphereComponent* GetSphereCollision() const
+    {
+        return SphereCollision;
+    }
 
     /**
      * @public Get Spring Arm component
      * @return USpringArmComponent*
      **/
     UFUNCTION(BlueprintCallable, Category = "APlayerPawn | Components")
-    FORCEINLINE USpringArmComponent* GetSpringArm() const { return SpringArm; }
+    FORCEINLINE USpringArmComponent* GetSpringArm() const
+    {
+        return SpringArm;
+    }
 
     /**
      * @public Get Camera component
      * @return UCameraComponent*
      **/
     UFUNCTION(BlueprintCallable, Category = "APlayerPawn | Components")
-    FORCEINLINE UCameraComponent* GetCamera() const { return Camera; }
+    FORCEINLINE UCameraComponent* GetCamera() const
+    {
+        return Camera;
+    }
 
 private:
     // @private Root scene component

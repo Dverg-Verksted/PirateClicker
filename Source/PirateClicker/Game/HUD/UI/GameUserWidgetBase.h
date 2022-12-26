@@ -6,17 +6,18 @@
 #include "Blueprint/UserWidget.h"
 #include "GameUserWidgetBase.generated.h"
 
+class AStoryGMBase;
 /**
  *
  */
-UENUM(BlueprintType, meta = (Bitflags, UseEnumValuesAsMaskValuesInEditor = "true"))
+UENUM(BlueprintType)
 enum class ETotems : uint8
 {
-    NONE = 0 UMETA(Hidden),
-    Fire = 1 << 0,
-    Frost = 1 << 1,
-    ThirdType = 1 << 2,
-    FourthType = 1 << 3,
+    NONE UMETA(Hidden),
+    Fire,
+    Frost,
+    ThirdType,
+    FourthType,
 };
 ENUM_CLASS_FLAGS(ETotems);
 
@@ -25,10 +26,34 @@ class PIRATECLICKER_API UGameUserWidgetBase : public UUserWidget
 {
     GENERATED_BODY()
 
-public:
-    //UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (Bitmask, BitmaskEnum = "ETotems"))
-    //uint8 TotemFlags = 0;
+#pragma region Default
 
-    UFUNCTION(BlueprintCallable)
-    static  void SetTotemsToHUD(UPARAM(meta = (Bitmask, BitmaskEnum = ETotems)) int32 Totems, bool& Fire, bool& Frost, bool& ThirdType, bool& FourthType);
+public:
+    virtual void InitWidget()
+    {
+        InitWidget_Event();
+    }
+    virtual void CompleteWidget()
+    {
+        CompleteWidget_Event();
+    }
+
+protected:
+    virtual void NativeConstruct() override;
+
+    UFUNCTION(BlueprintImplementableEvent)
+    void InitWidget_Event();
+
+    UFUNCTION(BlueprintImplementableEvent)
+    void CompleteWidget_Event();
+
+#pragma endregion
+
+#pragma region GameUserData
+
+protected:
+    UPROPERTY(BlueprintReadOnly)
+    AStoryGMBase* StoryGM;
+
+#pragma endregion
 };

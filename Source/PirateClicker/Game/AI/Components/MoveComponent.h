@@ -13,8 +13,6 @@ class USplineComponent;
 
 #define LOG_MOVE(LogVerb, Text) Print_LogMovement(LogVerb, Text, __LINE__, __FUNCTION__)
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE(FStopedMoveSignature);
-
 /**
  * @class Component for movement pirate
  **/
@@ -54,7 +52,6 @@ private:
 #pragma region Action
 
 public:
-
     /**
      * @public Go move to spline
      **/
@@ -79,12 +76,23 @@ public:
     UFUNCTION(BlueprintCallable)
     void ResetSpeedModifyToPercent();
 
+    UFUNCTION(BlueprintCallable)
+    void PauseMove();
+
+    UFUNCTION(BlueprintCallable)
+    void ResumeMove();
+
+private:
+    /**
+     * @private Change movement state
+     **/
+    void ChangeMovementState(const EStateMovement& NewState);
+
 #pragma endregion
 
 #pragma region DataMove
 
 protected:
-    
     // Movement speed pirate cm/sec
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Settings Movement", meta = (ToolTip = "Скорость передвижения пирата", ClampMin = "1.0", ClampMax = "1500.0", ForceUnits = "m/s"))
     float DefaultSpeedMove{10.0f};
@@ -95,8 +103,8 @@ protected:
 
     // Speed modify
     float SpeedModify{1.0f};
-private:
 
+private:
     EStateMovement StateMovement = EStateMovement::Stop;
 
     // Target data for movement
@@ -113,7 +121,7 @@ private:
 
 public:
     UPROPERTY(BlueprintAssignable)
-    FStopedMoveSignature OnStopedMove;
+    FChangeMovementStateSignature OnChangeMovementState;
 
 #pragma endregion
 };

@@ -6,15 +6,16 @@
 #include "GameFramework/GameModeBase.h"
 #include "MenuGameMode.generated.h"
 
-
-
 UENUM()
 enum class EStateMenuMode:uint8
 {
+    None,
     MainMenu,
     SettingsMenu,
     ShopMenu,
     LoadMenu,
+    LevelSelectMenu,
+    LoreDairyMenu
 };
 
 #pragma region Delegates
@@ -36,10 +37,10 @@ public:
     
     FChangeMenuStateNotifySignature OnChangeMenuStateNotify;
 
-
+    virtual void  StartPlay() override;
     
 private:
-    EStateMenuMode StateMenuMode{EStateMenuMode::MainMenu};
+    EStateMenuMode StateMenuMode{EStateMenuMode::None};
 
 #pragma endregion 
 	

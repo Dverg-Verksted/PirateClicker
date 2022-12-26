@@ -1,39 +1,17 @@
 // This section is the property of the Dverg Verksted team
 
 #include "Game/HUD/UI/GameUserWidgetBase.h"
+#include "Game/GameMode/StoryGMBase.h"
+#include "Library/PirateClickerLibrary.h"
 
-UPROPERTY(EditAnywhere, BlueprintReadWrite, meta = (Bitmask, BitmaskEnum = "ETotems"))
-int32 TotemFlags = 0;
+#pragma region Default
 
-UFUNCTION(BlueprintCallable)
-bool IsFire()
+void UGameUserWidgetBase::NativeConstruct()
 {
-    return TotemFlags & (uint8)ETotems::Fire;
+    Super::NativeConstruct();
+
+    StoryGM = Cast<AStoryGMBase>(GetWorld()->GetAuthGameMode());
+    if (CHECKED(StoryGM != nullptr, "Story GM is nullptr")) return;
 }
 
-UFUNCTION(BlueprintCallable)
-bool IsFrost()
-{
-    return TotemFlags & (uint8)ETotems::Frost;
-}
-
-UFUNCTION(BlueprintCallable)
-bool IsThirdType()
-{
-    return TotemFlags & (uint8)ETotems::ThirdType;
-}
-
-UFUNCTION(BlueprintCallable)
-bool IsFourthType()
-{
-    return TotemFlags & (uint8)ETotems::FourthType;
-}
-
-void UGameUserWidgetBase::SetTotemsToHUD(int32 Totems, bool& Fire, bool& Frost, bool& ThirdType, bool& FourthType) 
-{
-    TotemFlags = Totems;
-    Fire = IsFire();
-    Frost = IsFrost();
-    ThirdType = IsThirdType();
-    FourthType = IsFourthType();
-}
+#pragma endregion

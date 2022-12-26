@@ -13,6 +13,8 @@ enum class EStateMovement : uint8
     Pause,
 };
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FChangeMovementStateSignature, const EStateMovement&, StateMovement);
+
 // A special state for pirate
 UENUM()
 enum class EStateBrain : uint8
@@ -35,12 +37,10 @@ struct FMovementData
     UPROPERTY()
     ASplineActor* TargetSpline{nullptr};
 
-    FMovementData(){}
-    explicit FMovementData(const float InDuration, const bool InReverse, ASplineActor* InTargetSpline): Duration(InDuration),
-    bReverse(InReverse), TargetSpline(InTargetSpline){}
+    FMovementData() {}
+    explicit FMovementData(const float InDuration, const bool InReverse, ASplineActor* InTargetSpline) : Duration(InDuration), bReverse(InReverse), TargetSpline(InTargetSpline) {}
 
-    FString ToString() const
-    {
-        return FString::Printf(TEXT("Duration: [%f] | bReverse: [%i] | TargetSpline: [%s]"), Duration, bReverse, *TargetSpline->GetName());
-    }
+    FString ToString() const { return FString::Printf(TEXT("Duration: [%f] | bReverse: [%i] | TargetSpline: [%s]"), Duration, bReverse, *TargetSpline->GetName()); }
+
+    FString ToStringN() const { return FString::Printf(TEXT("Duration: [%f]\nbReverse: [%i]\nTargetSpline: [%s]"), Duration, bReverse, *TargetSpline->GetName()); }
 };
