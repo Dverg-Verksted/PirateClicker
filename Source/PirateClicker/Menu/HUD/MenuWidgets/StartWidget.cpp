@@ -9,6 +9,7 @@ void UStartWidget::NativeConstruct()
 
     StartGameButton->OnClicked.AddDynamic(this,&ThisClass::UStartWidget::OpenLevelSelectWidget);
     SettingsButton->OnClicked.AddDynamic(this,&ThisClass::UStartWidget::OpenSettingsWidget);
+    LoreDiaryButton->OnClicked.AddDynamic(this,&ThisClass::OpenDiaryMenu);
 }
 
 void UStartWidget::OpenSettingsWidget()
@@ -21,4 +22,9 @@ void UStartWidget::OpenLevelSelectWidget()
 {
     PlayAnimation(ButtonAnimation);
     MenuGameMode->MenuStateChange(EStateMenuMode::LevelSelectMenu);
+}
+void UStartWidget::OpenDiaryMenu()
+{
+    PlayAnimation(ButtonAnimation);
+    MenuGameMode->MenuStateChange(EStateMenuMode::LoreDairyMenu);
 }

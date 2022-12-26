@@ -21,8 +21,3 @@ for /D %%a in ("%ProjectRoot%\Plugins\*") do (
    rmdir /S /Q %%a\Intermediate
    rmdir /S /Q %%a\Binaries
 )
-
-"%UBTRelativePath%" -projectfiles -progress -project="%ProjectPath%"
-"%UBTRelativePath%" DebugGame Win64 -Project="%ProjectPath%" -TargetType=Editor -Progress -NoEngineChanges -NoHotReloadFromIDE
-
-pause

@@ -8,11 +8,13 @@
 UENUM(BlueprintType)
 enum class EStateGame : uint8
 {
+    None,
     Loading,
     InProgress,
     Pause,
     GameWin,
     GameLose,
+    Dialog,
 };
 
 class ASpawnerNPC;
@@ -58,6 +60,28 @@ struct FDataGameWave
     TArray<FDataUnderWave> ArrUnderWaves;
 };
 
+UENUM(BlueprintType)
+enum class ETypeSide : uint8
+{
+    Player UMETA(DisplayName = "Главный герой"),
+    Opponent UMETA(DisplayName = "Оппонент"),
+};
+
+USTRUCT(BlueprintType)
+struct FDialogData
+{
+    GENERATED_BODY()
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (DisplayName = "Сторона"))
+    ETypeSide TypeSide{ETypeSide::Player};
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (DisplayName = "Текст"))
+    FText DataText;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowedClasses = "SoundBase"))
+    FSoftObjectPath VoicePath;
+};
+
 // Game rule for gamemode
 USTRUCT(BlueprintType)
 struct FGameRule : public FTableRowBase
@@ -75,4 +99,16 @@ struct FGameRule : public FTableRowBase
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ToolTip = "Добавьте и опишите волны"))
     TArray<FDataGameWave> ArrWaves;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowedClasses = "Texture2D", ToolTip = "Набор изображений"))
+    TMap<ETypeSide, FSoftObjectPath> ImageTypeSide{TPair<ETypeSide, FSoftObjectPath>(ETypeSide::Opponent, ""), TPair<ETypeSide, FSoftObjectPath>(ETypeSide::Player, "")};
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ToolTip = "Диалог при старте игры"))
+    TArray<FDialogData> StartGameDialogs;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ToolTip = "Диалог при победе"))
+    TArray<FDialogData> WinGameDialogs;
+
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ToolTip = "Диалог при поражении"))
+    TArray<FDialogData> LoseGameDialogs;
 };

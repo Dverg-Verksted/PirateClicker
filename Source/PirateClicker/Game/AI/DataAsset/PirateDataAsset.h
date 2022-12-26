@@ -9,6 +9,18 @@
 
 class APirateActorBase;
 
+USTRUCT()
+struct FRangeSpeed
+{
+    GENERATED_BODY()
+
+    UPROPERTY(EditDefaultsOnly, meta = (ClampMin = "0.1", ClampMax = "1500.0", ForceUnits = "m/s"))
+    float MinSpeed{1.5f};
+
+    UPROPERTY(EditDefaultsOnly, meta = (ClampMin = "0.1", ClampMax = "1500.0", ForceUnits = "m/s"))
+    float MaxSpeed{5.0f};
+};
+
 USTRUCT(BlueprintType)
 struct FDataPirate
 {
@@ -29,15 +41,24 @@ struct FDataPirate
     UPROPERTY(EditAnywhere, meta = (ToolTip = "Данные по стамине", EditCondition = "bEnableStamina", EditConditionHides))
     FDataStamina DataStamina;
 
+    UPROPERTY(EditDefaultsOnly, meta = (ToolTip = "Включить рандомную скорость"))
+    bool bEnableRandomMove{false};
+
+    UPROPERTY(EditDefaultsOnly, meta = (ToolTip = "Скорость передвижения пирата", ClampMin = "0.1", ClampMax = "1500.0", ForceUnits = "m/s", EditCondition = "bEnableRandomMove", EditConditionHides))
+    FRangeSpeed RangeSpeedMove;
+
     // Movement speed pirate cm/sec
-    UPROPERTY(EditDefaultsOnly, meta = (ToolTip = "Скорость передвижения пирата", ClampMin = "0.1", ClampMax = "1500.0", ForceUnits = "m/s"))
+    UPROPERTY(EditDefaultsOnly, meta = (ToolTip = "Скорость передвижения пирата", ClampMin = "0.1", ClampMax = "1500.0", ForceUnits = "m/s", EditCondition = "!bEnableRandomMove", EditConditionHides))
     float SpeedMove{10.0f};
 
     // Rotate speed pirate
     UPROPERTY(EditDefaultsOnly, meta = (ToolTip = "Скорость поворота пирата", ClampMin = "0.1", ClampMax = "5.0", ForceUnits = "x"))
     float SpeedRotate{1.0f};
 
-    FString ToString() const { return FString::Printf(TEXT("Data Health: [%s] | Data Stamina: [%s] | Speed Move: [%f] m/s | Speed Rotate: [%f]"), *DataHealth.ToString(), *DataStamina.ToString(), SpeedMove, SpeedRotate); }
+    FString ToString() const
+    {
+        return FString::Printf(TEXT("Data Health: [%s] | Data Stamina: [%s] | Speed Move: [%f] m/s | Speed Rotate: [%f]"), *DataHealth.ToString(), *DataStamina.ToString(), SpeedMove, SpeedRotate);
+    }
 };
 
 /**

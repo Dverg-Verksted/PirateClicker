@@ -34,7 +34,10 @@ public:
      * @return TMap<EStateGame, UGameUserWidgetBase*>
      **/
     UFUNCTION(BlueprintCallable, Category = "AGameHUD | GetDataHUD")
-    TMap<EStateGame, UGameUserWidgetBase*> GetGameWidgets() const { return GameWidgets; }
+    TMap<EStateGame, UGameUserWidgetBase*> GetGameWidgets() const
+    {
+        return GameWidgets;
+    }
 
 protected:
     // @protected Game progress widget
@@ -48,6 +51,10 @@ protected:
     // @protected Game Lose widget
     UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (DisplayName = "Виджет проигрыша"))
     TSubclassOf<UGameUserWidgetBase> LoseWidget;
+
+    // @protected Game progress widget
+    UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (DisplayName = "Виджет диалог"))
+    TSubclassOf<UGameUserWidgetBase> DialogsWidget;
 
     // @protected Current pointer to StoryGM
     UPROPERTY()

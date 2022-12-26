@@ -70,17 +70,9 @@ void AStoryGMBase::StartPlay()
 
     FTimerHandle TimerHandle;
     GetWorldTimerManager().SetTimer(
-        TimerHandle,
-        [&]()
-        {
-            ChangeStateGame(EStateGame::InProgress);
-            TargetIndexWave = 0;
-            RunWaves(TargetIndexWave);
-        },
-        1.0f, false);
-    
-    UPirateClickerLibrary::FindAllActors(GetWorld(), ArrayTotem);
+        TimerHandle, [&]() { ChangeStateGame(EStateGame::Dialog); }, 1.0f, false);
 
+    UPirateClickerLibrary::FindAllActors(GetWorld(), ArrayTotem);
     OnSetupTotemPart.Broadcast({EPresetTotems::Fire, EPresetTotems::Frost});
 }
 
@@ -88,10 +80,25 @@ void AStoryGMBase::StartPlay()
 
 #pragma region Action
 
-void AStoryGMBase::ChangeStateGame(const EStateGame& NewState)
+void AStoryGMBase::ChangeStateGame(EStateGame NewState)
 {
     if (!CHECKED(StateGame != NewState, "State game is equal new state")) return;
 
+    if (StateGame == EStateGame::InProgress && (NewState == EStateGame::GameWin || NewState == EStateGame::GameLose))
+    {
+        PrevStateGame = NewState;
+        StateGame = EStateGame::Dialog;
+        OnChangeStateGame.Broadcast(StateGame);
+        return;
+    }
+
+    if (PrevStateGame == EStateGame::Loading && StateGame == EStateGame::Dialog && NewState == EStateGame::InProgress)
+    {
+        TargetIndexWave = 0;
+        RunWaves(TargetIndexWave);
+    }
+
+    PrevStateGame = StateGame;
     StateGame = NewState;
     OnChangeStateGame.Broadcast(StateGame);
 }
@@ -102,6 +109,26 @@ FText AStoryGMBase::GetNameWave(const int32 IndexWave) const
     if (!GameRule->ArrWaves.IsValidIndex(IndexWave)) return FText();
 
     return GameRule->ArrWaves[IndexWave].NameWave;
+}
+
+const TArray<FDialogData>& AStoryGMBase::GetCurrentStateDataDialogs()
+{
+    if (PrevStateGame == EStateGame::Loading && StateGame == EStateGame::Dialog)
+    {
+        return GameRule->StartGameDialogs;
+    }
+
+    if (PrevStateGame == EStateGame::GameWin && StateGame == EStateGame::Dialog)
+    {
+        return GameRule->WinGameDialogs;
+    }
+
+    if (PrevStateGame == EStateGame::GameLose && StateGame == EStateGame::Dialog)
+    {
+        return GameRule->LoseGameDialogs;
+    }
+
+    return EMPTY_DATA_DIALOGS;
 }
 
 void AStoryGMBase::RunWaves(int32 IndexWave)

@@ -21,7 +21,6 @@ UAbilitySystemComponent::UAbilitySystemComponent()
     PrimaryComponentTick.bStartWithTickEnabled = true;
 }
 
-
 // Called when the game starts
 void UAbilitySystemComponent::BeginPlay()
 {
@@ -53,7 +52,6 @@ void UAbilitySystemComponent::TickComponent(float DeltaTime, ELevelTick TickType
     }
 
 #endif
-
 }
 
 #pragma endregion
@@ -135,7 +133,7 @@ void UAbilitySystemComponent::StopReduceStamina()
 
     if (DataStamina.bRegenerateStamina)
     {
-        GetWorld()->GetTimerManager().SetTimer(FillStaminaTimerHandle, this , &ThisClass::FillStamina, DataStamina.CallFrequencyUpperStamina, true);
+        GetWorld()->GetTimerManager().SetTimer(FillStaminaTimerHandle, this, &ThisClass::FillStamina, DataStamina.CallFrequencyUpperStamina, true);
     }
 }
 
@@ -159,7 +157,7 @@ void UAbilitySystemComponent::RegisterTakeDamage(AActor* DamagedActor, float Dam
             GetWorld()->GetTimerManager().ClearTimer(FillStaminaTimerHandle);
             GetWorld()->GetTimerManager().ClearTimer(ReduceStaminaTimerHandle);
             GetWorld()->GetTimerManager().ClearTimer(FillHealthTimerHandle);
-            
+
             ChangeStatusAbilitySystem(EStatusAbilitySystem::None);
         }
     }

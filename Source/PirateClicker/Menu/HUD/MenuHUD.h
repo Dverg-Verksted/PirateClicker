@@ -8,7 +8,6 @@
 #include "Menu/MenuGameMode.h"
 #include "MenuHUD.generated.h"
 
-
 /**
  * 
  */
@@ -16,6 +15,8 @@ UCLASS()
 class PIRATECLICKER_API AMenuHUD : public AHUD
 {
 	GENERATED_BODY()
+
+#pragma region Widgets
 
 public:
     UPROPERTY(EditAnywhere)
@@ -26,16 +27,21 @@ public:
     TSubclassOf<UMenuMasterWidget> ShopWidget;
     UPROPERTY(EditAnywhere)
     TSubclassOf<UMenuMasterWidget> LevelSelectWidget;
-
-    virtual void BeginPlay() override;
-
-    UFUNCTION()
-    void RegisterChangeMenuState(EStateMenuMode NewMenuState);
+    UPROPERTY(EditAnywhere)
+    TSubclassOf<UMenuMasterWidget> LoreDiaryWidget;
 
     UPROPERTY()
     TMap<EStateMenuMode,UMenuMasterWidget*> SetStateMenuWidgets;
-
     UPROPERTY()
     UMenuMasterWidget* CurrentVisibleWidget{nullptr};
+
+#pragma endregion
+
+#pragma region Actions
     
+    virtual void BeginPlay() override;
+    UFUNCTION()
+    void RegisterChangeMenuState(EStateMenuMode NewMenuState);
+
+#pragma endregion
 };

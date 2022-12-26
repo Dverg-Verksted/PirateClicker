@@ -56,21 +56,37 @@ public:
      * @return EStateGame
      **/
     UFUNCTION(BlueprintCallable, Category = "AStoryGMBase | Action")
-    FORCEINLINE EStateGame GetStateGame() const { return StateGame; }
+    FORCEINLINE EStateGame GetStateGame() const
+    {
+        return StateGame;
+    }
+
+    /**
+     * @public Get previous state game
+     * @return EStateGame
+     **/
+    UFUNCTION(BlueprintCallable, Category = "AStoryGMBase | Action")
+    FORCEINLINE EStateGame GetPrevStateGame() const
+    {
+        return PrevStateGame;
+    }
 
     /**
      * @public Change state game
      * @param1 EStateGame
      **/
     UFUNCTION(BlueprintCallable, Category = "AStoryGMBase | Action")
-    void ChangeStateGame(const EStateGame& NewState);
+    void ChangeStateGame(EStateGame NewState);
 
     /**
      * @public Get count waves
      * @return int32
      **/
     UFUNCTION(BlueprintCallable, Category = "AStoryGMBase | Action")
-    int32 GetCountWaves() const { return (GameRule) ? GameRule->ArrWaves.Num() : INDEX_NONE; }
+    int32 GetCountWaves() const
+    {
+        return (GameRule) ? GameRule->ArrWaves.Num() : INDEX_NONE;
+    }
 
     /**
      * @public Get count waves
@@ -84,7 +100,10 @@ public:
      * @return int32
      **/
     UFUNCTION(BlueprintCallable, Category = "AStoryGMBase | Action")
-    int32 GetNumRunWave() const { return TargetIndexWave; }
+    int32 GetNumRunWave() const
+    {
+        return TargetIndexWave;
+    }
 
     /**
      * @public Get count gold on Level
@@ -98,10 +117,19 @@ public:
      * @return APlayerPawn*
      **/
     UFUNCTION(BlueprintCallable, Category = "AStoryGMBase | Action")
-    APlayerPawn* GetPlayerPawn() const { return PlayerPawn; }
+    APlayerPawn* GetPlayerPawn() const
+    {
+        return PlayerPawn;
+    }
 
     UFUNCTION(BlueprintCallable, Category = "AStoryGMBase | Action")
-    const TArray<ATotemZoneActor*>& GetArrayTotemZone() const { return ArrayTotem; }
+    const TArray<ATotemZoneActor*>& GetArrayTotemZone() const
+    {
+        return ArrayTotem;
+    }
+
+    UFUNCTION(BlueprintCallable, Category = "AStoryGMBase | Action")
+    const TArray<FDialogData>& GetCurrentStateDataDialogs();
 
 private:
     /**
@@ -154,8 +182,11 @@ private:
     UPROPERTY()
     APlayerPawn* PlayerPawn{nullptr};
 
+    // @private Previous state game
+    EStateGame PrevStateGame{EStateGame::None};
+
     // @private Current state game
-    EStateGame StateGame = EStateGame::Loading;
+    EStateGame StateGame{EStateGame::Loading};
 
     int32 TargetIndexWave{0};
 
@@ -185,6 +216,13 @@ public:
 
     UPROPERTY(BlueprintAssignable)
     FSetupTotemPartSignature OnSetupTotemPart;
+
+#pragma endregion
+
+#pragma region EmptyData
+
+    TArray<FDialogData> EmptyDataDialogs;
+#define EMPTY_DATA_DIALOGS EmptyDataDialogs;
 
 #pragma endregion
 };

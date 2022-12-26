@@ -23,12 +23,10 @@ class PIRATECLICKER_API UAbilitySystemComponent : public UActorComponent
 #pragma region Default
 
 public:
-
     // Sets default values for this component's properties
     UAbilitySystemComponent();
 
 protected:
-
     // Called when the game starts
     virtual void BeginPlay() override;
 
@@ -39,34 +37,45 @@ protected:
 #pragma region Action
 
 public:
-
     /**
      * @public Checked dead owner
      * @return bool
      **/
     UFUNCTION(BlueprintCallable)
-    FORCEINLINE bool IsDead() const { return bDead; }
+    FORCEINLINE bool IsDead() const
+    {
+        return bDead;
+    }
 
     /**
      * @public Checked Health enabled
      * @return bool
      **/
     UFUNCTION(BlueprintCallable)
-    FORCEINLINE bool IsEnableHealth() const { return bEnableHealth; }
+    FORCEINLINE bool IsEnableHealth() const
+    {
+        return bEnableHealth;
+    }
 
     /**
      * @public Checked Stamina enabled
      * @return bool
      **/
     UFUNCTION(BlueprintCallable)
-    FORCEINLINE bool IsEnableStamina() const { return bEnableStamina; }
+    FORCEINLINE bool IsEnableStamina() const
+    {
+        return bEnableStamina;
+    }
 
     /**
      * @public Getting constant data health
      * @return FDataHealth
      **/
     UFUNCTION(BlueprintCallable)
-    const FDataHealth& GetFreezeDataHealth() const { return DataHealth; }
+    const FDataHealth& GetFreezeDataHealth() const
+    {
+        return DataHealth;
+    }
 
     /**
      * @public Setup new data ability system
@@ -106,7 +115,10 @@ public:
      * @public Get Status ability system
      **/
     UFUNCTION(BlueprintCallable)
-    FORCEINLINE EStatusAbilitySystem GetStatusAbilitySystem() const { return StatusAbilitySystem; }
+    FORCEINLINE EStatusAbilitySystem GetStatusAbilitySystem() const
+    {
+        return StatusAbilitySystem;
+    }
 
     /**
      * @public Take damage to Health param
@@ -115,7 +127,6 @@ public:
     void TakeDamage(const float Damage);
 
 private:
-
     UFUNCTION()
     void RegisterTakeDamage(AActor* DamagedActor, float Damage, const class UDamageType* DamageType, class AController* InstigatedBy, AActor* DamageCauser);
 
@@ -128,7 +139,6 @@ private:
 #pragma region DataAbilitySystem
 
 private:
-
     UPROPERTY(EditAnywhere, Category = "Ability Settings", meta = (DisplayName = "Включить систему здоровья"))
     bool bEnableHealth{true};
 
@@ -154,7 +164,6 @@ private:
 #pragma region Signature
 
 public:
-
     UPROPERTY(BlueprintAssignable)
     FUpdateDataHealthSignature OnUpdateDataHealth;
 
@@ -172,9 +181,8 @@ public:
 
     UPROPERTY(BlueprintAssignable)
     FStaminaIsFullSignature OnStaminaIsFull;
-    
-private:
 
+private:
     /**
      * @private Change status ability system
      **/

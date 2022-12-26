@@ -25,6 +25,8 @@ public:
     UButton* SettingsButton;
     UPROPERTY(Transient,meta = (BindWidget))
     UButton* ShopButton;
+    UPROPERTY(Transient,meta = (BindWidget))
+    UButton* LoreDiaryButton;
 
     UPROPERTY(Transient, meta = (BindWidgetAnim))
     UWidgetAnimation* ButtonAnimation;
@@ -41,6 +43,8 @@ private:
     void OpenLevelSelectWidget();
     UFUNCTION()
     void OpenSettingsWidget();
+    UFUNCTION()
+    void OpenDiaryMenu();
 
 #pragma endregion 
 };

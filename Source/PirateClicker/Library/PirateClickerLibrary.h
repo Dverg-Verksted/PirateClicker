@@ -46,7 +46,6 @@ public:
      **/
     static int32 GetIndexAlongDistTargetPosition(const ASplineActor* Spline, const FVector& TargetPosition);
 
-
 #pragma endregion
 
 #pragma region WorldUtils
