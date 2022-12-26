@@ -184,7 +184,7 @@ private:
 
     // @private Previous state game
     EStateGame PrevStateGame{EStateGame::None};
-    
+
     // @private Current state game
     EStateGame StateGame{EStateGame::Loading};
 
@@ -222,8 +222,7 @@ public:
 #pragma region EmptyData
 
     TArray<FDialogData> EmptyDataDialogs;
-    #define EMPTY_DATA_DIALOGS EmptyDataDialogs;
+#define EMPTY_DATA_DIALOGS EmptyDataDialogs;
 
 #pragma endregion
-    
 };

@@ -1,6 +1,5 @@
 // This section is the property of the Dverg Verksted team
 
-
 #include "Game/HUD/UI/DialogGameWidget.h"
 #include "Components/Button.h"
 #include "Game/GameMode/StoryGMBase.h"

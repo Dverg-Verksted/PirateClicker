@@ -70,12 +70,7 @@ void AStoryGMBase::StartPlay()
 
     FTimerHandle TimerHandle;
     GetWorldTimerManager().SetTimer(
-        TimerHandle,
-        [&]()
-        {
-            ChangeStateGame(EStateGame::Dialog);
-        },
-        1.0f, false);
+        TimerHandle, [&]() { ChangeStateGame(EStateGame::Dialog); }, 1.0f, false);
 
     UPirateClickerLibrary::FindAllActors(GetWorld(), ArrayTotem);
     OnSetupTotemPart.Broadcast({EPresetTotems::Fire, EPresetTotems::Frost});
@@ -127,7 +122,7 @@ const TArray<FDialogData>& AStoryGMBase::GetCurrentStateDataDialogs()
     {
         return GameRule->WinGameDialogs;
     }
-    
+
     if (PrevStateGame == EStateGame::GameLose && StateGame == EStateGame::Dialog)
     {
         return GameRule->LoseGameDialogs;

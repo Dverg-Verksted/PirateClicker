@@ -61,7 +61,7 @@ struct FDataGameWave
 };
 
 UENUM(BlueprintType)
-enum class ETypeSide: uint8
+enum class ETypeSide : uint8
 {
     Player UMETA(DisplayName = "Главный герой"),
     Opponent UMETA(DisplayName = "Оппонент"),
@@ -80,7 +80,6 @@ struct FDialogData
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (AllowedClasses = "SoundBase"))
     FSoftObjectPath VoicePath;
-
 };
 
 // Game rule for gamemode
@@ -112,5 +111,4 @@ struct FGameRule : public FTableRowBase
 
     UPROPERTY(EditAnywhere, BlueprintReadOnly, meta = (ToolTip = "Диалог при поражении"))
     TArray<FDialogData> LoseGameDialogs;
-
 };

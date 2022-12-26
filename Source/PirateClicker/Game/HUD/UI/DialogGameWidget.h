@@ -9,17 +9,16 @@
 
 class UButton;
 /**
- * 
+ *
  */
 UCLASS()
 class PIRATECLICKER_API UDialogGameWidget : public UGameUserWidgetBase
 {
-	GENERATED_BODY()
+    GENERATED_BODY()
 
 #pragma region Default
-    
-protected:
 
+protected:
     virtual void InitWidget() override;
 
 #pragma endregion
@@ -27,12 +26,10 @@ protected:
 #pragma region ActionDialog
 
 public:
-
     UFUNCTION(BlueprintImplementableEvent)
     void PushDataDialog_Event(const FDialogData& DataDialog, const bool bEnd);
 
 private:
-
     UFUNCTION()
     void PushDataDialog();
 
@@ -43,19 +40,15 @@ private:
 #pragma region DataDialog
 
 protected:
-
     UPROPERTY(Transient, meta = (BindWidget))
     UButton* NextPushDataDialog;
-    
-private:
 
+private:
     EStateGame NextStateGame{EStateGame::None};
-    
+
     TArray<FDialogData> ArrayDataDialogs;
 
     int32 TargetIndexDialog{0};
 
 #pragma endregion
-
-
 };

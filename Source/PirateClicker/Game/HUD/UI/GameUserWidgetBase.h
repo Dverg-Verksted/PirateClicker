@@ -29,12 +29,16 @@ class PIRATECLICKER_API UGameUserWidgetBase : public UUserWidget
 #pragma region Default
 
 public:
-
-    virtual void InitWidget() { InitWidget_Event(); }
-    virtual void CompleteWidget() { CompleteWidget_Event(); }
+    virtual void InitWidget()
+    {
+        InitWidget_Event();
+    }
+    virtual void CompleteWidget()
+    {
+        CompleteWidget_Event();
+    }
 
 protected:
-
     virtual void NativeConstruct() override;
 
     UFUNCTION(BlueprintImplementableEvent)
@@ -48,10 +52,8 @@ protected:
 #pragma region GameUserData
 
 protected:
-
     UPROPERTY(BlueprintReadOnly)
     AStoryGMBase* StoryGM;
 
 #pragma endregion
-
 };
