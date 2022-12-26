@@ -53,28 +53,40 @@ public:
      * @return UCapsuleComponent
      **/
     UFUNCTION(BlueprintCallable, Category = "APirateActorBase | Components")
-    UCapsuleComponent* GetCapsuleCollision() const { return CapsuleCollision; }
+    UCapsuleComponent* GetCapsuleCollision() const
+    {
+        return CapsuleCollision;
+    }
 
     /**
      * @public Get pirate mesh
      * @return USkeletalMeshComponent
      **/
     UFUNCTION(BlueprintCallable, Category = "APirateActorBase | Components")
-    USkeletalMeshComponent* GetPirateMesh() const { return PirateMesh; }
+    USkeletalMeshComponent* GetPirateMesh() const
+    {
+        return PirateMesh;
+    }
 
     /**
      * @public Get move pirate component
      * @return UMovePirateComponent
      **/
     UFUNCTION(BlueprintCallable, Category = "APirateActorBase | Components")
-    UMoveComponent* GetMovePirateComponent() const { return MoveComponent; }
+    UMoveComponent* GetMovePirateComponent() const
+    {
+        return MoveComponent;
+    }
 
     /**
      * @public Get ability component
      * @return UMovePirateComponent
      **/
     UFUNCTION(BlueprintCallable, Category = "APirateActorBase | Components")
-    UAbilitySystemComponent* GetAbilityComponent() const { return AbilitySystem; }
+    UAbilitySystemComponent* GetAbilityComponent() const
+    {
+        return AbilitySystem;
+    }
 
 protected:
     // @protected Root capsule collision
@@ -105,7 +117,6 @@ public:
     bool bHasTreasure{false};
 
 protected:
-
     UPROPERTY(EditDefaultsOnly, Category = "Settings Pirate")
     UAnimMontage* DeadMontage{nullptr};
 
@@ -150,7 +161,10 @@ public:
      * @public Getting state brain
      **/
     UFUNCTION(BlueprintCallable, Category = "APirateActorBase | Action")
-    EStateBrain GetStateBrain() const { return StateBrain; }
+    EStateBrain GetStateBrain() const
+    {
+        return StateBrain;
+    }
 
     /**
      * @public Register death
@@ -165,7 +179,6 @@ public:
     float PlayMontage(UAnimMontage* AnimMontage, float InPlayRate = 1.f, FName StartSectionName = NAME_None) const;
 
 private:
-
     /**
      * @private Move To Point
      **/
@@ -176,13 +189,13 @@ private:
     void BackChestToStorage();
 
     /**
-     * @private 
+     * @private
      **/
     UFUNCTION()
     void RegisterStaminaOver();
-    
+
     /**
-     * @private 
+     * @private
      **/
     UFUNCTION()
     void RegisterStaminaFull();

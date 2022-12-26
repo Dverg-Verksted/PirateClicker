@@ -67,14 +67,20 @@ public:
      * @return USceneComponent
      **/
     UFUNCTION(BlueprintCallable, Category = "Components")
-    FORCEINLINE USceneComponent* GetRootScene() const { return RootScene; }
+    FORCEINLINE USceneComponent* GetRootScene() const
+    {
+        return RootScene;
+    }
 
     /**
      * @public Get sphere attack collision
      * @return USphereComponent
      **/
     UFUNCTION(BlueprintCallable, Category = "Components")
-    FORCEINLINE USphereComponent* GetSphereCollision() const { return SphereAttackCollision; }
+    FORCEINLINE USphereComponent* GetSphereCollision() const
+    {
+        return SphereAttackCollision;
+    }
 
 private:
     // @private Root scene component
@@ -91,7 +97,7 @@ private:
 
 public:
     UFUNCTION(BlueprintCallable, Category = "Action")
-    bool IsFullHeightPartTotem() const { return ArrayDataSlotsTotem.Num() == HeightTotem; }
+    bool IsFullHeightPartTotem() const;
 
     UFUNCTION(BlueprintCallable, Category = "Action")
     void SetupTotemDA(UTotemDataAsset* TotemDA);

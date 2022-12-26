@@ -6,6 +6,7 @@
 #include "Game/GameMode/StoryGMBase.h"
 #include "Kismet/KismetSystemLibrary.h"
 #include "Game/ScreenTap/ScreenTapActor.h"
+#include "Kismet/GameplayStatics.h"
 #include "Library/PirateClickerLibrary.h"
 
 #if UE_EDITOR || UE_BUILD_DEVELOPMENT
@@ -65,14 +66,16 @@ void AGamePC::RegisterTouchPressed(ETouchIndex::Type FingerIndex, FVector Locati
         const TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes{};
         const TArray<AActor*> ActorsToIgnore{GetPawn()};
         TArray<AActor*> OutActors;
-        UKismetSystemLibrary::SphereOverlapActors(GetWorld(), HitResult.Location, 100.0f, ObjectTypes, APirateActorBase::StaticClass(), ActorsToIgnore, OutActors);
+        UKismetSystemLibrary::SphereOverlapActors(GetWorld(), HitResult.Location, 100.0f, ObjectTypes, AActor::StaticClass(), ActorsToIgnore, OutActors);
         SpawnActorWithTap(HitResult.Location);
 
+        OnPushArrayHit.Broadcast(OutActors);
         for (AActor* Actor : OutActors)
         {
+            OnHitActor.Broadcast(Actor);
             if (Actor->IsA(APirateActorBase::StaticClass()))
             {
-                OnHitActor.Broadcast(Actor);
+                UGameplayStatics::ApplyDamage(Actor, 5.0f, this, GetPawn(), UDamageType::StaticClass());
             }
         }
     }

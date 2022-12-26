@@ -119,6 +119,13 @@ void ATotemZoneActor::Tick(float DeltaTime)
 
 #pragma region Action
 
+bool ATotemZoneActor::IsFullHeightPartTotem() const
+{
+    const auto FindElem = ArrayDataSlotsTotem.FindByPredicate([](const FDataSlotTotem& Data) { return Data.TotemActor == nullptr; });
+
+    return FindElem == nullptr;
+}
+
 void ATotemZoneActor::SetupTotemDA(UTotemDataAsset* TotemDA)
 {
     const int32 IndexPart = GetFreeSlotIndexForTotem();

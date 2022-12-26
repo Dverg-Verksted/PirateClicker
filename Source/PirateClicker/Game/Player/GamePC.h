@@ -11,6 +11,7 @@ class AScreenTapActor;
 class AStoryGMBase;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FHitActorSignature, AActor*, HitActor);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPushArrayHitSignature, TArray<AActor*>, ArrayHitActor);
 
 /**
  * @class Game player controller
@@ -71,6 +72,9 @@ private:
 public:
     UPROPERTY(BlueprintAssignable)
     FHitActorSignature OnHitActor;
+
+    UPROPERTY(BlueprintAssignable)
+    FPushArrayHitSignature OnPushArrayHit;
 
 #pragma endregion
 
