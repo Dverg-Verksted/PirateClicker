@@ -56,6 +56,15 @@ protected:
     UPROPERTY(EditDefaultsOnly, Category = "Settings", meta = (MetaClass = "ScreenTapActor"))
     FSoftClassPath PathToScreenTap;
 
+    UPROPERTY(EditDefaultsOnly, Category = "Settings")
+    float BaseDamageTap{5.0f};
+
+    UPROPERTY(EditDefaultsOnly, Category = "Settings", meta = (ForceUnits = "cm"))
+    float SphereRadiusTap{100.0f};
+
+    UPROPERTY(EditDefaultsOnly, Category = "Settings")
+    bool DrawDebugSphereTap{false};
+
     UPROPERTY()
     AScreenTapActor* ScreenTapClass;
 
