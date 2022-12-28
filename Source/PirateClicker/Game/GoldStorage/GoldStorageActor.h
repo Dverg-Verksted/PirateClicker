@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/BoxComponent.h"
 #include "Components/SphereComponent.h"
+#include "Game/AI/Components/Effect/EffectDataTypes.h"
 #include "GameFramework/Actor.h"
 #include "GoldStorageActor.generated.h"
 
@@ -80,6 +81,9 @@ protected:
 
     UPROPERTY(EditInstanceOnly, Category = "Storage component settings", meta = (ToolTip = "Тут назначаем сундук, который будет выдаваться пирату при оверлепе"))
     TSubclassOf<AGoldChest> GoldChestToGive;
+
+    UPROPERTY(EditAnywhere, Category = "Storage component settings", meta = (ToolTip = "Данные по эффекту наложения", ShowOnlyInnerProperties))
+    FDataEffect DataEffect;
 
 #pragma endregion
 #pragma region Delegate
