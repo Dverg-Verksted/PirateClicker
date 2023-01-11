@@ -6,7 +6,7 @@
 #include "GameFramework/Actor.h"
 #include "LevelMeshClass.generated.h"
 
-UCLASS(HideCategories=("Replication","Input","Actor","LOD","Cooking","Collision","Rendering"))
+UCLASS(HideCategories=("Replication","Input","Actor","LOD","Cooking","Collision","Rendering","ActorTick"))
 class PIRATECLICKER_API ALevelMeshClass : public AActor
 {
     GENERATED_BODY()
