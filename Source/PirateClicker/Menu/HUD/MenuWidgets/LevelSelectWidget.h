@@ -4,6 +4,7 @@
 
 #include "CoreMinimal.h"
 #include "Components/Button.h"
+#include "Components/Image.h"
 #include "Menu/HUD/MenuMasterWidget.h"
 #include "LevelSelectWidget.generated.h"
 
@@ -25,6 +26,8 @@ public:
     UButton* LevelSwitchRightArrow;
     UPROPERTY(Transient,meta = (BindWidget))
     UButton* BackButton;
+    UPROPERTY(Transient,meta = (BindWidget))
+    UImage* LevelModelRenderTexture;
 
     UPROPERTY(Transient, meta = (BindWidgetAnim))
     UWidgetAnimation* ArrowButtonsAnimation;
