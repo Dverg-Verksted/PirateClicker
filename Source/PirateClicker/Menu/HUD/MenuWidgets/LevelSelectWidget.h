@@ -27,7 +27,7 @@ public:
     UPROPERTY(Transient,meta = (BindWidget))
     UButton* BackButton;
     UPROPERTY(Transient,meta = (BindWidget))
-    UImage* LevelModelRenderTexture;
+    UImage* LevelMeshRenderTexture;
 
     UPROPERTY(Transient, meta = (BindWidgetAnim))
     UWidgetAnimation* ArrowButtonsAnimation;
