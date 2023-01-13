@@ -6,7 +6,10 @@
 #include "GameFramework/Actor.h"
 #include "LevelMeshClass.generated.h"
 
-UCLASS(HideCategories=("Replication","Input","Actor","LOD","Cooking","Collision","Rendering","ActorTick"))
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FRotateLevelMeshLeftSignature);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE(FRotateLevelMeshRightSignature);
+
+UCLASS(HideCategories=("Replication","Input","Actor","LOD","Cooking","Collision","Rendering","Actor Tick"))
 class PIRATECLICKER_API ALevelMeshClass : public AActor
 {
     GENERATED_BODY()
@@ -21,16 +24,36 @@ protected:
 
 #pragma endregion
 
-#pragma region Components
-
+#pragma region Components and Variables
+//Components
 protected:
-    // Scene root component
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "LevelMesh Settings")
     USceneComponent* SceneRootComponent;
-
-    // Mesh Settings
+    
     UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "LevelMesh Settings")
-    UStaticMeshComponent* MeshStorage;
+    UStaticMeshComponent* LevelMeshStorage;
+
+    UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "LevelMesh Settings")
+    USceneCaptureComponent2D* LevelMeshCamera;
+//Variables
+private:
+    UPROPERTY(BlueprintAssignable,BlueprintCallable)
+    FRotateLevelMeshLeftSignature RotateLevelMeshLeftNotify;
+    UPROPERTY(BlueprintAssignable,BlueprintCallable)
+    FRotateLevelMeshLeftSignature RotateLevelMeshRightNotify;
+
+    UPROPERTY()
+    FRotator LevelMeshRotationRate{0,5,0};
+
+#pragma endregion
+
+#pragma region Action
+
+public:
+    UFUNCTION(BlueprintCallable)
+    void RotateLevelMeshLeft();
+    UFUNCTION(BlueprintCallable)
+    void RotateLevelMeshRight();
 
 #pragma endregion
 
