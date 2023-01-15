@@ -22,19 +22,18 @@ ALevelMeshClass::ALevelMeshClass()
 void ALevelMeshClass::BeginPlay()
 {
 	Super::BeginPlay();
-	
 }
 
 void ALevelMeshClass::RotateLevelMeshLeft()
 {
     RotateLevelMeshLeftNotify.Broadcast();
-    LevelMeshStorage->SetRelativeRotation(LevelMeshStorage->GetRelativeRotation() + LevelMeshRotationRate);
+    LevelMeshStorage->SetRelativeRotation(LevelMeshStorage->GetRelativeRotation() - LevelMeshRotationRate);
     
 }
 void ALevelMeshClass::RotateLevelMeshRight()
 {
     RotateLevelMeshRightNotify.Broadcast();
-    LevelMeshStorage->SetRelativeRotation(LevelMeshStorage->GetRelativeRotation() - LevelMeshRotationRate);
+    LevelMeshStorage->SetRelativeRotation(LevelMeshStorage->GetRelativeRotation() + LevelMeshRotationRate);
     
 }
 
