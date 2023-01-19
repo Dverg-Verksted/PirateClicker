@@ -6,12 +6,11 @@
 #include "Components/Button.h"
 #include "Components/TextBlock.h"
 #include "Delegates/DelegateCombinations.h"
-#include "Delegates/DelegateCombinations.h"
 #include "LoreDiaryPageButtonComponent.generated.h"
 
 #pragma region Delegates
 
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FOnOpenDiaryPageSignature,FText,DiaryPageButtonName,FText,DiaryPageButtonLoreText);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnOpenDiaryPageSignature,class ULoreDiaryPageButtonComponent*,PageButton);
 
 #pragma endregion
 
@@ -33,13 +32,12 @@ public:
 #pragma region Variables
 
 public:
-    UPROPERTY(EditInstanceOnly)
+    UPROPERTY(EditInstanceOnly,BlueprintReadOnly)
     FText DiaryPageButtonName;
-    UPROPERTY(EditInstanceOnly)
+    UPROPERTY(EditInstanceOnly,BlueprintReadOnly)
     FText DiaryPageButtonLoreText;
-
-protected:
-    UPROPERTY()
+    
+    UPROPERTY(BlueprintAssignable)
     FOnOpenDiaryPageSignature OnOpenDiaryPageNotify;
 
 #pragma endregion
@@ -52,15 +50,6 @@ protected:
 public:
     UFUNCTION()
     void OpenDiaryPageEvent();
-
-    UFUNCTION(BlueprintCallable)
-    FText GetDiaryPageTextBlockEvent();
-    UFUNCTION(BlueprintCallable)
-    FText GetDiaryPageNameEvent();
-    UFUNCTION(BlueprintCallable)
-    void SetDiaryPageTextBlockEvent(FText NewDiaryPageText);
-    UFUNCTION(BlueprintCallable)
-    void SetDiaryPageNameEvent(FText NewDiaryPageName);
 
 #pragma endregion
 	

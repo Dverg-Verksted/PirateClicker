@@ -98,7 +98,7 @@ void UPirateClickerLibrary::AsyncSpawnActor(UObject* WorldContextObject, TAssetS
     AssetLoader.RequestAsyncLoad(L_Reference, FStreamableDelegate::CreateStatic(&UPirateClickerLibrary::OnAsyncSpawnActorComplete, WorldContextObject, L_Reference, SpawnTransform, Callback));
 }
 
-void UPirateClickerLibrary::OnAsyncAssetLoadObjectComplete(FStringAssetReference Reference, FAsyncAssetLoadSignature Callback)
+void UPirateClickerLibrary::OnAsyncAssetLoadObjectComplete(FSoftObjectPath Reference, FAsyncAssetLoadSignature Callback)
 {
     UObject* Obj = Cast<UObject>(StaticLoadObject(UObject::StaticClass(), nullptr, *(Reference.ToString())));
     Callback.ExecuteIfBound(Obj != nullptr, Obj);

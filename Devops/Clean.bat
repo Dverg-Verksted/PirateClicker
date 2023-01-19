@@ -13,11 +13,3 @@ for %%a in (%dirsToRemove%) do (
 echo Delete trash files
 echo %ProjectRoot%\%ProjectPureName%.sln
 del %ProjectRoot%\%ProjectPureName%.sln
-
-echo Delete trash in Plugins
-for /D %%a in ("%ProjectRoot%\Plugins\*") do (
-	echo %%a\Intermediate
-	echo %%a\Binaries
-   rmdir /S /Q %%a\Intermediate
-   rmdir /S /Q %%a\Binaries
-)

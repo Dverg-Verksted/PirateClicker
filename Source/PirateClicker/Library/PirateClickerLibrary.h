@@ -14,7 +14,7 @@ DEFINE_LOG_CATEGORY_STATIC(LogPirateClicker, All, All);
 #define CHECKED(Cond, Text) UPirateClickerLibrary::CheckedCondition(Cond, Text, __LINE__, __FUNCTION__)
 
 DECLARE_DYNAMIC_DELEGATE_TwoParams(FAsyncAssetLoadSignature, bool, bResult, UObject*, Object);
-DECLARE_DYNAMIC_DELEGATE_ThreeParams(FAsyncSpawnActorSignature, bool, bResult, FStringAssetReference, LoadedReference, AActor*, SpawnedActor);
+DECLARE_DYNAMIC_DELEGATE_ThreeParams(FAsyncSpawnActorSignature, bool, bResult, FSoftObjectPath, LoadedReference, AActor*, SpawnedActor);
 
 /**
  * @class Generalized Pirate Clicker Functional Library
@@ -109,7 +109,7 @@ public:
 private:
     /** Called when asset loading is finished */
     UFUNCTION()
-    static void OnAsyncAssetLoadObjectComplete(FStringAssetReference Reference, FAsyncAssetLoadSignature Callback);
+    static void OnAsyncAssetLoadObjectComplete(FSoftObjectPath Reference, FAsyncAssetLoadSignature Callback);
 
     /** Called when asset loading for actor spawn is finished */
     static void OnAsyncSpawnActorComplete(UObject* WorldContextObject, FStringAssetReference Reference, FTransform SpawnTransform, FAsyncSpawnActorSignature Callback);

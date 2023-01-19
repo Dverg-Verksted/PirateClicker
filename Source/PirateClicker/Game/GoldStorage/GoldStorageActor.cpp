@@ -1,6 +1,8 @@
 // This section is the property of the Dverg Verksted team
 
 #include "Game/GoldStorage/GoldStorageActor.h"
+
+#include "Game/AI/Components/Effect/EffectManager.h"
 #include "Library/PirateClickerLibrary.h"
 #include "Game/AI/Pirates/PirateActorBase.h"
 
@@ -105,6 +107,10 @@ void AGoldStorageActor::RegisterActorBeginOverlap(AActor* OverlappedActor, AActo
             if (PirateBase->bHasTreasure) return;
             PirateBase->bHasTreasure = true;
             PirateBase->SpawnGoldChest(GoldChestToGive, this);
+            if (UEffectManager* EffectManager = PirateBase->FindComponentByClass<UEffectManager>())
+            {
+                EffectManager->AddEffect(DataEffect);
+            }
             GoldStorageChestTaken.Broadcast(PirateBase, this);
             SetCurrentGold(CurrentGold - 1);
             if (CurrentGold == 0)

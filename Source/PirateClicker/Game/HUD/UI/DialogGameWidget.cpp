@@ -43,7 +43,8 @@ void UDialogGameWidget::PushDataDialog()
         CompleteDialog();
         return;
     }
-    PushDataDialog_Event(ArrayDataDialogs[TargetIndexDialog++], ArrayDataDialogs.Num() == TargetIndexDialog);
+    PushDataDialog_Event(ArrayDataDialogs[TargetIndexDialog], ArrayDataDialogs.Num() == TargetIndexDialog + 1);
+    TargetIndexDialog++;
 }
 
 void UDialogGameWidget::CompleteDialog()
