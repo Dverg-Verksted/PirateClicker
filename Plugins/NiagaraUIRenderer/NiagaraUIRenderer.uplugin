@@ -1,7 +1,7 @@
 {
 	"FileVersion": 3,
 	"Version": 1,
-	"VersionName": "1.1.1",
+	"VersionName": "1.0.4",
 	"FriendlyName": "Niagara UI Renderer",
 	"Description": "Add support for Niagara particle systems to be rendered directly as UI Widgets",
 	"Category": "FX",
@@ -10,11 +10,10 @@
 	"DocsURL": "https://sourysk.github.io/NiagaraUIRendererDocumentation/",
 	"MarketplaceURL": "com.epicgames.launcher://ue/marketplace/product/fd24d23ca57b4c59a4e4b7368da250bd",
 	"SupportURL": "",
-	"EngineVersion": "4.27.0",
+	"EngineVersion": "5.1.0",
 	"CanContainContent": true,
 	"Installed": true,
 	"SupportedTargetPlatforms": [
-		"Win32",
 		"Win64",
 		"Android"
 	],
@@ -23,9 +22,8 @@
 			"Name": "NiagaraUIRenderer",
 			"Type": "Runtime",
 			"LoadingPhase": "Default",
-			"WhitelistPlatforms": [
+			"PlatformAllowList": [
 				"Win64",
-				"Win32",
 				"Android"
 			]
 		},
@@ -33,9 +31,8 @@
 			"Name": "NiagaraUIRendererEditor",
 			"Type": "Editor",
 			"LoadingPhase": "Default",
-			"WhitelistPlatforms": [
-				"Win64",
-				"Win32"
+			"PlatformAllowList": [
+				"Win64"
 			]
 		}
 	],

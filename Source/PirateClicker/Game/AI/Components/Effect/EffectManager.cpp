@@ -38,6 +38,7 @@ void UEffectManager::TickComponent(float DeltaTime, ELevelTick TickType, FActorC
 
 void UEffectManager::AddEffect(const FDataEffect& InDataEffect)
 {
+    if (InDataEffect.TypeEffect == ETypeEffect::None) return;
     ArrayDataEffects.Add(InDataEffect);
     LOG_PIRATE(ELogVerb::Display, FString::Printf(TEXT("Add effect in Pirate: [%s] | Data: [%s]"), *GetOwner()->GetName(), *InDataEffect.ToString()));
     RunApplyEffect();
@@ -85,12 +86,12 @@ void UEffectManager::ApplyEffectsToOwner()
 
         switch (Data.TypeEffect)
         {
-            case ETypeEffect::Fire:
+            case ETypeEffect::PhysicalDamage:
             {
                 OwnerAbilitySystemComponent->TakeDamage(Data.Damage);
                 break;
             }
-            case ETypeEffect::Cold:
+            case ETypeEffect::SlowingDown:
             {
                 OwnerMoveComponent->SetupSpeedModifyToPercent(Data.SpeedConversion);
                 break;

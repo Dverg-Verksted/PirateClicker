@@ -1,4 +1,4 @@
-// Copyright 2021 - Michal Smoleň
+// Copyright 2022 - Michal Smoleň
 
 #pragma once
 
@@ -19,19 +19,21 @@ class NIAGARAUIRENDERER_API UNiagaraUIComponent : public UNiagaraComponent
 	GENERATED_BODY()
 
 public:
-	void SetTransformationForUIRendering(FVector2D Location, FVector2D Scale, float Angle);
+	void SetAutoActivateParticle(bool AutoActivate);
+	
+	void SetTransformationForUIRendering(FVector2D Location, FVector2f Scale, float Angle);
 
-	void RenderUI(SNiagaraUISystemWidget* NiagaraWidget, float ScaleFactor, FVector2D ParentTopLeft, const FNiagaraWidgetProperties* WidgetProperties);
+	void RenderUI(SNiagaraUISystemWidget* NiagaraWidget, float ScaleFactor, FVector2f ParentTopLeft, const FNiagaraWidgetProperties* WidgetProperties);
 
 	void AddSpriteRendererData(SNiagaraUISystemWidget* NiagaraWidget, TSharedRef<const FNiagaraEmitterInstance, ESPMode::ThreadSafe> EmitterInst,
-								class UNiagaraSpriteRendererProperties* SpriteRenderer, float ScaleFactor, FVector2D ParentTopLeft, const FNiagaraWidgetProperties* WidgetProperties);
+								class UNiagaraSpriteRendererProperties* SpriteRenderer, float ScaleFactor, FVector2f ParentTopLeft, const FNiagaraWidgetProperties* WidgetProperties);
 
 	void AddRibbonRendererData(SNiagaraUISystemWidget* NiagaraWidget, TSharedRef<const FNiagaraEmitterInstance, ESPMode::ThreadSafe> EmitterInst,
-                                class UNiagaraRibbonRendererProperties* RibbonRenderer, float ScaleFactor, FVector2D ParentTopLeft, const FNiagaraWidgetProperties* WidgetProperties);
+                                class UNiagaraRibbonRendererProperties* RibbonRenderer, float ScaleFactor, FVector2f ParentTopLeft, const FNiagaraWidgetProperties* WidgetProperties);
 
 	
 	
 private:
-	bool ShouldActivateParticle = false;
+	bool AutoActivateParticle = false;
 	
 };

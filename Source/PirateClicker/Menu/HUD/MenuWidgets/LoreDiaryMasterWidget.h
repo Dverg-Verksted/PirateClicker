@@ -30,8 +30,12 @@ public:
     void CloseDiaryEvent();
     UFUNCTION(BlueprintCallable)
     void ShowDiaryPageTextEvent(FText LoreDiaryTextToShow,FText LoreDiaryTextName);
+    UFUNCTION(BlueprintCallable)
+    void CreateNewButtonComponentEvent(FText LoreDiaryTextToShow,FText LoreDiaryTextName);
+
+private:
     UFUNCTION()
-    void CreateNewButtonComponentEvent();
+    void RegisterClickedButtonPage(class ULoreDiaryPageButtonComponent* PageButton);
 
 
 #pragma endregion
@@ -55,7 +59,7 @@ public:
 protected:
     
     FCloseDiarySignature CloseDiaryNotify;
-    UPROPERTY()
+    UPROPERTY(EditAnywhere)
     TSubclassOf<ULoreDiaryPageButtonComponent> LoreDiaryButtonClass;
 
 #pragma endregion
