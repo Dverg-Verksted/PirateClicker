@@ -1,4 +1,4 @@
-// Copyright 2021 - Michal Smoleň
+// Copyright 2022 - Michal Smoleň
 
 #include "NiagaraSystemWidget.h"
 #include "SNiagaraUISystemWidget.h"
@@ -78,9 +78,11 @@ void UNiagaraSystemWidget::InitializeNiagaraUI()
 			
 		if (!NiagaraActor)
 		{
-			FActorSpawnParameters spawnParams;
-			spawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
-			NiagaraActor = World->SpawnActor<ANiagaraUIActor>(FVector::ZeroVector, FRotator::ZeroRotator, spawnParams);
+			FActorSpawnParameters SpawnParams;
+			SpawnParams.SpawnCollisionHandlingOverride = ESpawnActorCollisionHandlingMethod::AlwaysSpawn;
+			SpawnParams.ObjectFlags |= RF_Transient;
+			
+			NiagaraActor = World->SpawnActor<ANiagaraUIActor>(FVector::ZeroVector, FRotator::ZeroRotator, SpawnParams);
 		}
 
 		NiagaraComponent = NiagaraActor->SpawnNewNiagaraUIComponent(NiagaraSystemReference, AutoActivate, ShowDebugSystemInWorld, TickWhenPaused);
