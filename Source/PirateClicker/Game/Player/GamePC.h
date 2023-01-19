@@ -11,7 +11,7 @@ class AScreenTapActor;
 class AStoryGMBase;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FHitActorSignature, AActor*, HitActor);
-DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPushArrayHitSignature, TArray<AActor*>, ArrayHitActor);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FPushArrayHitSignature, const TArray<AActor*>&, ArrayHitActor);
 
 /**
  * @class Game player controller
@@ -55,6 +55,15 @@ private:
 protected:
     UPROPERTY(EditDefaultsOnly, Category = "Settings", meta = (MetaClass = "ScreenTapActor"))
     FSoftClassPath PathToScreenTap;
+
+    UPROPERTY(EditDefaultsOnly, Category = "Settings")
+    float BaseDamageTap{5.0f};
+
+    UPROPERTY(EditDefaultsOnly, Category = "Settings", meta = (ForceUnits = "cm"))
+    float SphereRadiusTap{100.0f};
+
+    UPROPERTY(EditDefaultsOnly, Category = "Settings")
+    bool DrawDebugSphereTap{false};
 
     UPROPERTY()
     AScreenTapActor* ScreenTapClass;

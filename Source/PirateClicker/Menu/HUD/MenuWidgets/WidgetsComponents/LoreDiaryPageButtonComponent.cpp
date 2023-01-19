@@ -13,23 +13,6 @@ void ULoreDiaryPageButtonComponent::NativeConstruct()
 }
 void ULoreDiaryPageButtonComponent::OpenDiaryPageEvent()
 {
-    OnOpenDiaryPageNotify.Broadcast(DiaryPageButtonName,DiaryPageButtonLoreText);
+    OnOpenDiaryPageNotify.Broadcast(this);
 }
 
-FText ULoreDiaryPageButtonComponent::GetDiaryPageNameEvent()
-{
-    return DiaryPageButtonName;
-}
-FText ULoreDiaryPageButtonComponent::GetDiaryPageTextBlockEvent()
-{
-    return DiaryPageButtonLoreText;
-}
-
-void ULoreDiaryPageButtonComponent::SetDiaryPageNameEvent(FText NewDiaryPageName)
-{
-    DiaryPageButtonName = NewDiaryPageName;
-}
-void ULoreDiaryPageButtonComponent::SetDiaryPageTextBlockEvent(FText NewDiaryPageText)
-{
-    DiaryPageButtonLoreText = NewDiaryPageText;
-}

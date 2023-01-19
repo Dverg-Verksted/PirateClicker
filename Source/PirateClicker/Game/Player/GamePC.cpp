@@ -47,9 +47,9 @@ void AGamePC::Tick(float DeltaSeconds)
     Super::Tick(DeltaSeconds);
 
 #if UE_EDITOR || UE_BUILD_DEVELOPMENT
-    if (EnableD_GamePC.GetValueOnGameThread())
+    if (EnableD_GamePC.GetValueOnGameThread() || DrawDebugSphereTap)
     {
-        DrawDebugSphere(GetWorld(), TouchLocation, 100.0f, 12, FColor::Red, false, 0.0f, 0, 2.0f);
+        DrawDebugSphere(GetWorld(), TouchLocation, SphereRadiusTap, 12, FColor::Red, false, 0.0f, 0, 2.0f);
     }
 #endif
 }
@@ -66,7 +66,7 @@ void AGamePC::RegisterTouchPressed(ETouchIndex::Type FingerIndex, FVector Locati
         const TArray<TEnumAsByte<EObjectTypeQuery>> ObjectTypes{};
         const TArray<AActor*> ActorsToIgnore{GetPawn()};
         TArray<AActor*> OutActors;
-        UKismetSystemLibrary::SphereOverlapActors(GetWorld(), HitResult.Location, 100.0f, ObjectTypes, AActor::StaticClass(), ActorsToIgnore, OutActors);
+        UKismetSystemLibrary::SphereOverlapActors(GetWorld(), HitResult.Location, SphereRadiusTap, ObjectTypes, AActor::StaticClass(), ActorsToIgnore, OutActors);
         SpawnActorWithTap(HitResult.Location);
 
         OnPushArrayHit.Broadcast(OutActors);
@@ -75,7 +75,7 @@ void AGamePC::RegisterTouchPressed(ETouchIndex::Type FingerIndex, FVector Locati
             OnHitActor.Broadcast(Actor);
             if (Actor->IsA(APirateActorBase::StaticClass()))
             {
-                UGameplayStatics::ApplyDamage(Actor, 5.0f, this, GetPawn(), UDamageType::StaticClass());
+                UGameplayStatics::ApplyDamage(Actor, BaseDamageTap, this, GetPawn(), UDamageType::StaticClass());
             }
         }
     }

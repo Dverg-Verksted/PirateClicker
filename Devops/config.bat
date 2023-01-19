@@ -1,10 +1,10 @@
 @echo off
 
 rem Find UE and Launcher
-FOR /F "tokens=2* skip=2" %%a in ('reg query "HKEY_LOCAL_MACHINE\SOFTWARE\EpicGames\Unreal Engine\4.27" /v "InstalledDirectory"') do set EnginePath=%%b
+FOR /F "tokens=2* skip=2" %%a in ('reg query "HKEY_LOCAL_MACHINE\SOFTWARE\EpicGames\Unreal Engine\5.1" /v "InstalledDirectory"') do set EnginePath=%%b
 
 if not exist "%EnginePath%" (
-	@echo "UE4.27 Is not installed. Unable to proceed"
+	@echo "UE5.1 Is not installed. Unable to proceed"
 	pause
 	exit
 	)
