@@ -41,11 +41,41 @@ void APlayerPawn::BeginPlay()
     if (!CHECKED(SphereCollision != nullptr, "Sphere Collision is nullptr")) return;
     if (!CHECKED(SpringArm != nullptr, "Spring Arm is nullptr")) return;
     if (!CHECKED(Camera != nullptr, "Camera is nullptr")) return;
+
+    DefaultPosition = GetActorLocation();
 }
 
 void APlayerPawn::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
+
+    if (CameraPawnMoved == ECameraPawnMoved::OnLeft)
+    {
+        const FVector PrevOffset = SpringArm->SocketOffset;
+        const FVector NewOffset = FMath::VInterpTo(PrevOffset, LeftBound, DeltaSeconds, SpeedMovedBounds);
+        if (FVector::Dist(NewOffset, PrevOffset) > DistOffsetBreak)
+        {
+            SpringArm->SocketOffset = NewOffset;
+        }
+        else
+        {
+            ChangeStateCameraMove(ECameraPawnMoved::InPlace);
+        }
+    }
+
+    if (CameraPawnMoved == ECameraPawnMoved::OnRight)
+    {
+        const FVector PrevOffset = SpringArm->SocketOffset;
+        const FVector NewOffset = FMath::VInterpTo(PrevOffset, RightBound, DeltaSeconds, SpeedMovedBounds);
+        if (FVector::Dist(NewOffset, PrevOffset) > DistOffsetBreak)
+        {
+            SpringArm->SocketOffset = NewOffset;
+        }
+        else
+        {
+            ChangeStateCameraMove(ECameraPawnMoved::InPlace);
+        }
+    }
 }
 
 #if WITH_EDITOR
@@ -65,8 +95,32 @@ void APlayerPawn::PostEditChangeChainProperty(FPropertyChangedChainEvent& Proper
     {
         SpringArm->SetRelativeRotation(RotatePawn);
     }
+
+    CalculateDataBoundInfo(&LeftBoundInfo, LeftBound);
+    CalculateDataBoundInfo(&RightBoundInfo, RightBound);
 }
 
 #endif
+
+#pragma endregion
+
+#pragma region Action
+
+void APlayerPawn::ChangeStateCameraMove(ECameraPawnMoved NewState)
+{
+    if (CameraPawnMoved == NewState) return;
+
+    CameraPawnMoved = NewState;
+    OnChangeStateCameraPawnMoved.Broadcast(NewState);
+}
+
+void APlayerPawn::CalculateDataBoundInfo(FDataInfoBound* Data, const FVector& RelPosBound) const
+{
+    if (Data)
+    {
+        Data->WorldPosition = GetActorLocation() + RelPosBound;
+        Data->Distance = FVector::Dist(GetActorLocation(), GetActorLocation() + RelPosBound);
+    }
+}
 
 #pragma endregion

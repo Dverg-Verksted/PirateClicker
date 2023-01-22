@@ -3,6 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
+#include "PlayerPawnDataTypes.h"
 #include "GameFramework/Pawn.h"
 #include "PlayerPawn.generated.h"
 
@@ -18,7 +19,7 @@ enum class EStateMoveCamera : uint8
     Left
 };
 
-UCLASS(HideCategories = ("Replication", "Collision", "Input", "Actor", "LOD", "Cooking"))
+UCLASS(HideCategories = ("Replication", "Collision", "Input", "Actor", "LOD", "Cooking", "Pawn", "Camera", "HLOD", "Physics", "Networking"))
 class PIRATECLICKER_API APlayerPawn : public APawn
 {
     GENERATED_BODY()
@@ -50,6 +51,13 @@ protected:
 #pragma endregion
 
 #pragma region Action
+
+    UFUNCTION(BlueprintCallable)
+    void ChangeStateCameraMove(ECameraPawnMoved NewState);
+
+private:
+
+    void CalculateDataBoundInfo(FDataInfoBound* Data, const FVector& RelPosBound) const;
 
 #pragma endregion
 
@@ -130,5 +138,37 @@ private:
     UPROPERTY(EditInstanceOnly, Category = "Settings player pawn", meta = (DisplayName = "Скорость поворота камеры", ClampMin = "1.0"))
     float SpeedRotate{0.0f};
 
+    // @private Left position Bound
+    UPROPERTY(EditInstanceOnly, Category = "Settings player pawn", meta = (DisplayName = "Левая граница перемещение камеры", MakeEditWidget = true))
+    FVector LeftBound{FVector(0.0f, -100.0f, 0.0f)};
+
+    UPROPERTY(VisibleInstanceOnly, Category = "Settings player pawn", meta = (DisplayName = "Инфа об левой границе"))
+    FDataInfoBound LeftBoundInfo;
+
+    // @private Right position Bound
+    UPROPERTY(EditInstanceOnly, Category = "Settings player pawn", meta = (DisplayName = "Правая граница перемещение камеры", MakeEditWidget = true))
+    FVector RightBound{FVector(0.0f, 100.0f, 0.0f)};
+
+    UPROPERTY(VisibleInstanceOnly, Category = "Settings player pawn", meta = (DisplayName = "Инфа об правой границе"))
+    FDataInfoBound RightBoundInfo;
+
+    // @private Speed interp to target position
+    UPROPERTY(EditAnywhere, Category = "Settings player pawn", meta = (DisplayName = "Скорость интерполяции камеры до позиции"))
+    float SpeedMovedBounds{5.0f};
+
+    UPROPERTY(EditAnywhere, Category = "Settings player pawn", meta = (DisplayName = "Дистанция остановы при интерполяции"))
+    float DistOffsetBreak{0.05f};
+
+    ECameraPawnMoved CameraPawnMoved{ECameraPawnMoved::InPlace};
+    FVector DefaultPosition{FVector::ZeroVector};
+
 #pragma endregion
+
+#pragma region Signature
+
+    UPROPERTY(BlueprintAssignable)
+    FChangeStateCameraPawnMovedSignature OnChangeStateCameraPawnMoved;
+
+#pragma endregion
+    
 };
