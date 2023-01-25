@@ -43,16 +43,16 @@ private:
     FRotateLevelMeshLeftSignature RotateLevelMeshRightNotify;
 
     UPROPERTY()
-    FRotator LevelMeshRotationRate{0,5,0};
+    FRotator LevelMeshRotationRate{0,0.7f,0};
 
 #pragma endregion
 
 #pragma region Action
 
 public:
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION()
     void RotateLevelMeshLeft();
-    UFUNCTION(BlueprintCallable)
+    UFUNCTION()
     void RotateLevelMeshRight();
 
 #pragma endregion
