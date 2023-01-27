@@ -9,17 +9,17 @@ if not exist "%EnginePath%" (
 	exit
 	)
 
-echo EnginePath=%EnginePath%
+echo EnginePath="%EnginePath%"
 
 rem Project
-set ProjectRoot=%~dp0\..
+set ProjectRoot=%~dp0..
 set ProjectPureName=PirateClicker
 
 rem Unreal path
 set RunUATPath=%EnginePath%\Engine\Build\BatchFiles\RunUAT.bat
-set UBTRelativePath=%EnginePath%\Engine\Binaries\DotNET\UnrealBuildTool.exe
+set UBTRelativePath=%EnginePath%\Engine\Binaries\DotNET\UnrealBuildTool\UnrealBuildTool.exe
 set EditorUE=%EnginePath%\Engine\Binaries\Win64\UE4Editor.exe
 
 rem Path to Project
 set ProjectName=%ProjectPureName%.uproject
-set ProjectPath=%ProjectRoot%\%ProjectName%
+set ProjectPath=%ProjectRoot%\\%ProjectName%
